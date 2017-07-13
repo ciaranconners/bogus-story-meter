@@ -1,0 +1,19 @@
+{
+  "name": "bogus-story-meter",
+  "version": "1.0.0",
+  "description": "for the sake of truth",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeamSSP/bogus-story-meter.git"
+  },
+  "author": "Ciaran Conners, Pat Tang, Scott Rudiger, John Roxborough",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TeamSSP/bogus-story-meter/issues"
+  },
+  "homepage": "https://github.com/TeamSSP/bogus-story-meter#readme"
+}
