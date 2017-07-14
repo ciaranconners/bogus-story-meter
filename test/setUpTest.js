@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 
-describe('sanity check', () => {
-  it('should return true', () => {
+describe('sanity check', function() {
+  it('should return true', function() {
     expect(true).to.equal(true);
   });
 });
