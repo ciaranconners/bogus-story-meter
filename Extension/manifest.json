@@ -1,0 +1,18 @@
+{
+  "name": "Bogus Story Meter",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "For people who want the truth and nothing but the truth.",
+  // "icons": { "128": "icon_128.png" },
+  // "background": {
+  //   "persistent": false,
+  //   "scripts": ["bg.js"]
+  // },
+  // "permissions": ["http://*.google.com/", "https://*.google.com/", "https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js", "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"],
+  "browser_action": {
+    "default_title": "Hello",
+    // "default_icon": "icon_19.png",
+    "default_popup": "index.html"
+  },
+  "content_security_policy": "script-src 'self' https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css; object-src 'self'"
+}
