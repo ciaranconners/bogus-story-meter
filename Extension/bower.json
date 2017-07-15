@@ -1,0 +1,23 @@
+{
+  "name": "Extension",
+  "homepage": "https://github.com/johnmrox/bogus-story-meter",
+  "authors": [
+    "johnmrox <johnmrox@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.5",
+    "jquery": "^3.2.1",
+    "bootstrap": "^3.3.7"
+  }
+}
