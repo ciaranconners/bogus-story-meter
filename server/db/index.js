@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var db = new Sequelize('chatter', 'root', '');
+var db = new Sequelize(process.env.RDS_CONNECTION_URL);
 
 var User = db.define('User', {
 	username: Sequelize.STRING,
@@ -10,7 +10,7 @@ var User = db.define('User', {
 });
 
 var Url = db.define('Url', {
-	id: { type: Sequelize.INTEGER, primaryKey: true }, 
+	id: { type: Sequelize.INTEGER, primaryKey: true },
 	id_category: { type: Sequelize.INTEGER,
    	references: {
       model: Category,
@@ -20,7 +20,7 @@ var Url = db.define('Url', {
 	id_category: Sequelize.STRING,
 	upvote_count: Sequelize.INTEGER,
 	downvote_count: Sequelize.INTEGER,
-	neutral_count: Sequelize.INTEGER	
+	neutral_count: Sequelize.INTEGER
 });
 
 var Category = db.define('Category', {
@@ -81,11 +81,11 @@ var Comment_vote = db.define('Comment_vote', {
       model: Comment,
       key: 'id'
 		}
-	},	
+	},
 	id_user: { type: Sequelize.INTEGER,
    	references: {
       model: User,
       key: 'id'
 		}
-	}	
+	}
 });
