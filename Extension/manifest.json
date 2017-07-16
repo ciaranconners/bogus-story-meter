@@ -3,7 +3,7 @@
   "version": "1.0",
   "manifest_version": 2,
   "description": "For people who want the truth and nothing but the truth.",
-  // "icons": { "128": "icon_128.png" },
+  "icons": { "128": "images/BSMIcon.png" },
   // "background": {
   //   "persistent": false,
   //   "scripts": ["bg.js"]
