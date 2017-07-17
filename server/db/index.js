@@ -4,7 +4,10 @@ var config = require('./db-config.js');
 var db = new Sequelize(config.RDS_CONNECTION_URL, {dialect: 'mysql'});
 
 var User = db.define('User', {
-  username: Sequelize.STRING,
+  username: {
+    type: Sequelize.STRING,
+    unique: true
+  },
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -16,6 +19,10 @@ var User = db.define('User', {
 }).sync();
 
 var Url = db.define('Url', {
+  url: {
+    type: Sequelize.STRING,
+    unique: true
+  },
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
