@@ -1,0 +1,17 @@
+body {
+  min-width: 450px;
+}
+
+.dd-truth, .dd-false {
+  display: inline-block;
+}
+
+textarea {
+  min-width: 400px;
+}
+
+.dropdown {
+  /*display: flex;*/
+  /*justify-content: center;*/
+  flex-direction: row;
+}

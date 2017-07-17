@@ -1,1 +1,36 @@
-<p>Yum, World</p>
+<div ng-controller="AppCtrl as app" class="container" ng-init="app.get_current_url(app.getdata)">
+  <div ng-if="app.loggedIn" class="dropdown">
+    <div ng-if="!app.rated" class="dropdown dd-heading unrated-heading">
+      <p>This page has not yet been rated by our users, be the first to submit your thoughts!</p>
+    </div>
+
+    <div ng-if="app.rated" class="dd-heading rated-heading">
+      <h2>{{app.rating}}</h2>
+      <p>of users believe the information presented on this page is accurate, what do you think?</p>
+    </div>
+
+    <button class="dd-truth btn btn-success"><h3>True</h3></button>
+    <button class="dd-false btn btn-danger"><h3>False</h3></button>
+
+    <textarea class="dd-comment" placeholder="Leave a comment" ng-model="app.comment" id="commentField"></textarea>
+
+    <button class="dd-submit btn btn-primary" ng-click="app.handleSubmitComment(app.comment)">Submit</button>
+
+    <button class="dd-stats-link">Click to view comments</button>
+  </div>
+
+  <div ng-if="!app.loggedIn" class="dropdown">
+    <div ng-if="app.rated" class="dd-heading rated-heading">
+      <h2>{{app.rating}}</h2>
+      <p>of users believe the information presented on this page is accurate, log in or create an account to share your thoughts!</p>
+    </div>
+
+    <div ng-if="!app.rated" class="dd-heading unrated-heading">
+      <p>This page has not yet been rated by our users, log in or create an account to be the first to submit your thoughts!</p>
+    </div>
+
+    <button class="dd-login btn btn-primary">Login with Google</button>
+
+    <button class="dd-stats-link">Click to view comments</button>
+  </div>
+</div>
