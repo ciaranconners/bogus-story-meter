@@ -18,6 +18,7 @@ var User = db.define('User', {
 var Url = db.define('Url', {
   id: {
     type: Sequelize.INTEGER,
+    autoIncrement: true,
     primaryKey: true
   },
   id_category: {
@@ -27,15 +28,15 @@ var Url = db.define('Url', {
       key: 'id'
     }
   },
-  id_parent: Sequelize.STRING,
   upvote_count: Sequelize.INTEGER,
   downvote_count: Sequelize.INTEGER,
   neutral_count: Sequelize.INTEGER
-});
+}).sync();
 
 var Category = db.define('Category', {
   id: {
     type: Sequelize.INTEGER,
+    autoIncrement: true,
     primaryKey: true
   },
   name: Sequelize.STRING,
@@ -46,11 +47,12 @@ var Category = db.define('Category', {
       key: 'id'
     }
   }
-});
+}).sync();
 
 var Url_vote = db.define('Url_vote', {
   id: {
     type: Sequelize.INTEGER,
+    autoIncrement: true,
     primaryKey: true
   },
   id_user: {
@@ -68,11 +70,12 @@ var Url_vote = db.define('Url_vote', {
     }
   },
   type: Sequelize.STRING
-});
+}).sync();
 
 var Comment = db.define('Comment', {
   id: {
     type: Sequelize.INTEGER,
+    autoIncrement: true,
     primaryKey: true
   },
   id_url: {
@@ -97,11 +100,12 @@ var Comment = db.define('Comment', {
     }
   },
   text: Sequelize.STRING
-});
+}).sync();
 
 var Comment_vote = db.define('Comment_vote', {
   id: {
     type: Sequelize.INTEGER,
+    autoIncrement: true,
     primaryKey: true
   },
   id_comment: {
