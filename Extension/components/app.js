@@ -5,7 +5,7 @@ angular.module('app', [])
     var that = this;
 
     this.tabUrl = '';
-    this.loggedIn = false;
+    this.loggedIn = true;
     this.rating = '80%' // on init - get page rating from DB
     this.rated = true;
 
