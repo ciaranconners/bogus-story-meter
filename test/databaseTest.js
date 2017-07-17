@@ -1,37 +1,22 @@
-var db = require('../server/db/index.js');
 const expect = require('chai').expect;
+const db = require('../server/db/index.js');
 
-function makeUser(callback) {
-
-return db.User.create({
-    username: 'Scott'
-  })
-  .then(function() {
-    callback();
-  })
-  .catch(function(err) {
-    console.error(err);
-  });
-}
-
-function getUser() {
-  return db.User.findOne({where:{username: 'Scott'}})
-  .then(function(user) {
-    console.log(user);
-  })
-  .catch(function(err) {
-    console.error(err);
-  });
-}
 
 describe('first db test', () => {
   it('should retrieve a user', (done) => {
-    makeUser(function() {
-      getUser.then(function() {
-        expect(user.username).to.equal('Scott');
-        done();
-      });
+    db.models.User.create({username: 'John'})
+    .then(() => {
+      return db.models.User.findOne({ where: {username: 'John'} });
+    })
+    .then((user) => {
+      expect(user.username).to.equal('John');
+      db.close();
+      done();
+    })
+    .catch((err) => {
+      console.error(err);
+      db.close();
+      done();
     });
   });
 });
-
