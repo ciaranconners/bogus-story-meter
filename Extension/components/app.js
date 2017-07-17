@@ -35,9 +35,7 @@ angular.module('app', [])
       // $http.post()
       this.comment = '';
     }
-
   })
-
   .component('app', {
 
     templateUrl: '../templates/app.html',
