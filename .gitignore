@@ -13,3 +13,4 @@ package-lock.json
 !.elasticbeanstalk/*.global.yml
 keys.txt
 settings.config
+server/db/db-config.js

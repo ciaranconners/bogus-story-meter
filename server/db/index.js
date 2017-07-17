@@ -1,21 +1,21 @@
 var Sequelize = require('sequelize');
-// var db = new Sequelize(process.env.RDS_CONNECTION_URL, {dialect: 'mysql'});
-var db = new Sequelize('mysql://TeamSSP:TeamSSP123@bogus-story-meter-dev2.c6w6pvtpmovr.us-east-2.rds.amazonaws.com:3306', {dialect: 'mysql'});
+var config = require('./db-config.js');
 
-module.exports = {};
+var db = new Sequelize(config.RDS_CONNECTION_URL, {dialect: 'mysql'});
 
-module.exports.User = db.define('User', {
+var User = db.define('User', {
   username: Sequelize.STRING,
   id: {
     type: Sequelize.INTEGER,
+    autoIncrement: true,
     primaryKey: true
   },
   upvote_count: {type: Sequelize.INTEGER, defaultValue: 0},
   downvote_count: {type: Sequelize.INTEGER, defaultValue: 0},
   neutral_count: {type: Sequelize.INTEGER, defaultValue: 0}
-});
+}).sync();
 
-module.exports.Url = db.define('Url', {
+var Url = db.define('Url', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true
@@ -23,7 +23,7 @@ module.exports.Url = db.define('Url', {
   id_category: {
     type: Sequelize.INTEGER,
     references: {
-      model: module.exports.Category,
+      model: Category,
       key: 'id'
     }
   },
@@ -33,7 +33,7 @@ module.exports.Url = db.define('Url', {
   neutral_count: Sequelize.INTEGER
 });
 
-module.exports.Category = db.define('Category', {
+var Category = db.define('Category', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true
@@ -42,13 +42,13 @@ module.exports.Category = db.define('Category', {
   id_parent: {
     type: Sequelize.INTEGER,
     references: {
-      model: module.exports.Category,
+      model: Category,
       key: 'id'
     }
   }
 });
 
-module.exports.Url_vote = db.define('Url_vote', {
+var Url_vote = db.define('Url_vote', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true
@@ -56,21 +56,21 @@ module.exports.Url_vote = db.define('Url_vote', {
   id_user: {
     type: Sequelize.INTEGER,
     references: {
-      model: module.exports.User,
+      model: User,
       key: 'id'
     }
   },
   id_url: {
     type: Sequelize.INTEGER,
     references: {
-      model: module.exports.Url,
+      model: Url,
       key: 'id'
     }
   },
   type: Sequelize.STRING
 });
 
-module.exports.Comment = db.define('Comment', {
+var Comment = db.define('Comment', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true
@@ -78,28 +78,28 @@ module.exports.Comment = db.define('Comment', {
   id_url: {
     type: Sequelize.INTEGER,
     references: {
-      model: module.exports.Url,
+      model: Url,
       key: 'id'
     }
   },
   id_user: {
     type: Sequelize.INTEGER,
     references: {
-      model: module.exports.User,
+      model: User,
       key: 'id'
     }
   },
   id_parent: {
     type: Sequelize.INTEGER,
     references: {
-      model: module.exports.Comment,
+      model: Comment,
       key: 'id'
     }
   },
   text: Sequelize.STRING
 });
 
-module.exports.Comment_vote = db.define('Comment_vote', {
+var Comment_vote = db.define('Comment_vote', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true
@@ -107,16 +107,17 @@ module.exports.Comment_vote = db.define('Comment_vote', {
   id_comment: {
     type: Sequelize.INTEGER,
     references: {
-      model: module.exports.Comment,
+      model: Comment,
       key: 'id'
     }
   },
   id_user: {
     type: Sequelize.INTEGER,
     references: {
-      model: module.exports.User,
+      model: User,
       key: 'id'
     }
   }
 });
 
+module.exports = db;
