@@ -1,4 +1,4 @@
-// angular.module('app')
+angular.module('app')
 
-// .service('requests', function($http, $window) {
-// });
+.service('requests', function($http, $window) {
+});
