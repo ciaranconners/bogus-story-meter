@@ -25,15 +25,23 @@ angular.module('app', [])
       // })
     }
 
-    // get_current_url(function(url) {
-    //   this.tabUrl = url;
-    // });
+    this.handleTrue = function() {
+      console.log('true')
+    }
 
+    this.handleFalse = function() {
+      console.log('false')
+    }
 
     this.handleSubmitComment = function(comment) {
       //post comment to DB
       // $http.post()
       this.comment = '';
+    }
+
+    this.handleStatsLink = function() {
+
+      console.log(this.tabUrl)
     }
   })
   .component('app', {
