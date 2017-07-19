@@ -16,20 +16,20 @@ if(rating === null) {
   chrome.browserAction.setBadgeText({text: `${rating}%`});
 }
 
-get_current_url = function(callback) {
-      chrome.tabs.query({ active: true }, function(tabs) {
-        tabUrl = tabs[0].url;
-        callback(tabUrl)
-      });
-    }
-
-getdata = function(url) {
-      // console.log('url', url)
-      localStorage.setItem('activeUrl', url)
-      // $http.get('/urls' + url, function(res, req) {
-      //   // get back data
-      //   // set this.rating = data.rating
-      // })
-    }
-
-    get_current_url(getdata)
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  if (changeInfo.status === 'complete') {
+    console.log(tab.url);
+  var url = tab.url;
+  $.ajax({
+    type: "POST",
+    url: 'http://localhost:8080/url',
+    data: {
+      currentUrl: url
+    },
+    success: function(data) {
+      console.log('success');
+    },
+    dataType: 'application/json'
+  });
+  }
+});
