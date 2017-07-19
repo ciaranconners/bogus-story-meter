@@ -1,11 +1,11 @@
 var Sequelize = require('sequelize');
-var connectionURL = require('./db-config.js').RDS_CONNECTION_URL;
+var connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
 
 
 var db = new Sequelize('bsm', 'root', '', {
   dialect: 'mysql'
 });
-// var db = new Sequelize(config.RDS_CONNECTION_URL, {dialect: 'mysql'});
+// var db = new Sequelize(connectionUrl, {dialect: 'mysql'});
 
 
 var User = db.define('User', {
@@ -36,8 +36,11 @@ var User = db.define('User', {
 });
 
 var Category = db.define('Category', {
-  name: Sequelize.STRING,
-  IdParent: Sequelize.INTEGER
+  name: {
+    type: Sequelize.STRING,
+    unique: true
+  },
+  categoryId: Sequelize.INTEGER
 }, {
   classMethods: {
     associate: (models) => {
@@ -53,10 +56,19 @@ var Url = db.define('Url', {
     type: Sequelize.STRING,
     unique: true
   },
-  IdCategory: Sequelize.INTEGER,
-  upvote_count: Sequelize.INTEGER,
-  downvote_count: Sequelize.INTEGER,
-  neutral_count: Sequelize.INTEGER
+  categoryId: Sequelize.INTEGER,
+  upvote_count: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  downvote_count: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  neutral_count: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  }
 }, {
   classMethods: {
     associate: (model) => {
@@ -67,10 +79,10 @@ var Url = db.define('Url', {
 });
 
 var Comment = db.define('Comment', {
-  text: Sequelize.TEXT,
-  IdParent: Sequelize.INTEGER,
-  IdUrl: Sequelize.INTEGER,
-  IdUser: Sequelize.INTEGER
+  text: Sequelize.TEXT('medium'),
+  commentId: Sequelize.INTEGER,
+  urlId: Sequelize.INTEGER,
+  userId: Sequelize.INTEGER
 }, {
   classMethods: {
     associate: (models) => {
@@ -85,8 +97,8 @@ var Comment = db.define('Comment', {
 
 var CommentVote = db.define('CommentVote', {
   type: Sequelize.STRING,
-  IdComment: Sequelize.INTEGER,
-  IdUser: Sequelize.INTEGER
+  commentId: {type: Sequelize.INTEGER, unique: 'userCommentId'},
+  userId: {type: Sequelize.INTEGER, unique: 'userCommentId'}
 }, {
   classMethods: {
     associate: (models) => {
@@ -98,11 +110,13 @@ var CommentVote = db.define('CommentVote', {
 
 var UrlVote = db.define('UrlVote', {
   type: Sequelize.STRING,
-  UserId: Sequelize.INTEGER
+  userId: {type: Sequelize.INTEGER, unique: 'userUrlId'},
+  urlId: {type: Sequelize.INTEGER, unique: 'userUrlId'}
 }, {
   classMethods: {
     associate: (models) => {
       UrlVote.belongsTo(models.User);
+      UrlVote.belongsTo(models.Url);
     }
   }
 });
@@ -121,10 +135,7 @@ User.sync()
     return Comment.sync();
   })
   .then(() => {
-    return CommentVote.sync();
+    CommentVote.sync();
   });
 
-module.exports = {
-  User: User,
-  UrlVote: UrlVote
-};
+module.exports = db.models;

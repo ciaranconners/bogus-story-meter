@@ -2,47 +2,165 @@ const expect = require('chai').expect;
 const db = require('../server/db/index.js');
 
 
-describe('User tests', () => {
+describe('Database tests', () => {
+
   it('should retrieve a user', (done) => {
-    console.log('User: ', db.User);
     db.User.upsert({username: 'joe'})
     .then((data) => {
-      console.log('hello', data);
       return db.User.findOne({ where: {username: 'joe'} });
     })
     .then((user) => {
       expect(user.username).to.equal('joe');
-      // db.close();
-      console.log('finishing user test');
       done();
     })
     .catch((err) => {
-      console.log('finishing user test');
       console.error('ERROR: ', err);
-      // db.close();
-      // done();
+      done(err);
     });
   });
+
   it('should insert a UrlVote', (done) => {
     db.User.findOne({where: {username: 'joe'}})
     .then((user) => {
-      console.log('userID: ', user.id);
-      return db.UrlVote.create({type: 'upvote', UserId: user.id});
+      return db.UrlVote.create({type: 'upvote', userId: user.id});
     })
     .then((data) => {
-      console.log('newly created UrlVote: ', data, null, 2);
       return db.UrlVote.findOne({ where: {type: 'upvote'} });
     })
     .then((vote) => {
-      console.log('VOTE: ', vote);
       expect(vote.type).to.equal('upvote');
-      // db.close();
       done();
     })
     .catch((err) => {
       console.error('ERROR: ', err);
-      // db.close();
-      // done();
+      done(err);
     });
   });
+
+  it('should insert a Category', (done) => {
+    db.Category.create({name: 'Science'})
+    .then(() => {
+      return db.Category.findOne({where: {name: 'Science'}});
+    })
+    .then((category) => {
+      expect(category.name).to.equal('Science');
+      done();
+    })
+    .catch((err) => {
+      console.error('error inserting/finding category', err);
+      done(err);
+    });
+  });
+
+  it('should insert a reference to parent Category', (done) => {
+    db.Category.findOne({where: {name: 'Science'}})
+    .then((category) => {
+      return db.Category.create({name: 'Physics', categoryId: category.id});
+    })
+    .then(() => {
+      return db.Category.findOne({where: {name: 'Physics'}});
+    })
+    .then((category) => {
+      expect(category.categoryId).to.equal(1);
+      done();
+    })
+    .catch((err) => {
+      console.error('error inserting/finding category: ', err);
+      done(err);
+    });
+  });
+
+  it('should insert a Url', (done) => {
+    const testUrl = 'https://www.theguardian.com/science/life-and-physics/2017/jul/17/getting-to-the-bottom-of-the-higgs-boson';
+
+    db.Category.findOne({where: {name: 'Physics'}})
+    .then((category) => {
+      return db.Url.create({url: testUrl, categoryId: category.id});
+    })
+    .then(() => {
+      return db.Url.findOne({where: {url: testUrl}});
+    })
+    .then((url) => {
+      expect(url.url).to.equal(testUrl);
+      expect(url.categoryId).to.equal(2);
+      done();
+    })
+    .catch((err) => {
+      console.error('error inserting url: ', err);
+      done(err);
+    });
+  });
+
+  it('should insert a Comment', (done) => {
+    const testText = 'Sheldon: Do you know about the Higgs boson?';
+
+    db.Comment.create({text: testText, urlId: 1, userId: 1})
+    .then(() => {
+      return db.Comment.findOne({where: {text: testText}});
+    })
+    .then((comment) => {
+      expect(comment.text).to.equal(testText);
+      expect(comment.urlId).to.equal(1);
+      expect(comment.userId).to.equal(1);
+      expect(comment.commentId).to.be.null;
+      done();
+    })
+    .catch((err) => {
+      console.error('error inserting comment: ', err);
+      done(err);
+    });
+  });
+
+  it('should insert a reply Comment', (done) => {
+    const testText = 'Penny: Of course. It\'s been in the news, and it\'s a very famous boson.';
+
+    db.Comment.create({text: testText, urlId: 1, userId: 1, commentId: 1})
+    .then(() => {
+      return db.Comment.findOne({where: {text: testText}});
+    })
+    .then((comment) => {
+      expect(comment.commentId).to.equal(1);
+      done();
+    })
+    .catch((err) => {
+      console.error('error replying to Comment: ', err);
+      done(err);
+    });
+  });
+
+  it('should insert a CommentVote', (done) => {
+
+    db.CommentVote.create({commentId: 1, userId: 1, type: 'upvote'})
+    .then(() => {
+      return db.CommentVote.findOne({where: {commentId: 1, userId: 1}});
+    })
+    .then(commentVote => {
+      expect(commentVote.type).to.equal('upvote');
+      done();
+    })
+    .catch((err) => {
+      console.error('error inserting CommentVote: ', err);
+      done(err);
+    })
+  });
+
+  it('should not insert another CommentVote if the user already voted on a comment', (done) => {
+    expect(() => {
+      return db.CommentVote.create({commentId: 1, userId: 1, type: 'upvote'});
+    }).to.throw();
+    done();
+  });
+
+  it('should not insert another UrlVote if the user already voted on a Url', (done) => {
+
+  });
+
+  it('should insert a CommentVote if previous vote by the same user is deleted', (done) => {
+
+  });
+
+  it('should insert a UrlVote if previous vote by the same user is deleted', (done) => {
+
+  });
+
 });
