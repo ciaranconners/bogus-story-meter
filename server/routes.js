@@ -22,5 +22,9 @@ app.get('/', handler.serveIndexGetRequest);
 
 app.get('/test', handler.test);
 
+app.post('/url', (req, res) => {
+  console.log(req.body);
+  res.status(200).send('server response');
+});
 
 module.exports = app;
