@@ -2,10 +2,11 @@ angular.module('app', [])
 
 .controller('AppCtrl', function($scope, requests) {
 	this.profileInfo = {};
-	this.profileInfo.ame;
+	this.profileInfo.name;
 	this.profileInfo.url;
 	this.profileInfo.email;
 	this.profileInfo.id;
+	this.signedIn;
 
 	this.onSignIn = function(googleUser) {
 	  var profile = googleUser.getBasicProfile();
@@ -19,6 +20,8 @@ angular.module('app', [])
   	this.profileInfo.email = profile.getEmail();	
   	this.profileInfo.id = profile.getId();
 
+  	this.signedIn = true;
+
 	  $scope.$apply();
 	}.bind(this);
 
@@ -29,6 +32,7 @@ angular.module('app', [])
     auth2.signOut().then(function () {
       console.log('User signed out.');
     });
+    this.signedIn = false;
   }	
 })
 
