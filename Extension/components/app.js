@@ -6,8 +6,23 @@ angular.module('app', [])
 
     this.tabUrl = '';
     this.loggedIn = true;
-    this.rating = '80%' // on init - get page rating from DB
+    this.rating = 10 // on init - get page rating from DB
     this.rated = true;
+
+    // Update favicon based on rating
+
+    // if(this.rating === null) {
+    //   chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
+    // } else if(this.rating >= 60) {
+    //   chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
+    //   chrome.browserAction.setBadgeBackgroundColor({color: "green"});
+    //   chrome.browserAction.setBadgeText({text: `${this.rating}%`});
+    // } else if (this.rating < 60) {
+    //   chrome.browserAction.setIcon({path: '../images/BSMIconRed.png'});
+    //   chrome.browserAction.setBadgeBackgroundColor({color: "red"});
+    //   chrome.browserAction.setBadgeText({text: `${this.rating}%`});
+    // }
+
 
     this.get_current_url = function(callback) {
       chrome.tabs.query({ active: true }, function(tabs) {
@@ -18,7 +33,7 @@ angular.module('app', [])
     }
 
     this.getdata = function(url) {
-      console.log('url', url)
+      // console.log('url', url)
       // $http.get('/urls' + url, function(res, req) {
       //   // get back data
       //   // set this.rating = data.rating
@@ -40,7 +55,6 @@ angular.module('app', [])
     }
 
     this.handleStatsLink = function() {
-
       console.log(this.tabUrl)
     }
   })
