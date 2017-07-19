@@ -1,4 +1,20 @@
-<div class="profile">
-	<profile-pic></profile-pic>
-	<search-form></search-form>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<div class="container top-offset" id="test">
+	<div>
+		<div class="g-signin2" data-onsuccess="onSignIn"></div>
+		<a href="#" ng-click="$ctrl.signOut()">Sign out</a>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="img-parent">
+				<img class="profile-pic" ng-src={{$ctrl.profileInfo.url}}>
+				<p class="username">{{$ctrl.profileInfo.name}}</p>
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<search-form></search-form>
+			<recent-activity></recent-activity>
+		</div>
+	</div>	
 </div>
