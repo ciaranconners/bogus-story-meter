@@ -1,6 +1,8 @@
 
+// listener for page load?  tab switch?
+
 // get rating from database
-var rating = 90;
+var rating = 10;
 
 if(rating === null) {
   chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
@@ -18,7 +20,6 @@ get_current_url = function(callback) {
       chrome.tabs.query({ active: true }, function(tabs) {
         tabUrl = tabs[0].url;
         callback(tabUrl)
-        // return tabUrl;
       });
     }
 
@@ -32,4 +33,3 @@ getdata = function(url) {
     }
 
     get_current_url(getdata)
-    console.log(localStorage.getItem('activeUrl'))

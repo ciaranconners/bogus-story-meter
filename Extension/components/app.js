@@ -6,7 +6,7 @@ angular.module('app', [])
 
     this.tabUrl = '';
     this.loggedIn = true;
-    this.rating = 10 // on init - get page rating from DB
+    this.rating = 90 // on init - get page rating from DB
     this.rated = true;
 
     // Update favicon based on rating
@@ -42,7 +42,14 @@ angular.module('app', [])
 
     this.handleTrue = function() {
       console.log('true')
+
+      // GET REQUEST TO TEST ENDPOINT
+      $http.get('http://localhost:8080/test').then(function(response) {
+        console.log('response ', response);
+      }, function(err) {console.error('Error ', err);})
     }
+
+
 
     this.handleFalse = function() {
       console.log('false')
