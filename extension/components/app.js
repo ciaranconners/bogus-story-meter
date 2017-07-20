@@ -118,7 +118,7 @@ angular.module('app', [])
       console.log(this.tabUrl);
 
       chrome.tabs.create({url: "http://localhost:8080"});
-      window.close(); // Note: window.close(), not this.close()
+      window.close();
     }
   })
 
