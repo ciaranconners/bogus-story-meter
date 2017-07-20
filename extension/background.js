@@ -2,54 +2,68 @@
 // listener for page load?  tab switch?
 
 // get rating from database
-var rating = 10;
+// var rating = 10;
 
-if(rating === null) {
-  chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
-} else if(rating >= 60) {
-  chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
-  chrome.browserAction.setBadgeBackgroundColor({color: "green"});
-  chrome.browserAction.setBadgeText({text: `${rating}%`});
-} else if (rating < 60) {
-  chrome.browserAction.setIcon({path: '../images/BSMIconRed.png'});
-  chrome.browserAction.setBadgeBackgroundColor({color: "red"});
-  chrome.browserAction.setBadgeText({text: `${rating}%`});
-}
+const updateIcon = (rating) => {
+  if (rating === null) {
+    chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
+  } else if (rating >= 60) {
+    chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
+    chrome.browserAction.setBadgeBackgroundColor({color: 'green'});
+    chrome.browserAction.setBadgeText({text: `${rating}%`});
+  } else if (rating < 60) {
+    chrome.browserAction.setIcon({path: '../images/BSMIconRed.png'});
+    chrome.browserAction.setBadgeBackgroundColor({color: 'red'});
+    chrome.browserAction.setBadgeText({text: `${rating}%`});
+  }
+};
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.status === 'complete') {
     // console.log(tab.url);
     if (tab.url !== 'about:blank' && tab.url !== 'chrome://newtab/') {
       var url = tab.url;
+      console.log('updatedUrl', url);
       $.ajax({
-        type: "POST",
-        url: 'http://localhost:8080/url',
+        type: 'POST',
+        url: 'http://localhost:8080/urlrating',
+        dataType: 'application/json',
         data: {
           currentUrl: url
         },
-        success: function(data) {
+        success: function(res) {
           console.log('success');
+          console.log('DATA', res.data);
+          updateIcon(res.data);
         },
-        dataType: 'application/json'
       });
     }
   }
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
+  console.log($.ajax);
   chrome.tabs.get(activeInfo.tabId, function(tab) {
     if (tab.url !== 'about:blank' && tab.url !== 'chrome://newtab/') {
       var url = tab.url;
+      console.log('activatedUrl', url);
       $.ajax({
-        type: "POST",
-        url: 'http://localhost:8080/url',
+        type: 'GET',
+        url: 'http://localhost:8080/urlrating',
+        // dataType: 'application/json',
+        params: {},
         data: {
           currentUrl: url
         },
+        error: function(err) {
+          console.log('FAIL');
+          console.error(err);
+        },
         success: function(data) {
           console.log('success');
-        },
-        dataType: 'application/json'
+          console.log('DATA', data);
+          updateIcon(data);
+        }
       });
     }
   });
