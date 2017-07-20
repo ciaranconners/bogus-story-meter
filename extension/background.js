@@ -18,7 +18,6 @@ if(rating === null) {
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.status === 'complete') {
-    // console.log(tab.url);
     if (tab.url !== 'about:blank' && tab.url !== 'chrome://newtab/') {
       var url = tab.url;
       $.ajax({
