@@ -25,6 +25,20 @@ angular.module('app', [])
     //   chrome.browserAction.setBadgeText({text: `${this.rating}%`});
     // }
 
+  
+    this.clickHandler = function(e) {
+      chrome.tabs.update({url: "https://cnn.com"});
+      window.close(); // Note: window.close(), not this.close()
+    };
+
+    chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+    // Use the token.
+      console.log('token: ', token, new Date());
+      if (token) {
+        this.loggedIn = true;
+        $scope.$apply();
+      }
+    }.bind(this));  
 
     this.get_current_url = function(callback) {
       chrome.tabs.query({ active: true }, function(tabs) {
@@ -103,6 +117,9 @@ angular.module('app', [])
 
     this.handleStatsLink = function() {
       console.log(this.tabUrl);
+
+      chrome.tabs.create({url: "http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com/"});
+      window.close();
     }
   })
   .component('app', {
