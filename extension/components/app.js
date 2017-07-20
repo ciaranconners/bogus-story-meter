@@ -25,12 +25,6 @@ angular.module('app', [])
     //   chrome.browserAction.setBadgeText({text: `${this.rating}%`});
     // }
 
-  
-    this.clickHandler = function(e) {
-      chrome.tabs.update({url: "https://cnn.com"});
-      window.close(); // Note: window.close(), not this.close()
-    };
-
     chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
     // Use the token.
       console.log('token: ', token, new Date());

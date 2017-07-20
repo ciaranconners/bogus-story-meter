@@ -1,5 +1,5 @@
-angular.module('app', [])
+angular.module('app')
 
 .component('navbar', {
-  templateUrl: '../templates/navbar.html',
+  templateUrl: '../templates/navbar.html'
 });
