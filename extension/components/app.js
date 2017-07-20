@@ -32,7 +32,7 @@ angular.module('app', [])
         this.loggedIn = true;
         $scope.$apply();
       }
-    }.bind(this));  
+    }.bind(this));
 
     this.get_current_url = function(callback) {
       chrome.tabs.query({ active: true }, function(tabs) {
@@ -118,7 +118,6 @@ angular.module('app', [])
   })
   .component('app', {
 
-    templateUrl: '../templates/app.html',
-    controller: 'AppCtrl'
+    templateUrl: '../templates/app.html'
 
   });
