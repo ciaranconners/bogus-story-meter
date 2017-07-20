@@ -38,45 +38,6 @@ angular.module('app', [])
       }
     }.bind(this));  
 
-    // chrome.identity.getProfileUserInfo(function(userInfo) {
-    //   if (userInfo.email.length) {
-    //     chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-    //       console.log('this: ', this);
-    //     // Use the token.
-    //       console.log('token: ', token, new Date());
-    //       if (token) {
-    //         this.loggedIn = true;
-    //         $scope.$apply();
-    //       }
-    //     }.bind(this));
-    //   } 
-    // });
-
-
-
-    // this.logIn = function() {
-    //   console.log('button pressed');
-
-    //   chrome.identity.getProfileUserInfo(function(userInfo) {
-
-    //     console.log('this is the email: ', userInfo.email);
-    //     console.log('userInfo: ', userInfo);
-
-    //     if (!userInfo.email.length) {
-    //       //alert('You need to sign into Chrome');         
-    //     } else {
-    //       chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-    //       // Use the token.
-    //       console.log('token: ', token, new Date());
-    //         if (token) {
-    //           this.loggedIn = true;
-    //           $scope.$apply();
-    //         }
-    //       }.bind(this));           
-    //     }
-    //   });
-    // }
-
     this.get_current_url = function(callback) {
       chrome.tabs.query({ active: true }, function(tabs) {
         that.tabUrl = tabs[0].url;
@@ -117,7 +78,7 @@ angular.module('app', [])
     this.handleStatsLink = function(e) {
       console.log(this.tabUrl);
 
-      chrome.tabs.create({url: "http://localhost:8080"});
+      chrome.tabs.create({url: "http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com/"});
       window.close();
     }
   })
