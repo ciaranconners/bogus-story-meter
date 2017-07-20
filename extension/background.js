@@ -1,55 +1,83 @@
+const updateIcon = (rating) => {
+  const CBA = chrome.browserAction;
 
-// listener for page load?  tab switch?
+  const updateIconTo = {
+    notRated: () => {
+      CBA.setIcon({path: '../images/BSMIcon.png'});
+      CBA.setBadgeBackgroundColor({color: [0, 0, 0, 0]});
+      CBA.setBadgeText({text: ''});
+    },
+    truthy: () => {
+      CBA.setIcon({path: '../images/BSMIconGreen.png'});
+      CBA.setBadgeBackgroundColor({color: 'green'});
+      CBA.setBadgeText({text: `${rating}%`});
+    },
+    falsy: () => {
+      CBA.setIcon({path: '../images/BSMIconRed.png'});
+      CBA.setBadgeBackgroundColor({color: 'red'});
+      CBA.setBadgeText({text: `${rating}%`});
+    },
+    middle: () => {
+      CBA.setIcon({path: '../images/BSMIcon.png'});
+      CBA.setBadgeBackgroundColor({color: [0, 0, 0, 0]});
+      CBA.setBadgeText({text: `${rating}%`});
+    }
+  };
+  /*eslint-disable indent*/
+  rating === null ? updateIconTo.notRated()
+  : rating >= 55 ? updateIconTo.truthy()
+  : rating <= 45 ? updateIconTo.falsy()
+  : updateIconTo.middle();
+  /*eslint-enable indent*/
+};
 
-// get rating from database
-var rating = 10;
-
-if(rating === null) {
-  chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
-} else if(rating >= 60) {
-  chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
-  chrome.browserAction.setBadgeBackgroundColor({color: "green"});
-  chrome.browserAction.setBadgeText({text: `${rating}%`});
-} else if (rating < 60) {
-  chrome.browserAction.setIcon({path: '../images/BSMIconRed.png'});
-  chrome.browserAction.setBadgeBackgroundColor({color: "red"});
-  chrome.browserAction.setBadgeText({text: `${rating}%`});
-}
-
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  if (changeInfo.status === 'complete') {
-    // console.log(tab.url);
-    if (tab.url !== 'about:blank' && tab.url !== 'chrome://newtab/') {
-      var url = tab.url;
+let lastUrl;
+// get rating for url when address on current tab changes
+chrome.tabs.onUpdated.addListener(function(tabId, tab) {
+  // Note to Ciaran: removed "if (changeInfo.status === 'complete')" because it was making the icon update after a long delay on sites with a lot of ads. the below if statement allows it to load faster while repeating the GET request at most twice.
+  // Feel free to delete this and ^ that after you read it
+  let url = tab.url;
+  if (url !== lastUrl) {
+    if (url !== 'about:blank' && url !== 'chrome://newtab/') {
       $.ajax({
-        type: "POST",
-        url: 'http://localhost:8080/url',
+        type: 'GET',
+        url: `${window.serverUri}/urlrating`,
+        params: {},
         data: {
           currentUrl: url
         },
-        success: function(data) {
-          console.log('success');
+        error: function(err) {
+          console.log(`Failed to get rating for ${url}`);
+          console.error(err);
         },
-        dataType: 'application/json'
+        success: function(data) {
+          lastUrl = url;
+          updateIcon(JSON.parse(data));
+        }
       });
     }
   }
 });
 
+// get rating for url after switching tabs
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function(tab) {
-    if (tab.url !== 'about:blank' && tab.url !== 'chrome://newtab/') {
-      var url = tab.url;
+    let url = tab.url;
+    if (url !== 'about:blank' && url !== 'chrome://newtab/') {
       $.ajax({
-        type: "POST",
-        url: 'http://localhost:8080/url',
+        type: 'GET',
+        url: `${window.serverUri}/urlrating`,
+        params: {},
         data: {
           currentUrl: url
         },
-        success: function(data) {
-          console.log('success');
+        error: function(err) {
+          console.log(`Failed to get rating for ${url}`);
+          console.error(err);
         },
-        dataType: 'application/json'
+        success: function(data) {
+          updateIcon(JSON.parse(data));
+        }
       });
     }
   });

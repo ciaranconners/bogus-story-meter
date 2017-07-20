@@ -1,13 +1,15 @@
 angular.module('app', [])
 
-  .controller('AppCtrl', function($scope, $http) {
+  .controller('AppCtrl', function($http) {
 
     var that = this;
 
+    this.currentUser = 'default';
     this.tabUrl = '';
-    this.loggedIn = false;
+    this.loggedIn = true;
     this.rating = 90 // on init - get page rating from DB
     this.rated = true;
+    this.userRating // true or false based on previous rating
 
     // Update favicon based on rating
 
@@ -23,7 +25,7 @@ angular.module('app', [])
     //   chrome.browserAction.setBadgeText({text: `${this.rating}%`});
     // }
 
-
+  
     this.clickHandler = function(e) {
       chrome.tabs.update({url: "https://cnn.com"});
       window.close(); // Note: window.close(), not this.close()
@@ -54,35 +56,75 @@ angular.module('app', [])
       // })
     }
 
-    this.handleTrue = function() {
-      console.log('true')
-
-      // GET REQUEST TO TEST ENDPOINT
-      $http.get('http://localhost:8080/test').then(function(response) {
-        console.log('response ', response);
-      }, function(err) {console.error('Error ', err);})
+    this.handleTrue = () => {
+      var data = {
+        url: this.tabUrl,
+        username: this.currentUser,
+        type: 'upvote'
+      };
+      $http.post('http://localhost:8080/urlvote', data).then(function(response) {
+        let urlId = JSON.stringify(response.data);
+        $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
+          this.rating = response.data;
+          if (this.rating === null) {
+            chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
+          } else if(this.rating >= 60) {
+            chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
+            chrome.browserAction.setBadgeBackgroundColor({color: "green"});
+            chrome.browserAction.setBadgeText({text: `${this.rating}%`});
+          } else if (this.rating < 60) {
+            chrome.browserAction.setIcon({path: '../images/BSMIconRed.png'});
+            chrome.browserAction.setBadgeBackgroundColor({color: "red"});
+            chrome.browserAction.setBadgeText({text: `${this.rating}%`});
+          }
+        });
+      }, function(err) {console.error('Could not submit vote ', err);});
     }
 
-
-
-    this.handleFalse = function() {
-      console.log('false')
+    this.handleFalse = () => {
+      var data = {
+        url: this.tabUrl,
+        username: this.currentUser,
+        type: 'downvote'
+      };
+      $http.post('http://localhost:8080/urlvote', data).then(function(response) {
+        let urlId = JSON.stringify(response.data);
+        $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
+          this.rating = response.data;
+          if (this.rating === null) {
+            chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
+          } else if(this.rating >= 60) {
+            chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
+            chrome.browserAction.setBadgeBackgroundColor({color: "green"});
+            chrome.browserAction.setBadgeText({text: `${this.rating}%`});
+          } else if (this.rating < 60) {
+            chrome.browserAction.setIcon({path: '../images/BSMIconRed.png'});
+            chrome.browserAction.setBadgeBackgroundColor({color: "red"});
+            chrome.browserAction.setBadgeText({text: `${this.rating}%`});
+          }
+        });
+      }, function(err) {console.error('Could not submit vote ', err);});
     }
 
     this.handleSubmitComment = function(comment) {
+      $http.post('http://localhost:8080/urlcomment', comment).then(function(response) {
+        console.log(response)
+      }, function(err) {console.error('Could not submit comment ', err)})
       //post comment to DB
       // $http.post()
       this.comment = '';
     }
 
-    this.handleStatsLink = function(e) {
+    this.handleStatsLink = function() {
       console.log(this.tabUrl);
 
       chrome.tabs.create({url: "http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com/"});
       window.close();
     }
   })
-
   .component('app', {
-    templateUrl: '../templates/app.html'
+
+    templateUrl: '../templates/app.html',
+    controller: 'AppCtrl'
+
   });

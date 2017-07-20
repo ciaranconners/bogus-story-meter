@@ -2,10 +2,10 @@ var Sequelize = require('sequelize');
 var connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
 
 
-var db = new Sequelize('bsm', 'root', '', {
-  dialect: 'mysql'
-});
-// var db = new Sequelize(connectionUrl, {dialect: 'mysql'});
+// var db = new Sequelize('bsm', 'root', '', {
+//   dialect: 'mysql'
+// });
+var db = new Sequelize(connectionUrl, {dialect: 'mysql'});
 
 
 var User = db.define('User', {
@@ -13,15 +13,15 @@ var User = db.define('User', {
     type: Sequelize.STRING,
     unique: true
   },
-  upvote_count: {
+  upvoteCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
-  downvote_count: {
+  downvoteCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
-  neutral_count: {
+  neutralCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
   }
@@ -57,15 +57,15 @@ var Url = db.define('Url', {
     unique: true
   },
   categoryId: Sequelize.INTEGER,
-  upvote_count: {
+  upvoteCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
-  downvote_count: {
+  downvoteCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
-  neutral_count: {
+  neutralCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
   }
