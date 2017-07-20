@@ -47,12 +47,14 @@ angular.module('app', [])
         url: this.tabUrl,
         username: this.currentUser,
         type: 'upvote'
-      };
-      $http.post('http://localhost:8080/urlvote', data).then(function(response) {
-        let urlId = JSON.stringify(response.data);
-        $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
-          this.rating = response.data;
-          if (this.rating === null) {
+      }
+      $http.post('http://localhost:8000/urlvote', data).then(function(response) {
+        console.log(response)
+
+        $http.get('http://localhost:8000/urlvote', data).then(function(response) {
+          this.rating = response.rating;
+
+          if(this.rating === null) {
             chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
           } else if(this.rating >= 60) {
             chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
@@ -63,8 +65,8 @@ angular.module('app', [])
             chrome.browserAction.setBadgeBackgroundColor({color: "red"});
             chrome.browserAction.setBadgeText({text: `${this.rating}%`});
           }
-        });
-      }, function(err) {console.error('Could not submit vote ', err);});
+        })
+      }, function(err) {console.error('Could not submit vote ', err);})
     }
 
     this.handleFalse = () => {
@@ -72,12 +74,14 @@ angular.module('app', [])
         url: this.tabUrl,
         username: this.currentUser,
         type: 'downvote'
-      };
-      $http.post('http://localhost:8080/urlvote', data).then(function(response) {
-        let urlId = JSON.stringify(response.data);
-        $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
-          this.rating = response.data;
-          if (this.rating === null) {
+      }
+      $http.post('http://localhost:8000/urlvote', data).then(function(response) {
+        console.log(response)
+
+        $http.get('http://localhost:8000/urlvote', data).then(function(response) {
+          this.rating = response.rating;
+
+          if(this.rating === null) {
             chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
           } else if(this.rating >= 60) {
             chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
@@ -88,12 +92,12 @@ angular.module('app', [])
             chrome.browserAction.setBadgeBackgroundColor({color: "red"});
             chrome.browserAction.setBadgeText({text: `${this.rating}%`});
           }
-        });
-      }, function(err) {console.error('Could not submit vote ', err);});
+        })
+      }, function(err) {console.error('Could not submit vote ', err);})
     }
 
     this.handleSubmitComment = function(comment) {
-      $http.post('http://localhost:8080/urlcomment', comment).then(function(response) {
+      $http.post('http://localhost:8000/urlcomment', comment).then(function(response) {
         console.log(response)
       }, function(err) {console.error('Could not submit comment ', err)})
       //post comment to DB
