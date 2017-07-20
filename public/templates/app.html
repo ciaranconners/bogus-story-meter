@@ -3,7 +3,7 @@
 <div class="container top-offset">
 	<div class="sign-in">
 		<div ng-show="!$ctrl.signedIn" class="g-signin2" data-onsuccess="onSignIn"></div>
-		<a ng-show="$ctrl.signedIn" href="#" ng-click="$ctrl.signOut()">Sign ut</a>
+		<a ng-show="$ctrl.signedIn" href="#" ng-click="$ctrl.signOut()">Sign out</a>
 	</div>
 	<div class="row profile-info">
 		<div class="col-sm-4">
@@ -13,8 +13,8 @@
 			</div>
 		</div>
 		<div class="col-sm-8">
-			<search-form></search-form>			
+			<search-form></search-form>
 			<recent-activity></recent-activity>
 		</div>
-	</div>	
+	</div>
 </div>
