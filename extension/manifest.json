@@ -8,12 +8,12 @@
     "persistent": false,
     "scripts": ["background.js"]
   },
-  "permissions": ["identity", "tabs", "background", "activeTab", "http://localhost:8080/test"],
+  "permissions": ["identity", "tabs", "background", "activeTab", "http://localhost:8080/test", "http://localhost:8080/"],
   "browser_action": {
     "default_title": "Bogus Story Meter",
     "default_popup": "index.html"
   },
-  "content_security_policy": "script-src 'self' https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css http://localhost:8080/test; object-src 'self' ",
+  "content_security_policy": "script-src 'self' https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css http://localhost:8080/test http://localhost:8080/; object-src 'self' ",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnR4kWGc22V1CwudxIMRTJA7OQ9jVDT8xrn3bypnTrehjdVgwtokuZDlr6vfGSF1MPNW6TviPwqXKrQRrrKX6QZtYX+fbxmwXPV7MvGrlMUZ9R+2D86tjh+NGe19dIaV0SYG8Usyiot3BPPISca6949Z1CBkdKYimOST0glsvWjTp6z+KTB55dctnpgPpP01UeoIEzcIBkYqBHGjG5FLUhBSiH0+VaBEEygK+fUSbE8JbdQRr4GE42KOzKlFnwSJfpsimzw6abJvFNWIvcdkplEYQzJ75eRgMsxodR+PODOEJr3FLAFcrUFK4HFjrGUUo9Sf9aOz43wofWtKDPjQXBwIDAQAB",
   "oauth2": {
     "client_id": "432670489929-0g6anrb5qg3b0o83m0ef5cdolsbotkps.apps.googleusercontent.com",
