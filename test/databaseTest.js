@@ -1,7 +1,6 @@
 const expect = require('chai').expect;
 const db = require('../server/db/index.js');
 
-/*eslint-disable indent*/
 
 describe('Database tests', () => {
 
