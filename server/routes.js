@@ -7,11 +7,11 @@ var cors = require('cors');
 
 // app.use(cors());
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
+// });
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
@@ -22,5 +22,9 @@ app.get('/', handler.serveIndexGetRequest);
 
 app.get('/test', handler.test);
 
+app.post('/url', (req, res) => {
+  console.log(req.body);
+  res.status(200).send('server response');
+});
 
 module.exports = app;

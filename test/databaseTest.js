@@ -141,7 +141,7 @@ describe('Database tests', () => {
     .catch((err) => {
       console.error('error inserting CommentVote: ', err);
       done(err);
-    })
+    });
   });
 
   it('should not insert another CommentVote if the user already voted on a comment', (done) => {
