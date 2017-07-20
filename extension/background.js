@@ -32,7 +32,7 @@ const updateIcon = (rating) => {
 };
 
 let lastUrl;
-// get rating for url when address on current tab changes
+// get rating for url when address on current tab changes/on tab creation
 chrome.tabs.onUpdated.addListener(function(tabId, tab) {
   // Note to Ciaran: removed "if (changeInfo.status === 'complete')" because it was making the icon update after a long delay on sites with a lot of ads. the below if statement allows it to load faster while repeating the GET request at most twice.
   // Feel free to delete this and ^ that after you read it
