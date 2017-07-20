@@ -22,13 +22,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 // app.get('/', handler.serveIndexGetRequest);
 
 app.get('/urlvote/:urlId', handler.getUrlVotes);
+
 app.post('/urlvote', handler.postUrlVotes);
 
-app.get('/test', handler.test);
-
-app.post('/url', (req, res) => {
-  console.log(req.body);
-  res.status(200).send('server response');
-});
+app.get('/urlrating', handler.getUrlRating);
 
 module.exports = app;

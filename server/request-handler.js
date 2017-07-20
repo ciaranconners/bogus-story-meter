@@ -1,14 +1,29 @@
 const db = require('./db/index.js');
 
+
 const handler = {};
 
-handler.serveIndexGetRequest = function(req, res) {
-  res.status(200).send('hello world');
-};
-
-handler.test = function(req, res) {
-  console.log('Hitting test endpoint');
-  res.status(200).send('hey world');
+/* gets rating for url
+- responds with NaN if the site is in the db but never voted on,
+- errors if url is not in db,
+- otherwise responds with the url's rating from 0 - 100
+*/
+handler.getUrlRating = (req, res) => {
+  let url = req.query.currentUrl;
+  db.Url.findOne({where: {url: url}})
+    .then(url => {
+      if (url) {
+        let upvotes = url.upvoteCount;
+        let downvotes = url.downvoteCount;
+        let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
+        res.json(rating);
+      } else { res.json(null); }
+    })
+    .catch((err) => {
+      console.log(`error retrieving rating for ${url}`);
+      console.error(err);
+      res.sendStatus(500);
+    });
 };
 
 handler.getUrlVotes = (req, res) => {
@@ -33,9 +48,9 @@ handler.postUrlVotes = (req, res) => {
       db.Url.increment(typeCount, {where: {id: url.id}});
       res.status(201).json(url.id);
     })
-    .then(() => db.User.findCreateFind({where: {username: username}}, {raw: true}))
+    .then(() => db.User.findCreateFind({where: {username: username}}))
     .spread(user => {
-      return db.User.increment(typeCount, {where: {id: user.id}});
+      db.User.increment(typeCount, {where: {id: user.id}});
     });
 };
 
