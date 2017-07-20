@@ -6,12 +6,12 @@
   "icons": { "128": "images/BSMIcon.png" },
   "background": {
     "persistent": false,
-    "scripts": ["./bower_components/jquery/dist/jquery.min.js", "background.js"]
+    "scripts": ["./bower_components/jquery/dist/jquery.min.js", "background.js", "serverUri.js"]
   },
-  "permissions": ["tabs", "background", "activeTab", "http://localhost:8080/test"],
+  "permissions": ["tabs", "background", "activeTab"],
   "browser_action": {
     "default_title": "Bogus Story Meter",
     "default_popup": "index.html"
   },
-  "content_security_policy": "script-src 'self' https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css http://localhost:8080/test; object-src 'self' "
+  "content_security_policy": "script-src 'self' https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css http://localhost:8080/urlvote http://localhost:8080/urlvote/*; object-src 'self' "
 }
