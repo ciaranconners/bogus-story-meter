@@ -11,8 +11,16 @@ handler.test = function(req, res) {
   res.status(200).send('hey world');
 };
 
-handler.getUrlVotes = () => {
+handler.getUrlVotes = (req, res) => {
+  let urlId = req.params.urlId;
 
+  db.Url.findOne({where: {id: urlId}})
+    .then(url => {
+      let upvotes = url.upvoteCount;
+      let downvotes = url.downvoteCount;
+      let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
+      res.json(rating);
+    });
 };
 
 handler.postUrlVotes = (req, res) => {
@@ -20,19 +28,14 @@ handler.postUrlVotes = (req, res) => {
   let type = req.body.type;
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
-  let resObj = {};
   db.Url.findCreateFind({where: {url: url}})
-    .then(url => {
-      return url.increment(typeCount)
-        .then(() => resObj.url = url);
+    .spread(url => {
+      db.Url.increment(typeCount, {where: {id: url.id}});
+      res.status(201).json(url.id);
     })
-    .then(() => db.User.findCreateFind({where: {username: username}}))
-    .then(user => {
-      return user.increment(typeCount)
-        .then(() => resObj.user = user);
-    })
-    .then(() => {
-      res.status(201).send('Vote recorded');
+    .then(() => db.User.findCreateFind({where: {username: username}}, {raw: true}))
+    .spread(user => {
+      return db.User.increment(typeCount, {where: {id: user.id}});
     });
 };
 
