@@ -7,6 +7,8 @@
 const updateIcon = (rating) => {
   if (rating === null) {
     chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
+    chrome.browserAction.setBadgeBackgroundColor({color: 'transparent'});
+    chrome.browserAction.setBadgeText({text: ''});
   } else if (rating >= 60) {
     chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
     chrome.browserAction.setBadgeBackgroundColor({color: 'green'});
@@ -20,22 +22,24 @@ const updateIcon = (rating) => {
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.status === 'complete') {
-    // console.log(tab.url);
     if (tab.url !== 'about:blank' && tab.url !== 'chrome://newtab/') {
       var url = tab.url;
       console.log('updatedUrl', url);
       $.ajax({
         type: 'POST',
         url: 'http://localhost:8080/urlrating',
-        dataType: 'application/json',
         data: {
           currentUrl: url
         },
-        success: function(res) {
-          console.log('success');
-          console.log('DATA', res.data);
-          updateIcon(res.data);
+        error: function(err) {
+          console.log('FAIL');
+          console.error(err);
         },
+        success: function(data) {
+          console.log('success');
+          console.log('DATA', data);
+          updateIcon(JSON.parse(data));
+        }
       });
     }
   }
@@ -50,7 +54,6 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
       $.ajax({
         type: 'GET',
         url: 'http://localhost:8080/urlrating',
-        // dataType: 'application/json',
         params: {},
         data: {
           currentUrl: url
@@ -62,7 +65,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
         success: function(data) {
           console.log('success');
           console.log('DATA', data);
-          updateIcon(data);
+          updateIcon(JSON.parse(data));
         }
       });
     }
