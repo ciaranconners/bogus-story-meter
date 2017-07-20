@@ -2,7 +2,7 @@ const updateIcon = (rating) => {
   const CBA = chrome.browserAction;
 
   const updateIconTo = {
-    notRatedOrMiddle: () => {
+    notRated: () => {
       CBA.setIcon({path: '../images/BSMIcon.png'});
       CBA.setBadgeBackgroundColor({color: [0, 0, 0, 0]});
       CBA.setBadgeText({text: ''});
@@ -16,13 +16,18 @@ const updateIcon = (rating) => {
       CBA.setIcon({path: '../images/BSMIconRed.png'});
       CBA.setBadgeBackgroundColor({color: 'red'});
       CBA.setBadgeText({text: `${rating}%`});
+    },
+    middle: () => {
+      CBA.setIcon({path: '../images/BSMIcon.png'});
+      CBA.setBadgeBackgroundColor({color: [0, 0, 0, 0]});
+      CBA.setBadgeText({text: `${rating}%`});
     }
   };
   /*eslint-disable indent*/
-  rating === null ? updateIconTo.notRatedOrMiddle()
-  : rating >= 60 ? updateIconTo.truthy()
-  : rating <= 60 ? updateIconTo.falsy()
-  : updateIconTo.notRatedOrMiddle();
+  rating === null ? updateIconTo.notRated()
+  : rating >= 55 ? updateIconTo.truthy()
+  : rating <= 45 ? updateIconTo.falsy()
+  : updateIconTo.middle();
   /*eslint-enable indent*/
 };
 
