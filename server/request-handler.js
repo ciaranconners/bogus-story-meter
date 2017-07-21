@@ -16,8 +16,8 @@ handler.getUrlRating = (req, res) => {
         let upvotes = url.upvoteCount;
         let downvotes = url.downvoteCount;
         let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
-        res.json(rating);
-      } else { res.json(null); }
+        res.json( {'rating': rating, 'urlId': url.id} );
+      } else { res.json( {'rating': null, 'urlId': null} ); }
     })
     .catch((err) => {
       console.log(`error retrieving rating for ${url}`);
@@ -38,22 +38,49 @@ handler.getUrlVotes = (req, res) => {
     });
 };
 
+// handler.postUrlVotes = (req, res) => {
+//   let url = req.body.url;
+//   let type = req.body.type;
+//   let username = req.body.username;
+//   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
+//   db.Url.findCreateFind({where: {url: url}})
+//     .spread(url => {
+//       db.Url.increment(typeCount, {where: {id: url.id}});
+//       res.status(201).json(url.id);
+//     })
+//     .then(() => db.User.findCreateFind({where: {username: username}}))
+//     .spread(user => {
+//       db.User.increment(typeCount, {where: {id: user.id}});
+//     });
+// };
+
 handler.postUrlVotes = (req, res) => {
   let url = req.body.url;
   let type = req.body.type;
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
-  
-  db.Url.findCreateFind({where: {url: url}})
-  .spread(url => {
-    db.Url.increment(typeCount, {where: {id: url.id}});
-    res.status(201).json(url.id);
 
-    db.User.findCreateFind({where: {username: username}})
-    .spread(function(user) {
-      db.UrlVote.create({type: type, userId: user.id, urlId: url.id})
+  if(typeof url === 'number') {
+    db.Url.findOne({where: {id: url}})
+    .then(url => {
+      db.Url.increment(typeCount, {where: {id: url.id}});
+      res.status(201).json(url.id);
+    })
+    .then(() => db.User.findCreateFind({where: {username: username}}))
+    .spread(user => {
+      db.User.increment(typeCount, {where: {id: user.id}});
     });
-  })
+  } else {
+    db.Url.create({'url': url})
+    .then(url => {
+      db.Url.increment(typeCount, {where: {id: url.id}});
+      res.status(201).json(url.id);
+    })
+    .then(() => db.User.findCreateFind({where: {username: username}}))
+    .spread(user => {
+      db.User.increment(typeCount, {where: {id: user.id}});
+    });
+  }
 
 };
 
