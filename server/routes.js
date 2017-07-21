@@ -16,4 +16,6 @@ app.post('/urlvote', handler.postUrlVotes);
 
 app.get('/urlrating', handler.getUrlRating);
 
+app.get('/stats', handler.generateRetrieveStatsPageUrl);
+
 module.exports = app;

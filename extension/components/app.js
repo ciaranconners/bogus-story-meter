@@ -9,21 +9,7 @@ angular.module('app', [])
     this.loggedIn = true;
     this.rating = 90 // on init - get page rating from DB
     this.rated = true;
-    this.userRating // true or false based on previous rating
-
-    // Update favicon based on rating
-
-    // if(this.rating === null) {
-    //   chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
-    // } else if(this.rating >= 60) {
-    //   chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
-    //   chrome.browserAction.setBadgeBackgroundColor({color: "green"});
-    //   chrome.browserAction.setBadgeText({text: `${this.rating}%`});
-    // } else if (this.rating < 60) {
-    //   chrome.browserAction.setIcon({path: '../images/BSMIconRed.png'});
-    //   chrome.browserAction.setBadgeBackgroundColor({color: "red"});
-    //   chrome.browserAction.setBadgeText({text: `${this.rating}%`});
-    // }
+    this.userRating; // true or false based on previous rating
 
     chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
     // Use the token.
@@ -110,12 +96,17 @@ angular.module('app', [])
     };
 
     this.handleStatsLink = function() {
-      chrome.tabs.create({url: "http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com/"});
-      window.close();
+      currentUrl = this.tabUrl;
+      $http.get('http://localhost:8080/stats', {
+        params: {currentUrl}
+      }).then(function(response) {
+          chrome.tabs.create({url: response.data});
+          window.close();
+      }, function(err) {
+        console.error(err);
+      });
     };
   })
   .component('app', {
-
     templateUrl: '../templates/app.html'
-
   });

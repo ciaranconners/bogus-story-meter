@@ -54,4 +54,43 @@ handler.postUrlVotes = (req, res) => {
     });
 };
 
+// the following function will generate a new stat page url or retrieve one if it exists in the DB
+
+handler.generateRetrieveStatsPageUrl = function(req, res) {
+  console.log('stat page url request received');
+  var currentUrl = req.query.currentUrl;
+  db.Url.findCreateFind({
+      where: {
+        url: currentUrl
+      }
+    })
+    .spread(url => {
+      if (url) {
+        if (url.statsPageUrl) {
+          res.json(url.statsPageUrl);
+        } else {
+          var stpUrl = 'http://localhost:8080' + '/stats/' + url.id.toString();
+          console.log('new stat page URL', stpUrl);
+          db.Url.update({
+              statsPageUrl: stpUrl
+            }, {
+              where: {
+                id: url.id
+              }
+            })
+            .then(function() {
+              res.status(200).json(stpUrl);
+            })
+            .catch(function(err) {
+              console.error(err);
+            });
+        }
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 module.exports = handler;
