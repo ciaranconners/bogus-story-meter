@@ -82,7 +82,6 @@ handler.postUrlVotes = (req, res) => {
     });
   }
 
-
 };
 
 module.exports = handler;
