@@ -37,6 +37,6 @@ angular.module('app', [])
 })
 
 .component('app', {
-  templateUrl: '../templates/app.html',
+  templateUrl: 'public/templates/app.html',
   controller: 'AppCtrl'
 });
