@@ -50,39 +50,14 @@ angular.module('app', [])
       // })
     };
 
-    this.handleTrue = () => {
+    this.handleRating = (test) => {
       var data = {
         url: this.tabUrl,
         username: this.currentUser,
-        type: 'upvote'
+        type: test
       };
-      $http.post('http://localhost:8080/urlvote', data).then(function(response) {
-        let urlId = JSON.stringify(response.data);
-        $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
-          this.rating = response.data;
-          if (this.rating === null) {
-            chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
-          } else if(this.rating >= 60) {
-            chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
-            chrome.browserAction.setBadgeBackgroundColor({color: "green"});
-            chrome.browserAction.setBadgeText({text: `${this.rating}%`});
-          } else if (this.rating < 60) {
-            chrome.browserAction.setIcon({path: '../images/BSMIconRed.png'});
-            chrome.browserAction.setBadgeBackgroundColor({color: "red"});
-            chrome.browserAction.setBadgeText({text: `${this.rating}%`});
-          }
-        });
-      }, function(err) {console.error('Could not submit vote ', err);});
-    };
-
-    this.handleFalse = () => {
-      var data = {
-        url: this.tabUrl,
-        username: this.currentUser,
-        type: 'downvote'
-      };
-      $http.post('http://localhost:8080/urlvote', data).then(function(response) {
-        let urlId = JSON.stringify(response.data);
+      $http.post('http://localhost:8080/urlvote', data).then(function(res) {
+        let urlId = JSON.stringify(res.data);
         $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
           this.rating = response.data;
           if (this.rating === null) {

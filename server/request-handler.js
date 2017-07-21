@@ -43,15 +43,18 @@ handler.postUrlVotes = (req, res) => {
   let type = req.body.type;
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
+  
   db.Url.findCreateFind({where: {url: url}})
-    .spread(url => {
-      db.Url.increment(typeCount, {where: {id: url.id}});
-      res.status(201).json(url.id);
-    })
-    .then(() => db.User.findCreateFind({where: {username: username}}))
-    .spread(user => {
-      db.User.increment(typeCount, {where: {id: user.id}});
+  .spread(url => {
+    db.Url.increment(typeCount, {where: {id: url.id}});
+    res.status(201).json(url.id);
+
+    db.User.findCreateFind({where: {username: username}})
+    .spread(function(user) {
+      db.UrlVote.create({type: type, userId: user.id, urlId: url.id})
     });
+  })
+
 };
 
 module.exports = handler;
