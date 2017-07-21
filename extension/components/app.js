@@ -37,10 +37,10 @@ angular.module('app', [])
     this.get_current_url = function(callback) {
       chrome.tabs.query({ active: true }, function(tabs) {
         that.tabUrl = tabs[0].url;
-        callback(that.tabUrl)
+        callback(that.tabUrl);
         // return tabUrl;
       });
-    }
+    };
 
     this.getdata = function(url) {
       // console.log('url', url)
@@ -48,7 +48,7 @@ angular.module('app', [])
       //   // get back data
       //   // set this.rating = data.rating
       // })
-    }
+    };
 
     this.handleTrue = () => {
       var data = {
@@ -73,7 +73,7 @@ angular.module('app', [])
           }
         });
       }, function(err) {console.error('Could not submit vote ', err);});
-    }
+    };
 
     this.handleFalse = () => {
       var data = {
@@ -98,23 +98,21 @@ angular.module('app', [])
           }
         });
       }, function(err) {console.error('Could not submit vote ', err);});
-    }
+    };
 
     this.handleSubmitComment = function(comment) {
       $http.post('http://localhost:8080/urlcomment', comment).then(function(response) {
-        console.log(response)
-      }, function(err) {console.error('Could not submit comment ', err)})
+        console.log(response);
+      }, function(err) {console.error('Could not submit comment ', err);});
       //post comment to DB
       // $http.post()
       this.comment = '';
-    }
+    };
 
     this.handleStatsLink = function() {
-      console.log(this.tabUrl);
-
       chrome.tabs.create({url: "http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com/"});
       window.close();
-    }
+    };
   })
   .component('app', {
 
