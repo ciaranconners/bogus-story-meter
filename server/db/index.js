@@ -110,11 +110,8 @@ var CommentVote = db.define('CommentVote', {
 //todo: make sure unique composite works
 var UrlVote = db.define('UrlVote', {
   type: Sequelize.STRING,
-  // userId: {type: Sequelize.INTEGER, unique: 'userUrlId'},
-  // urlId: {type: Sequelize.INTEGER, unique: 'userUrlId'}
-  //test
-  userId: {type: Sequelize.INTEGER, unique: 'compositeIndex'},
-  urlId: {type: Sequelize.INTEGER, unique: 'compositeIndex'}  
+  userId: {type: Sequelize.INTEGER, unique: 'userUrlId'},
+  urlId: {type: Sequelize.INTEGER, unique: 'userUrlId'}
 }, {
   classMethods: {
     associate: (models) => {

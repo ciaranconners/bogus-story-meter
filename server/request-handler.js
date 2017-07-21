@@ -47,27 +47,36 @@ handler.postUrlVotes = (req, res) => {
   if(typeof url === 'number') {
     db.Url.findOne({where: {id: url}})
     .then(url => {
-      db.Url.increment(typeCount, {where: {id: url.id}});
-      res.status(201).json(url.id);
-
-      db.User.findCreateFind({where: {username: username}})
-      .spread(function(user) {
-        db.UrlVote.create({type: type, userId: user.id, urlId: url.id})
+      return db.Url.increment(typeCount, {where: {id: url.id}})
+      .then(() => {
+        db.User.findCreateFind({where: {username: username}})
+        .spread((user) => {
+          db.User.increment(typeCount, {where: {id: user.id}});
+          db.UrlVote.create({type: type, userId: user.id, urlId: url.id});
+          res.status(201).json(url.id);
+        });
+      })
+      .catch(err => {
+        res.sendStatus(400);
       });
-    })
+    });
   } else {
     db.Url.create({'url': url})
     .then(url => {
-      db.Url.increment(typeCount, {where: {id: url.id}});
-      res.status(201).json(url.id);
-
-      db.User.findCreateFind({where: {username: username}})
-      .spread(function(user) {
-        db.UrlVote.create({type: type, userId: user.id, urlId: url.id})
+      return db.Url.increment(typeCount, {where: {id: url.id}})
+      .then(() => {
+        db.User.findCreateFind({where: {username: username}})
+        .spread((user) => {
+          db.User.increment(typeCount, {where: {id: user.id}});
+          db.UrlVote.create({type: type, userId: user.id, urlId: url.id});
+          res.status(201).json(url.id);
+        });
       });
     })
+    .catch(err => {
+      res.sendStatus(400);
+    });
   }
-
 };
 
 module.exports = handler;
