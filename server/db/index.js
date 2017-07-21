@@ -73,7 +73,7 @@ var Url = db.define('Url', {
   }
 }, {
   classMethods: {
-    associate: (model) => {
+    associate: (models) => {
       Url.belongsTo(models.Category);
       Url.hasMany(models.Comment);
     }

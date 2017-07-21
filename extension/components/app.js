@@ -7,7 +7,7 @@ angular.module('app', [])
     this.currentUser = 'default';
     this.tabUrl = '';
     this.loggedIn = true;
-    this.rating = 90 // on init - get page rating from DB
+    this.rating = 90; // on init - get page rating from DB
     this.rated = true;
     this.userRating; // true or false based on previous rating
 
@@ -97,9 +97,10 @@ angular.module('app', [])
 
     this.handleStatsLink = function() {
       currentUrl = this.tabUrl;
-      $http.get('http://localhost:8080/stats', {
+      $http.get('http://localhost:8080/stats/generate-retrieve', {
         params: {currentUrl}
       }).then(function(response) {
+          console.log(response.data);
           chrome.tabs.create({url: response.data});
           window.close();
       }, function(err) {

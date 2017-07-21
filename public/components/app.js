@@ -1,4 +1,4 @@
-angular.module('app')
+angular.module('app', [])
 
 .controller('AppCtrl', function($scope, requests) {
 	this.profileInfo = {};

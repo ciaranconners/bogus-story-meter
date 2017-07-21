@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="app">
+<html>
   <head>
     <meta charset="UTF-8">
     <meta name="google-signin-client_id" content="266363285075-j69o8kv6pq8agofle7sfvqap59ceqsfu.apps.googleusercontent.com">
@@ -10,25 +10,28 @@
     <!--<script src="https://apis.google.com/js/platform.js" async defer></script>-->
     <!-- Google Client ID (for google authentication) -->
 
+        <!-- angular, originally using v 1.6.4 for the routes-->
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-route.js"></script>
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-
-    <!-- angular-->
-   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
 
     <!-- bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
   </head>
 
-  <body>
+  <body ng-app="app">
     <app></app>
-    <script src="./index.js"></script>
-    <script src="components/app.js"></script>
-    <script src="services/requests.js"></script>
-    <script src="components/navbar.js"></script>
-    <script src="components/searchForm.js"></script>
-    <script src="components/recentActivity.js"></script>
+    <script src="/index.js"></script>
+    <script src="/components/app.js"></script>
+    <script src="/services/requests.js"></script>
+    <script src="/components/navbar.js"></script>
+    <script src="/components/searchForm.js"></script>
+    <script src="/components/recentActivity.js"></script>
+    <script src="/components/stats.js"></script>
+    <div ng-view></div>
   </body>
 </html>
