@@ -1,15 +1,15 @@
 angular.module('app', [])
 
-  .controller('AppCtrl', function($http) {
+  .controller('AppCtrl', function($scope, $http) {
 
     var that = this;
 
     this.currentUser = 'default';
     this.tabUrl = '';
     this.loggedIn = true;
-    this.rating = 90 // on init - get page rating from DB
+    this.rating = 90; // on init - get page rating from DB
     this.rated = true;
-    this.userRating // true or false based on previous rating
+    this.userRating; // true or false based on previous rating
 
     // Update favicon based on rating
 

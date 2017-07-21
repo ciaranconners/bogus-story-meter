@@ -107,6 +107,7 @@ var CommentVote = db.define('CommentVote', {
   }
 });
 
+//todo: make sure unique composite works
 var UrlVote = db.define('UrlVote', {
   type: Sequelize.STRING,
   userId: {type: Sequelize.INTEGER, unique: 'userUrlId'},

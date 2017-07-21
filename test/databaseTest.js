@@ -145,6 +145,7 @@ describe('Database tests', () => {
     });
   });
 
+  //create test
   it('should not insert another CommentVote if the user already voted on a comment', (done) => {
     expect(() => {
       return db.CommentVote.create({commentId: 1, userId: 1, type: 'upvote'});
