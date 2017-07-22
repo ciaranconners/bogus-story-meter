@@ -10,12 +10,12 @@ angular.module('app', ['ngRoute'])
         templateUrl: './templates/app.html',
         controller: 'AppCtrl'
       }).
-      when('/stats/redirect/*', {
+      when('/stats/redirect/:id', {
         templateUrl: './templates/statsPage.html',
         controller: 'StatCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
+      // .otherwise({
+      //   redirectTo: '/'
+      // });
   }
 ]);

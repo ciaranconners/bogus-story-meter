@@ -39,7 +39,6 @@ handler.getUrlVotes = (req, res) => {
 };
 
 handler.postUrlVotes = (req, res) => {
-  console.log(req);
   let url = req.body.url;
   let type = req.body.type;
   let username = req.body.username;
@@ -68,10 +67,10 @@ handler.generateRetrieveStatsPageUrl = function(req, res) {
     .spread(url => {
       if (url) {
         if (url.statsPageUrl) {
+          console.log('sending stat page URL from the DB');
           res.json(url.statsPageUrl);
         } else {
           var stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
-          console.log('new stat page URL', stpUrl);
           db.Url.update({
               statsPageUrl: stpUrl
             }, {
@@ -80,6 +79,7 @@ handler.generateRetrieveStatsPageUrl = function(req, res) {
               }
             })
             .then(function() {
+              console.log('new stat page URL created and stored, transmitting: ', stpUrl);
               res.status(200).json(stpUrl);
             })
             .catch(function(err) {
