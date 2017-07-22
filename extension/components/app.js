@@ -73,9 +73,9 @@ angular.module('app', [])
         username: this.currentUser,
         type: vote
       };
-      $http.post('http://localhost:8080/urlvote', data).then(function(res) {
+      $http.post(`${window.serverUri}/urlvote`, data).then(function(res) {
         let urlId = JSON.stringify(res.data);
-        $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
+        $http.get(`${window.serverUri}/urlvote/${urlId}`).then(function(response) {
           that.rating = response.data;
           that.updateIcon(that.rating);
           chrome.runtime.sendMessage({rating: that.rating});
@@ -84,7 +84,7 @@ angular.module('app', [])
     }
 
     this.handleSubmitComment = function(comment) {
-      $http.post('http://localhost:8080/urlcomment', comment).then(function(response) {
+      $http.post(`${window.serverUri}/urlcomment`, comment).then(function(response) {
         console.log(response);
       }, function(err) {console.error('Could not submit comment ', err);});
       //post comment to DB
