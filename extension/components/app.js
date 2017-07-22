@@ -11,8 +11,10 @@ angular.module('app', [])
     this.rated = true;
     this.userRating; // true or false based on previous rating
 
-    chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-    // Use the token.
+    chrome.identity.getAuthToken({
+      'interactive': true
+    }, function(token) {
+      // Use the token.
       console.log('token: ', token, new Date());
       if (token) {
         this.loggedIn = true;
@@ -21,7 +23,9 @@ angular.module('app', [])
     }.bind(this));
 
     this.get_current_url = function(callback) {
-      chrome.tabs.query({ active: true }, function(tabs) {
+      chrome.tabs.query({
+        active: true
+      }, function(tabs) {
         that.tabUrl = tabs[0].url;
         callback(that.tabUrl);
         // return tabUrl;
@@ -47,18 +51,34 @@ angular.module('app', [])
         $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
           this.rating = response.data;
           if (this.rating === null) {
-            chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
-          } else if(this.rating >= 60) {
-            chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
-            chrome.browserAction.setBadgeBackgroundColor({color: "green"});
-            chrome.browserAction.setBadgeText({text: `${this.rating}%`});
+            chrome.browserAction.setIcon({
+              path: '../images/BSMIcon.png'
+            });
+          } else if (this.rating >= 60) {
+            chrome.browserAction.setIcon({
+              path: '../images/BSMIconGreen.png'
+            });
+            chrome.browserAction.setBadgeBackgroundColor({
+              color: "green"
+            });
+            chrome.browserAction.setBadgeText({
+              text: `${this.rating}%`
+            });
           } else if (this.rating < 60) {
-            chrome.browserAction.setIcon({path: '../images/BSMIconRed.png'});
-            chrome.browserAction.setBadgeBackgroundColor({color: "red"});
-            chrome.browserAction.setBadgeText({text: `${this.rating}%`});
+            chrome.browserAction.setIcon({
+              path: '../images/BSMIconRed.png'
+            });
+            chrome.browserAction.setBadgeBackgroundColor({
+              color: "red"
+            });
+            chrome.browserAction.setBadgeText({
+              text: `${this.rating}%`
+            });
           }
         });
-      }, function(err) {console.error('Could not submit vote ', err);});
+      }, function(err) {
+        console.error('Could not submit vote ', err);
+      });
     };
 
     this.handleFalse = () => {
@@ -72,38 +92,59 @@ angular.module('app', [])
         $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
           this.rating = response.data;
           if (this.rating === null) {
-            chrome.browserAction.setIcon({path: '../images/BSMIcon.png'});
-          } else if(this.rating >= 60) {
-            chrome.browserAction.setIcon({path: '../images/BSMIconGreen.png'});
-            chrome.browserAction.setBadgeBackgroundColor({color: "green"});
-            chrome.browserAction.setBadgeText({text: `${this.rating}%`});
+            chrome.browserAction.setIcon({
+              path: '../images/BSMIcon.png'
+            });
+          } else if (this.rating >= 60) {
+            chrome.browserAction.setIcon({
+              path: '../images/BSMIconGreen.png'
+            });
+            chrome.browserAction.setBadgeBackgroundColor({
+              color: "green"
+            });
+            chrome.browserAction.setBadgeText({
+              text: `${this.rating}%`
+            });
           } else if (this.rating < 60) {
-            chrome.browserAction.setIcon({path: '../images/BSMIconRed.png'});
-            chrome.browserAction.setBadgeBackgroundColor({color: "red"});
-            chrome.browserAction.setBadgeText({text: `${this.rating}%`});
+            chrome.browserAction.setIcon({
+              path: '../images/BSMIconRed.png'
+            });
+            chrome.browserAction.setBadgeBackgroundColor({
+              color: "red"
+            });
+            chrome.browserAction.setBadgeText({
+              text: `${this.rating}%`
+            });
           }
         });
-      }, function(err) {console.error('Could not submit vote ', err);});
+      }, function(err) {
+        console.error('Could not submit vote ', err);
+      });
     };
 
     this.handleSubmitComment = function(comment) {
       $http.post('http://localhost:8080/urlcomment', comment).then(function(response) {
         console.log(response);
-      }, function(err) {console.error('Could not submit comment ', err);});
+      }, function(err) {
+        console.error('Could not submit comment ', err);
+      });
       //post comment to DB
       // $http.post()
       this.comment = '';
     };
 
-    this.handleStatsLink = function() {
-      currentUrl = this.tabUrl;
+    this.handleStatsLink = () => {
+      let currentUrl = this.tabUrl;
       $http.get('http://localhost:8080/stats/generate-retrieve', {
-        params: {currentUrl}
-      }).then(function(response) {
-          console.log('RD: ', response.data);
-          chrome.tabs.create({url: response.data});
-          window.close();
-      }, function(err) {
+        params: {
+          currentUrl
+        }
+      }).then(response => {
+        chrome.tabs.create({
+          url: response.data
+        });
+        window.close();
+      }, (err) => {
         console.error(err);
       });
     };

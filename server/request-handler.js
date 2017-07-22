@@ -10,14 +10,20 @@ const handler = {};
 */
 handler.getUrlRating = (req, res) => {
   let url = req.query.currentUrl;
-  db.Url.findOne({where: {url: url}})
+  db.Url.findOne({
+      where: {
+        url: url
+      }
+    })
     .then(url => {
       if (url) {
         let upvotes = url.upvoteCount;
         let downvotes = url.downvoteCount;
         let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
         res.json(rating);
-      } else { res.json(null); }
+      } else {
+        res.json(null);
+      }
     })
     .catch((err) => {
       console.log(`error retrieving rating for ${url}`);
@@ -29,7 +35,11 @@ handler.getUrlRating = (req, res) => {
 handler.getUrlVotes = (req, res) => {
   let urlId = req.params.urlId;
 
-  db.Url.findOne({where: {id: urlId}})
+  db.Url.findOne({
+      where: {
+        id: urlId
+      }
+    })
     .then(url => {
       let upvotes = url.upvoteCount;
       let downvotes = url.downvoteCount;
@@ -43,54 +53,61 @@ handler.postUrlVotes = (req, res) => {
   let type = req.body.type;
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
-  db.Url.findCreateFind({where: {url: url}})
+  db.Url.findCreateFind({
+      where: {
+        url: url
+      }
+    })
     .spread(url => {
-      db.Url.increment(typeCount, {where: {id: url.id}});
+      db.Url.increment(typeCount, {
+        where: {
+          id: url.id
+        }
+      });
       res.status(201).json(url.id);
     })
-    .then(() => db.User.findCreateFind({where: {username: username}}))
+    .then(() => db.User.findCreateFind({
+      where: {
+        username: username
+      }
+    }))
     .spread(user => {
-      db.User.increment(typeCount, {where: {id: user.id}});
+      db.User.increment(typeCount, {
+        where: {
+          id: user.id
+        }
+      });
     });
 };
 
 // the following function will generate a new stat page url or retrieve one if it exists in the DB
 
-handler.generateRetrieveStatsPageUrl = function(req, res) {
+handler.generateRetrieveStatsPageUrl = (req, res) => {
   console.log('stat page url request received');
-  var currentUrl = req.query.currentUrl;
+  let currentUrl = req.query.currentUrl;
   db.Url.findCreateFind({
       where: {
         url: currentUrl
       }
     })
     .spread(url => {
-      // the use of spread makes sense as findCreateFind returns an array
-      if (url) {
-        if (url.dataValues.statsPageUrl) {
-          console.log('sending stat page URL from the DB', url);
-          res.json(url.dataValues.statsPageUrl);
-        } else {
-          console.log('inside else');
-          var stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
-          db.Url.update({
-              statsPageUrl: stpUrl
-            }, {
-              where: {
-                id: url.id
-              }
-            })
-            .then(function(url) {
-              console.log('new stats page URL saved: ', url);
-              console.log('new stat page URL created and stored, transmitting: ', stpUrl);
-              res.status(200).json(stpUrl);
-            })
-            .catch(function(err) {
-              console.error(err);
-              res.sendStatus(500);
-            });
-        }
-      }
+      console.log('inside else');
+      let stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
+      db.Url.update({
+          statsPageUrl: stpUrl
+        }, {
+          where: {
+            id: url.id
+          }
+        })
+        .then(() => {
+          console.log('new stat page URL created, transmitting: ', stpUrl);
+          res.status(200).json(stpUrl);
+        })
+        .catch(function(err) {
+          console.error(err);
+          res.sendStatus(500);
+        });
     })
     .catch((err) => {
       console.error(err);
