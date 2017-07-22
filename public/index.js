@@ -6,13 +6,16 @@ angular.module('app', ['ngRoute'])
     $locationProvider.hashPrefix('');
 
     $routeProvider.
-      // when('/', {
-      //   templateUrl: './templates/app.html',
-      //   controller: 'AppCtrl'
-      // }).
-      when('/stats/redirect/:id', {
+      when('/', {
+        templateUrl: './templates/app.html',
+        controller: 'AppCtrl'
+      }).
+      when('/stats/redirect/*', {
         templateUrl: './templates/statsPage.html',
         controller: 'StatCtrl'
+      })
+      .otherwise({
+        redirectTo: '/'
       });
   }
 ]);

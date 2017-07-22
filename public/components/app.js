@@ -35,8 +35,7 @@ angular.module('app', [])
     this.signedIn = false;
   };
 })
-
 .component('app', {
-  templateUrl: 'public/templates/app.html',
+  templateUrl: './templates/app.html',
   controller: 'AppCtrl'
 });

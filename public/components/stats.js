@@ -4,6 +4,6 @@ angular.module('app')
 
 })
 .component('statsPage', {
-  templateUrl: '../templates/statsPage.html',
+  templateUrl: './templates/statsPage.html',
   controller: 'StatCtrl'
 });
