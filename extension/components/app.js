@@ -65,7 +65,7 @@ angular.module('app', [])
     }.bind(this));
 
     this.handleVote = (vote) => {
-      if(this.tabUrl === null) {
+      if (this.tabUrl === null) {
         return;
       }
       var data = {
