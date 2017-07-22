@@ -65,11 +65,13 @@ handler.generateRetrieveStatsPageUrl = function(req, res) {
       }
     })
     .spread(url => {
+      // the use of spread makes sense as findCreateFind returns an array
       if (url) {
-        if (url.statsPageUrl) {
-          console.log('sending stat page URL from the DB');
-          res.json(url.statsPageUrl);
+        if (url.dataValues.statsPageUrl) {
+          console.log('sending stat page URL from the DB', url);
+          res.json(url.dataValues.statsPageUrl);
         } else {
+          console.log('inside else');
           var stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
           db.Url.update({
               statsPageUrl: stpUrl
@@ -78,12 +80,14 @@ handler.generateRetrieveStatsPageUrl = function(req, res) {
                 id: url.id
               }
             })
-            .then(function() {
+            .then(function(url) {
+              console.log('new stats page URL saved: ', url);
               console.log('new stat page URL created and stored, transmitting: ', stpUrl);
               res.status(200).json(stpUrl);
             })
             .catch(function(err) {
               console.error(err);
+              res.sendStatus(500);
             });
         }
       }
@@ -91,7 +95,11 @@ handler.generateRetrieveStatsPageUrl = function(req, res) {
     .catch((err) => {
       console.error(err);
       res.sendStatus(500);
-    });
+  })
+  .catch((err) => {
+    console.error(err);
+    res.sendStatus(500);
+  });
 };
 
 module.exports = handler;

@@ -100,7 +100,7 @@ angular.module('app', [])
       $http.get('http://localhost:8080/stats/generate-retrieve', {
         params: {currentUrl}
       }).then(function(response) {
-          console.log(response.data);
+          console.log('RD: ', response.data);
           chrome.tabs.create({url: response.data});
           window.close();
       }, function(err) {
