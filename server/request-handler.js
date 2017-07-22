@@ -44,21 +44,27 @@ handler.postUrlVotes = (req, res) => {
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
 
-  if(typeof url === 'number') {
+  if (typeof url === 'number') {
     db.Url.findOne({where: {id: url}})
     .then(url => {
-      return db.Url.increment(typeCount, {where: {id: url.id}})
-      .then(() => {
-        db.User.findCreateFind({where: {username: username}})
-        .spread((user) => {
+      db.User.findCreateFind({where: {username: username}})
+      .spread((user) => {
+        db.UrlVote.create({type: type, userId: user.id, urlId: url.id})
+        .then(() => {
           db.User.increment(typeCount, {where: {id: user.id}});
-          db.UrlVote.create({type: type, userId: user.id, urlId: url.id});
+          db.Url.increment(typeCount, {where: {id: url.id}})
           res.status(201).json(url.id);
-        });
+        })
+        .catch(err => {
+          res.sendStatus(400);
+        })
       })
       .catch(err => {
         res.sendStatus(400);
       });
+    })
+    .catch(err => {
+      res.sendStatus(400);
     });
   } else {
     db.Url.create({'url': url})
@@ -67,14 +73,20 @@ handler.postUrlVotes = (req, res) => {
       .then(() => {
         db.User.findCreateFind({where: {username: username}})
         .spread((user) => {
-          db.User.increment(typeCount, {where: {id: user.id}});
-          db.UrlVote.create({type: type, userId: user.id, urlId: url.id});
-          res.status(201).json(url.id);
-        });
-      });
+          db.UrlVote.create({type: type, userId: user.id, urlId: url.id})
+          .then(() => {
+            db.User.increment(typeCount, {where: {id: user.id}});
+            res.status(201).json(url.id);
+          })
+        }).catch(err => {
+          res.sendStatus(500);
+        })
+      }).catch(err => {
+        res.sendStatus(500);
+      })
     })
     .catch(err => {
-      res.sendStatus(400);
+      res.sendStatus(500);
     });
   }
 };
