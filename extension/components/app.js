@@ -4,39 +4,6 @@ angular.module('app', [])
 
     var that = this;
 
-    this.updateIcon = (rating) => {
-      const CBA = chrome.browserAction;
-
-      const updateIconTo = {
-        notRated: () => {
-          CBA.setIcon({path: '../images/BSMIcon.png'});
-          CBA.setBadgeBackgroundColor({color: [0, 0, 0, 0]});
-          CBA.setBadgeText({text: ''});
-        },
-        truthy: () => {
-          CBA.setIcon({path: '../images/BSMIconGreen.png'});
-          CBA.setBadgeBackgroundColor({color: 'green'});
-          CBA.setBadgeText({text: `${rating}%`});
-        },
-        falsy: () => {
-          CBA.setIcon({path: '../images/BSMIconRed.png'});
-          CBA.setBadgeBackgroundColor({color: 'red'});
-          CBA.setBadgeText({text: `${rating}%`});
-        },
-        middle: () => {
-          CBA.setIcon({path: '../images/BSMIconOrange.png'});
-          CBA.setBadgeBackgroundColor({color: 'orange'});
-          CBA.setBadgeText({text: `${rating}%`});
-        }
-      };
-      /*eslint-disable indent*/
-      rating === null ? updateIconTo.notRated()
-      : rating >= 55 ? updateIconTo.truthy()
-      : rating <= 45 ? updateIconTo.falsy()
-      : updateIconTo.middle();
-      /*eslint-enable indent*/
-    };
-
     chrome.runtime.sendMessage({msg: 'Give me data on this tab'});
 
     chrome.extension.onMessage.addListener(function(urlObj) {
@@ -50,19 +17,18 @@ angular.module('app', [])
         $scope.$apply();
     });
 
-
-    this.currentUser = 'default';
+    this.currentUser = 'pat';
     this.loggedIn = true;
     this.userRating // true or false based on previous rating
 
-    chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-    // Use the token.
-      console.log('token: ', token, new Date());
-      if (token) {
-        this.loggedIn = true;
-        $scope.$apply();
-      }
-    }.bind(this));
+    // chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+    // // Use the token.
+    //   console.log('token: ', token, new Date());
+    //   if (token) {
+    //     this.loggedIn = true;
+    //     $scope.$apply();
+    //   }
+    // }.bind(this));
 
     this.handleVote = (vote) => {
       if (this.tabUrl === null) {
@@ -84,11 +50,17 @@ angular.module('app', [])
     }
 
     this.handleSubmitComment = function(comment) {
-      $http.post(`${window.serverUri}/urlcomment`, comment).then(function(response) {
+      if (this.tabUrl === null) {
+        return;
+      }
+      var data = {
+        url: this.tabUrl,
+        username: this.currentUser,
+        comment: comment
+      };
+      $http.post(`${window.serverUri}/urlcomment`, data).then(function(response) {
         console.log(response);
       }, function(err) {console.error('Could not submit comment ', err);});
-      //post comment to DB
-      // $http.post()
       this.comment = '';
     };
 
