@@ -38,6 +38,34 @@ handler.getUrlVotes = (req, res) => {
     });
 };
 
+handler.postUrlComment = (req, res) => {
+  let url = req.body.url;
+  let username = req.body.username;
+  let comment = req.body.comment;
+
+  if (typeof url === 'number') {
+    db.User.findCreateFind({where: {username: username}});
+    .spread((user) => {
+      db.Comment.create({text: comment, commentId: null, urlId: url, userId: user.id})
+    })
+    .catch(err => {
+      res.sendStatus(400);
+    });
+  } else {
+    db.Url.create({'url': url})
+    .then(url => {
+      db.User.findCreateFind({where: {username: username}});
+      .spread((user) => {
+        db.Comment.create({text: comment, commentId: null, urlId: url.id, userId: user.id});
+      }).catch(err => {
+        res.sendStatus(500);
+      })
+    }).catch(err => {
+      res.sendStatus(500);
+    })
+  }
+}
+
 handler.postUrlVotes = (req, res) => {
   let url = req.body.url;
   let type = req.body.type;

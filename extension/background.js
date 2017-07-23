@@ -109,6 +109,7 @@ const sendResponse = () => {
 chrome.extension.onMessage.addListener(function(message) {
     if(message.hasOwnProperty('rating')) {
       rating = message.rating;
+      updateIcon(rating);
     }
     sendResponse();
 });
