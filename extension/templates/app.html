@@ -1,5 +1,14 @@
-<!-- <div ng-controller="AppCtrl as app" class="container" ng-init="app.get_current_url(app.getdata)"> -->
 <div ng-controller="AppCtrl as app" class="container">
+
+  <div class="row">
+    <div class="col-xs-2"></div>
+    <div class="col-xs-8">
+      <h1 class="text-center" ng-if="app.rated" >{{app.rating}}%</h1>
+    </div>
+    <div class="col-xs-2 profilebutton">
+      <button class="btn btn-default" ng-click="app.handleProfile()"><span class="glyphicon glyphicon-user"></span></button>
+    </div>
+  </div>
 
   <div ng-if="app.loggedIn" class="dropdown">
     <div ng-if="!app.rated" class="dropdown dd-heading unrated-heading">
@@ -7,7 +16,6 @@
     </div>
 
     <div ng-if="app.rated" class="dd-heading rated-heading">
-      <h1 class="text-center">{{app.rating}}%</h1>
       <p class="text-center">of users believe the information presented on this page is accurate, what do you think?</p>
     </div>
     <div class="dd-tfbtn">
@@ -34,7 +42,7 @@
 
   </div>
 
-  <div ng-if="!app.loggedIn" class="dropdown">
+  <!-- <div ng-if="!app.loggedIn" class="dropdown">
 
     <div ng-if="app.rated" class="dd-heading rated-heading">
       <h1 class="text-center">{{app.rating}}</h1>
@@ -61,6 +69,6 @@
       <div class="col-xs-1"></div>
     </div>
 
-  </div>
+  </div> -->
 
 </div>

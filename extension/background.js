@@ -1,5 +1,6 @@
 let rating = null;
 let urlId = null;
+let username = null;
 
 const updateIcon = (rating) => {
   const CBA = chrome.browserAction;
@@ -40,7 +41,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
   // Note to Ciaran: removed "if (changeInfo.status === 'complete')" because it was making the icon update after a long delay on sites with a lot of ads. the below if statement allows it to load faster while repeating the GET request at most twice.
   // Feel free to delete this and ^ that after you read it
   let url = tab.url;
-  console.log('IN UPDATE TAB ', tab.url)
+
   if (url !== lastUrl) {
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
       rating = null;
@@ -73,7 +74,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
 // get rating for url after switching tabs
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function(tab) {
-    console.log('ACTIVATED ', tab.url)
+
     let url = tab.url;
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
       rating = null;
@@ -102,9 +103,13 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
   });
 });
 
+chrome.identity.getProfileUserInfo(function(userObj) {
+  username = userObj.email;
+});
+
 const sendResponse = () => {
-  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId});
-}
+  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username});
+};
 
 chrome.extension.onMessage.addListener(function(message) {
     if(message.hasOwnProperty('rating')) {
