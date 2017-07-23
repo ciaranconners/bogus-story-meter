@@ -9,6 +9,7 @@ angular.module('app', [])
     chrome.extension.onMessage.addListener(function(urlObj) {
         that.rating = urlObj.rating;
         that.tabUrl = urlObj.urlId;
+        that.currentUser = urlObj.username;
         if (that.rating === 0) {
           that.rated = true;
         } else {
@@ -17,7 +18,6 @@ angular.module('app', [])
         $scope.$apply();
     });
 
-    this.currentUser = 'pat';
     this.loggedIn = true;
     this.userRating // true or false based on previous rating
 
@@ -29,6 +29,11 @@ angular.module('app', [])
     //     $scope.$apply();
     //   }
     // }.bind(this));
+
+    this.handleProfile = () => {
+      chrome.tabs.create({url: `${window.serverUri}` });
+      window.close();
+    };
 
     this.handleVote = (vote) => {
       if (this.tabUrl === null) {
@@ -70,7 +75,5 @@ angular.module('app', [])
     };
   })
   .component('app', {
-
     templateUrl: '../templates/app.html'
-
   });
