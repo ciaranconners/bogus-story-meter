@@ -44,7 +44,7 @@ handler.postUrlComment = (req, res) => {
   let comment = req.body.comment;
 
   if (typeof url === 'number') {
-    db.User.findCreateFind({where: {username: username}});
+    db.User.findCreateFind({where: {username: username}})
     .spread((user) => {
       db.Comment.create({text: comment, commentId: null, urlId: url, userId: user.id})
     })
@@ -54,7 +54,7 @@ handler.postUrlComment = (req, res) => {
   } else {
     db.Url.create({'url': url})
     .then(url => {
-      db.User.findCreateFind({where: {username: username}});
+      db.User.findCreateFind({where: {username: username}})
       .spread((user) => {
         db.Comment.create({text: comment, commentId: null, urlId: url.id, userId: user.id});
       }).catch(err => {
