@@ -20,10 +20,11 @@ angular.module('app')
   	this.profileInfo.email = profile.getEmail();
   	this.profileInfo.id = profile.getId();
 
-  	this.signedIn = true;
-    // if (this.profileInfo.url.length > 1) {
-    //   this.signedIn = true;
-    // }
+  	// this.signedIn = true;
+    if (this.profileInfo.url.length > 1) {
+      this.signedIn = true;
+      console.log(this.signedIn);
+    }
 	  $scope.$apply();
 	}.bind(this);
 

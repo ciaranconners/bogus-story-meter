@@ -23,6 +23,8 @@ app.get('/urlrating', handler.getUrlRating);
 
 app.get('/stats/generate-retrieve', handler.generateRetrieveStatsPageUrl);
 
+// TODO => for the below route send a 404 error if the corresponding url doesn't exist in the DB:
+
 app.get('/stats/redirect/*', (req, res, next) => {
   res.sendFile('./index.html', {root: path.join(__dirname, '../public')});
 });

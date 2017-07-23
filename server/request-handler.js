@@ -45,10 +45,14 @@ handler.getUrlVotes = (req, res) => {
       let downvotes = url.downvoteCount;
       let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
       res.json(rating);
+    })
+    .catch((err) => {
+      console.error(err);
     });
 };
 
 handler.postUrlVotes = (req, res) => {
+  //console.log(req.body);
   let url = req.body.url;
   let type = req.body.type;
   let username = req.body.username;
@@ -77,6 +81,9 @@ handler.postUrlVotes = (req, res) => {
           id: user.id
         }
       });
+    })
+    .catch((err) => {
+      console.error('xxxxxxxxxxxxxxxx', err);
     });
 };
 
