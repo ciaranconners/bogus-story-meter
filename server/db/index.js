@@ -68,9 +68,6 @@ var Url = db.define('Url', {
   neutralCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
-  },
-  statsPageURL: {
-    type: Sequelize.STRING
   }
 }, {
   classMethods: {
