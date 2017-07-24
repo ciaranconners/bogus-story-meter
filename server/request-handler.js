@@ -8,31 +8,67 @@ const handler = {};
 - errors if url is not in db,
 - otherwise responds with the url's rating from 0 - 100
 */
-handler.getUrlRating = (req, res) => {
+
+// handler.getUrlRating = (req, res) => {
+//   let url = req.query.currentUrl;
+//   db.Url.findOne({where: {url: url}})
+//     .then(url => {
+//       if (url) {
+//         let upvotes = url.upvoteCount;
+//         let downvotes = url.downvoteCount;
+//         let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
+//         res.json( {'rating': rating, 'urlId': url.id} );
+//       } else { res.json( {'rating': null, 'urlId': null} ); }
+//     })
+//     .catch((err) => {
+//       console.log(`error retrieving rating for ${url}`);
+//       console.error(err);
+//       res.sendStatus(500);
+//     });
+// };
+
+handler.getUrlData = (req, res) => {
   let url = req.query.currentUrl;
-  db.Url.findOne({
-      where: {
-        url: url
+  let username = req.query.currentUser;
+
+  db.User.findCreateFind( {where: {'username': username}} )
+  .spread((userEntry) => {
+    return db.Url.findOne( {where: {'url': url}} )
+    .then((urlEntry) => {
+      if(urlEntry === null) {
+        res.json( {
+          'rating': null,
+          'urlId': null,
+          'userId': userEntry.id,
+          'userVote': null
+        })
+      } else {
+        return db.UrlVote.findOne( {where: {'userId': userEntry.id, 'urlId': urlEntry.id}} )
+        .then((voteEntry) => {
+          let upvotes = urlEntry.upvoteCount;
+          let downvotes = urlEntry.downvoteCount;
+          rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
+          if(voteEntry) {
+            res.json( {
+              'rating': rating,
+              'urlId': urlEntry.id,
+              'userId': userEntry.id,
+              'userVote': voteEntry.type
+            })
+          } else {
+            res.json( {
+              'rating': null,
+              'urlId': urlEntry.id,
+              'userId': userEntry.id,
+              'userVote': null
+            })
+          }
+        })
       }
     })
-    .then(url => {
-      if (url) {
-        let upvotes = url.upvoteCount;
-        let downvotes = url.downvoteCount;
-        let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
+  })
 
-        res.json(rating);
-
-        res.json( {'rating': rating, 'urlId': url.id} );
-      } else { res.json( {'rating': null, 'urlId': null} ); }
-
-    })
-    .catch((err) => {
-      console.log(`error retrieving rating for ${url}`);
-      console.error(err);
-      res.sendStatus(500);
-    });
-};
+}
 
 handler.getUrlVotes = (req, res) => {
   let urlId = req.params.urlId;
@@ -42,15 +78,15 @@ handler.getUrlVotes = (req, res) => {
         id: urlId
       }
     })
-    .then(url => {
-      let upvotes = url.upvoteCount;
-      let downvotes = url.downvoteCount;
-      let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
-      res.json(rating);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  .then(url => {
+    let upvotes = url.upvoteCount;
+    let downvotes = url.downvoteCount;
+    let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
+    res.json(rating);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 };
 
 handler.postUrlComment = (req, res) => {
