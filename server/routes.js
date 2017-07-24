@@ -29,4 +29,6 @@ app.get('/stats/redirect/*', (req, res, next) => {
   res.sendFile('./index.html', {root: path.join(__dirname, '../public')});
 });
 
+app.post('/urlcomment', handler.postUrlComment);
+
 module.exports = app;

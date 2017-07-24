@@ -1,12 +1,14 @@
 var Sequelize = require('sequelize');
-//var connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
+var connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
 
 var db = new Sequelize('bsm', 'root', '', {
   dialect: 'mysql',
   logging: false
 });
 
-// var db = new Sequelize(connectionUrl, {dialect: 'mysql'});
+// var db = new Sequelize(connectionUrl, {
+//   dialect: 'mysql'
+// });
 
 var User = db.define('User', {
   username: {
@@ -71,7 +73,7 @@ var Url = db.define('Url', {
   }
 }, {
   classMethods: {
-    associate: (models) => {
+    associate: (models) => { //john: used to say model
       Url.belongsTo(models.Category);
       Url.hasMany(models.Comment);
     }
@@ -108,6 +110,7 @@ var CommentVote = db.define('CommentVote', {
   }
 });
 
+//todo: make sure unique composite works
 var UrlVote = db.define('UrlVote', {
   type: Sequelize.STRING,
   userId: {type: Sequelize.INTEGER, unique: 'userUrlId'},

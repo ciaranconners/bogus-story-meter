@@ -1,3 +1,7 @@
+let rating = null;
+let urlId = null;
+let username = null;
+
 const updateIcon = (rating) => {
   const CBA = chrome.browserAction;
 
@@ -18,8 +22,8 @@ const updateIcon = (rating) => {
       CBA.setBadgeText({text: `${rating}%`});
     },
     middle: () => {
-      CBA.setIcon({path: '../images/BSMIcon.png'});
-      CBA.setBadgeBackgroundColor({color: [0, 0, 0, 0]});
+      CBA.setIcon({path: '../images/BSMIconOrange.png'});
+      CBA.setBadgeBackgroundColor({color: 'orange'});
       CBA.setBadgeText({text: `${rating}%`});
     }
   };
@@ -37,8 +41,14 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
   // Note to Ciaran: removed "if (changeInfo.status === 'complete')" because it was making the icon update after a long delay on sites with a lot of ads. the below if statement allows it to load faster while repeating the GET request at most twice.
   // Feel free to delete this and ^ that after you read it
   let url = tab.url;
+
   if (url !== lastUrl) {
-    if (url !== 'about:blank' && url !== 'chrome://newtab/') {
+    if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
+      rating = null;
+      urlId = null;
+      updateIcon(rating);
+    }
+    if (url !== 'about:blank' && url !== 'chrome://newtab/' && !!url) {
       $.ajax({
         type: 'GET',
         url: `${window.serverUri}/urlrating`,
@@ -52,7 +62,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
         },
         success: function(data) {
           lastUrl = url;
-          updateIcon(JSON.parse(data));
+          updateIcon(data.rating);
+          rating = data.rating;
+          urlId = data.urlId || url;
         }
       });
     }
@@ -62,7 +74,13 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
 // get rating for url after switching tabs
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function(tab) {
+
     let url = tab.url;
+    if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
+      rating = null;
+      urlId = null;
+      updateIcon(rating);
+    }
     if (url !== 'about:blank' && url !== 'chrome://newtab/') {
       $.ajax({
         type: 'GET',
@@ -76,9 +94,27 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
           console.error(err);
         },
         success: function(data) {
-          updateIcon(JSON.parse(data));
+          updateIcon(data.rating);
+          rating = data.rating;
+          urlId = data.urlId || url;
         }
       });
     }
   });
+});
+
+chrome.identity.getProfileUserInfo(function(userObj) {
+  username = userObj.email;
+});
+
+const sendResponse = () => {
+  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username});
+};
+
+chrome.extension.onMessage.addListener(function(message) {
+    if(message.hasOwnProperty('rating')) {
+      rating = message.rating;
+      updateIcon(rating);
+    }
+    sendResponse();
 });

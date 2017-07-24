@@ -1,141 +1,77 @@
 angular.module('app', [])
 
-  .controller('AppCtrl', function($http) {
+  .controller('AppCtrl', function($scope, $http) {
 
     var that = this;
 
-    this.currentUser = 'default';
-    this.tabUrl = '';
-    this.loggedIn = true;
-    this.rating = 90; // on init - get page rating from DB
-    this.rated = true;
-    this.userRating; // true or false based on previous rating
+    chrome.runtime.sendMessage({msg: 'Give me data on this tab'});
 
-    chrome.identity.getAuthToken({
-      'interactive': true
-    }, function(token) {
-      // Use the token.
-      console.log('token: ', token, new Date());
-      if (token) {
-        this.loggedIn = true;
+    chrome.extension.onMessage.addListener(function(urlObj) {
+        that.rating = urlObj.rating;
+        that.tabUrl = urlObj.urlId;
+        that.currentUser = urlObj.username;
+        if (that.rating === 0) {
+          that.rated = true;
+        } else {
+          that.rated = !!that.rating;
+        }
         $scope.$apply();
+    });
+
+    this.loggedIn = true;
+    this.userRating // true or false based on previous rating
+
+    // chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+    // // Use the token.
+    //   console.log('token: ', token, new Date());
+    //   if (token) {
+    //     this.loggedIn = true;
+    //     $scope.$apply();
+    //   }
+    // }.bind(this));
+
+    this.handleProfile = () => {
+      chrome.tabs.create({url: `${window.serverUri}` });
+      window.close();
+    };
+
+    this.handleVote = (vote) => {
+      if (this.tabUrl === null) {
+        return;
       }
-    }.bind(this));
-
-    this.get_current_url = function(callback) {
-      chrome.tabs.query({
-        active: true
-      }, function(tabs) {
-        that.tabUrl = tabs[0].url;
-        callback(that.tabUrl);
-        // return tabUrl;
-      });
-    };
-
-    this.getdata = function(url) {
-      // console.log('url', url)
-      // $http.get('/urls' + url, function(res, req) {
-      //   // get back data
-      //   // set this.rating = data.rating
-      // })
-    };
-
-    this.handleTrue = () => {
       var data = {
         url: this.tabUrl,
         username: this.currentUser,
-        type: 'upvote'
+        type: vote
       };
-      $http.post('http://localhost:8080/urlvote', data).then(function(response) {
-        let urlId = JSON.stringify(response.data);
-        $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
-          this.rating = response.data;
-          if (this.rating === null) {
-            chrome.browserAction.setIcon({
-              path: '../images/BSMIcon.png'
-            });
-          } else if (this.rating >= 60) {
-            chrome.browserAction.setIcon({
-              path: '../images/BSMIconGreen.png'
-            });
-            chrome.browserAction.setBadgeBackgroundColor({
-              color: "green"
-            });
-            chrome.browserAction.setBadgeText({
-              text: `${this.rating}%`
-            });
-          } else if (this.rating < 60) {
-            chrome.browserAction.setIcon({
-              path: '../images/BSMIconRed.png'
-            });
-            chrome.browserAction.setBadgeBackgroundColor({
-              color: "red"
-            });
-            chrome.browserAction.setBadgeText({
-              text: `${this.rating}%`
-            });
-          }
+      $http.post(`${window.serverUri}/urlvote`, data).then(function(res) {
+        let urlId = JSON.stringify(res.data);
+        $http.get(`${window.serverUri}/urlvote/${urlId}`).then(function(response) {
+          that.rating = response.data;
+          that.updateIcon(that.rating);
+          chrome.runtime.sendMessage({rating: that.rating});
         });
-      }, function(err) {
-        console.error('Could not submit vote ', err);
-      });
-    };
-
-    this.handleFalse = () => {
-      var data = {
-        url: this.tabUrl,
-        username: this.currentUser,
-        type: 'downvote'
-      };
-      $http.post('http://localhost:8080/urlvote', data).then(function(response) {
-        let urlId = JSON.stringify(response.data);
-        $http.get(`http://localhost:8080/urlvote/${urlId}`).then(function(response) {
-          this.rating = response.data;
-          if (this.rating === null) {
-            chrome.browserAction.setIcon({
-              path: '../images/BSMIcon.png'
-            });
-          } else if (this.rating >= 60) {
-            chrome.browserAction.setIcon({
-              path: '../images/BSMIconGreen.png'
-            });
-            chrome.browserAction.setBadgeBackgroundColor({
-              color: "green"
-            });
-            chrome.browserAction.setBadgeText({
-              text: `${this.rating}%`
-            });
-          } else if (this.rating < 60) {
-            chrome.browserAction.setIcon({
-              path: '../images/BSMIconRed.png'
-            });
-            chrome.browserAction.setBadgeBackgroundColor({
-              color: "red"
-            });
-            chrome.browserAction.setBadgeText({
-              text: `${this.rating}%`
-            });
-          }
-        });
-      }, function(err) {
-        console.error('Could not submit vote ', err);
-      });
-    };
+      }, function(err) {console.error('Could not submit vote ', err);});
+    }
 
     this.handleSubmitComment = function(comment) {
-      $http.post('http://localhost:8080/urlcomment', comment).then(function(response) {
+      if (this.tabUrl === null) {
+        return;
+      }
+      var data = {
+        url: this.tabUrl,
+        username: this.currentUser,
+        comment: comment
+      };
+      $http.post(`${window.serverUri}/urlcomment`, data).then(function(response) {
         console.log(response);
-      }, function(err) {
-        console.error('Could not submit comment ', err);
-      });
-      //post comment to DB
-      // $http.post()
+      }, function(err) {console.error('Could not submit comment ', err);});
       this.comment = '';
     };
 
     this.handleStatsLink = () => {
       let currentUrl = this.tabUrl;
-      $http.get('http://localhost:8080/stats/generate-retrieve', {
+      $http.get(`${window.serverUri}/stats/generate-retrieve`, {
         params: {
           currentUrl
         }

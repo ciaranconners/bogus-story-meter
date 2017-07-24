@@ -43,16 +43,3 @@ angular.module('app')
   templateUrl: './templates/app.html',
   controller: 'AppCtrl'
 });
-
-
-// placing the google script tag in the index seems to remedy its apparent absence on our component views
-
-// the data correctly flows in and is logged, but a slight change to onSignIn is required:
-
-// we need to check the length of the values passed to set the isSignedIn boolean correctly:
-
-// checking, say, the length of the image url should suffice
-
-
-
-// clearing the history helps, something with the token, etc
