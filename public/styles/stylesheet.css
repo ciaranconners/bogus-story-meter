@@ -45,3 +45,7 @@
 .list-points {
   list-style: none
 }
+
+.navbar {
+  background-color: blue;
+}
