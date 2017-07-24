@@ -69,9 +69,20 @@ angular.module('app', [])
       this.comment = '';
     };
 
-    this.handleStatsLink = function() {
-      chrome.tabs.create({url: "http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com/"});
-      window.close();
+    this.handleStatsLink = () => {
+      let currentUrl = this.tabUrl;
+      $http.get(`${window.serverUri}/stats/generate-retrieve`, {
+        params: {
+          currentUrl
+        }
+      }).then(response => {
+        chrome.tabs.create({
+          url: response.data
+        });
+        window.close();
+      }, (err) => {
+        console.error(err);
+      });
     };
   })
   .component('app', {
