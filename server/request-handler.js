@@ -22,9 +22,6 @@ handler.getUrlRating = (req, res) => {
         let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
 
         res.json(rating);
-      } else {
-        res.json(null);
-      }
 
         res.json( {'rating': rating, 'urlId': url.id} );
       } else { res.json( {'rating': null, 'urlId': null} ); }
@@ -70,22 +67,22 @@ handler.postUrlComment = (req, res) => {
       res.sendStatus(400);
     });
   } else {
-    db.Url.create({'url': url})
+    db.Url.findCreateFind({where: {'url': url}})
     .then(url => {
       db.User.findCreateFind({where: {username: username}})
       .spread((user) => {
         db.Comment.create({text: comment, commentId: null, urlId: url.id, userId: user.id});
       }).catch(err => {
         res.sendStatus(500);
-      })
+      });
     }).catch(err => {
       res.sendStatus(500);
-    })
+    });
   }
-}
+};
 
 handler.postUrlVotes = (req, res) => {
-  //console.log(req.body);
+  console.log(req.body);
   let url = req.body.url;
   let type = req.body.type;
   let username = req.body.username;
@@ -99,12 +96,12 @@ handler.postUrlVotes = (req, res) => {
         db.UrlVote.create({type: type, userId: user.id, urlId: url.id})
         .then(() => {
           db.User.increment(typeCount, {where: {id: user.id}});
-          db.Url.increment(typeCount, {where: {id: url.id}})
+          db.Url.increment(typeCount, {where: {id: url.id}});
           res.status(201).json(url.id);
         })
         .catch(err => {
           res.sendStatus(400);
-        })
+        });
       })
       .catch(err => {
         res.sendStatus(400);
@@ -124,16 +121,16 @@ handler.postUrlVotes = (req, res) => {
           .then(() => {
             db.User.increment(typeCount, {where: {id: user.id}});
             res.status(201).json(url.id);
-          })
+          });
         }).catch(err => {
-          res.sendStatus(500);
-        })
+          res.sendStatus(400);
+        });
       }).catch(err => {
-        res.sendStatus(500);
-      })
+        res.sendStatus(400);
+      });
     })
     .catch(err => {
-      res.sendStatus(500);
+      res.sendStatus(400);
     });
   }
 };
