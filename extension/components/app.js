@@ -19,7 +19,7 @@ angular.module('app', [])
     });
 
     this.loggedIn = true;
-    this.userRating // true or false based on previous rating
+    this.userRating; // true or false based on previous rating
 
     // chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
     // // Use the token.
@@ -36,23 +36,24 @@ angular.module('app', [])
     };
 
     this.handleVote = (vote) => {
+      console.log('hello', this.tabUrl);
       if (this.tabUrl === null) {
         return;
       }
-      var data = {
+      var data = JSON.stringify({
         url: this.tabUrl,
         username: this.currentUser,
         type: vote
-      };
+      });
+      console.log('DATA: ', data);
       $http.post(`${window.serverUri}/urlvote`, data).then(function(res) {
         let urlId = JSON.stringify(res.data);
         $http.get(`${window.serverUri}/urlvote/${urlId}`).then(function(response) {
           that.rating = response.data;
-          that.updateIcon(that.rating);
           chrome.runtime.sendMessage({rating: that.rating});
         });
       }, function(err) {console.error('Could not submit vote ', err);});
-    }
+    };
 
     this.handleSubmitComment = function(comment) {
       if (this.tabUrl === null) {
@@ -69,9 +70,20 @@ angular.module('app', [])
       this.comment = '';
     };
 
-    this.handleStatsLink = function() {
-      chrome.tabs.create({url: "http://ec2-52-36-33-73.us-west-2.compute.amazonaws.com/"});
-      window.close();
+    this.handleStatsLink = () => {
+      let currentUrl = this.tabUrl;
+      $http.get(`${window.serverUri}/stats/generate-retrieve`, {
+        params: {
+          currentUrl
+        }
+      }).then(response => {
+        chrome.tabs.create({
+          url: response.data
+        });
+        window.close();
+      }, (err) => {
+        console.error(err);
+      });
     };
   })
   .component('app', {

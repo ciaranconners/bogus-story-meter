@@ -1,4 +1,4 @@
-angular.module('app', [])
+angular.module('app')
 
 .controller('AppCtrl', function($scope, requests) {
 	this.profileInfo = {};
@@ -20,8 +20,11 @@ angular.module('app', [])
   	this.profileInfo.email = profile.getEmail();
   	this.profileInfo.id = profile.getId();
 
-  	this.signedIn = true;
-
+  	// this.signedIn = true;
+    if (this.profileInfo.url.length > 1) {
+      this.signedIn = true;
+      console.log(this.signedIn);
+    }
 	  $scope.$apply();
 	}.bind(this);
 
@@ -34,9 +37,9 @@ angular.module('app', [])
     });
     this.signedIn = false;
   };
+  console.log(this.signedIn);
 })
-
 .component('app', {
-  templateUrl: '../templates/app.html',
+  templateUrl: './templates/app.html',
   controller: 'AppCtrl'
 });

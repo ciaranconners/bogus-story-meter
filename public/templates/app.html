@@ -1,12 +1,7 @@
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-
-<navbar></navbar>
-
-
 <div class="container top-offset">
 	<div class="sign-in">
 		<div ng-show="!$ctrl.signedIn" class="g-signin2" data-onsuccess="onSignIn"></div>
-		<button ng-show="$ctrl.signedIn" ng-click="$ctrl.signOut()">Sign out</button>
+		<a ng-show="$ctrl.signedIn" href="/" ng-click="$ctrl.signOut()">Sign out</a>
 	</div>
 	<div class="row profile-info">
 		<div class="col-sm-4">
