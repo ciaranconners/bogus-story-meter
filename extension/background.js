@@ -1,6 +1,7 @@
 let rating = null;
 let urlId = null;
 let username = null;
+let uservote = null;
 
 const updateIcon = (rating) => {
   const CBA = chrome.browserAction;
@@ -46,25 +47,30 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
       rating = null;
       urlId = null;
+      uservote = null;
       updateIcon(rating);
     }
     if (url !== 'about:blank' && url !== 'chrome://newtab/' && !!url) {
       $.ajax({
         type: 'GET',
-        url: `${window.serverUri}/urlrating`,
+        url: `${window.serverUri}/urldata`,
         params: {},
         data: {
-          currentUrl: url
+          currentUrl: url,
+          currentUser: username
         },
         error: function(err) {
-          console.log(`Failed to get rating for ${url}`);
+          console.log(`Failed to get data for ${url}`);
           console.error(err);
         },
         success: function(data) {
+          console.log('updated data', data)
+
           lastUrl = url;
           updateIcon(data.rating);
           rating = data.rating;
           urlId = data.urlId || url;
+          uservote = data.userVote;
         }
       });
     }
@@ -79,24 +85,30 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
       rating = null;
       urlId = null;
+      uservote = null;
       updateIcon(rating);
     }
     if (url !== 'about:blank' && url !== 'chrome://newtab/') {
       $.ajax({
         type: 'GET',
-        url: `${window.serverUri}/urlrating`,
+        url: `${window.serverUri}/urldata`,
         params: {},
         data: {
-          currentUrl: url
+          currentUrl: url,
+          currentUser: username
         },
         error: function(err) {
-          console.log(`Failed to get rating for ${url}`);
+          console.log(`Failed to get data for ${url}`);
           console.error(err);
         },
         success: function(data) {
+          console.log('activated data', data)
+
           updateIcon(data.rating);
           rating = data.rating;
           urlId = data.urlId || url;
+          uservote = data.userVote;
+          userId = data.userId;
         }
       });
     }
@@ -108,7 +120,7 @@ chrome.identity.getProfileUserInfo(function(userObj) {
 });
 
 const sendResponse = () => {
-  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username});
+  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote});
 };
 
 chrome.extension.onMessage.addListener(function(message) {
