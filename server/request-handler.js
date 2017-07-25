@@ -78,7 +78,7 @@ handler.postUrlComment = (req, res) => {
     });
   } else {
     db.Url.findCreateFind({where: {'url': url}})
-    .then(url => {
+    .spread(url => {
       db.User.findCreateFind({where: {username: username}})
       .spread((user) => {
         db.Comment.create({text: comment, commentId: null, urlId: url.id, userId: user.id});
