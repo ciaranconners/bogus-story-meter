@@ -2,6 +2,7 @@ const db = require('./db/index.js');
 
 const handler = {};
 
+/*eslint-disable indent*/
 handler.getUrlData = (req, res) => {
   let url = req.query.currentUrl;
   let username = req.query.currentUser;
@@ -10,39 +11,39 @@ handler.getUrlData = (req, res) => {
   .spread((userEntry) => {
     return db.Url.findOne( {where: {'url': url}} )
     .then((urlEntry) => {
-      if(urlEntry === null) {
+      if (urlEntry === null) {
         res.json( {
           'rating': null,
           'urlId': null,
           'userId': userEntry.id,
           'userVote': null
-        })
+        });
       } else {
         return db.UrlVote.findOne( {where: {'userId': userEntry.id, 'urlId': urlEntry.id}} )
         .then((voteEntry) => {
           let upvotes = urlEntry.upvoteCount;
           let downvotes = urlEntry.downvoteCount;
           rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
-          if(voteEntry) {
+          if (voteEntry) {
             res.json( {
               'rating': rating,
               'urlId': urlEntry.id,
               'userId': userEntry.id,
               'userVote': voteEntry.type
-            })
+            });
           } else {
             res.json( {
               'rating': rating,
               'urlId': urlEntry.id,
               'userId': userEntry.id,
               'userVote': null
-            })
+            });
           }
-        })
+        });
       }
-    })
-  })
-}
+    });
+  });
+};
 
 handler.getUrlVotes = (req, res) => {
   let urlId = req.params.urlId;
@@ -71,7 +72,7 @@ handler.postUrlComment = (req, res) => {
   if (typeof url === 'number') {
     db.User.findCreateFind({where: {username: username}})
     .spread((user) => {
-      db.Comment.create({text: comment, commentId: null, urlId: url, userId: user.id})
+      db.Comment.create({text: comment, commentId: null, urlId: url, userId: user.id});
     })
     .catch(err => {
       res.sendStatus(400);
@@ -121,8 +122,8 @@ handler.postUrlVotes = (req, res) => {
       res.sendStatus(400);
     });
   } else {
-    db.Url.create({'url': url})
-    .then(url => {
+    db.Url.findCreateFind({where: {'url': url}})
+    .spread(url => {
       return db.Url.increment(typeCount, {where: {id: url.id}})
       .then(() => {
         db.User.findCreateFind({where: {username: username}})
