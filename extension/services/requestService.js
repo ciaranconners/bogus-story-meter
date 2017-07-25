@@ -21,4 +21,13 @@ angular.module('app') /*eslint-disable indent*/
     })
     .catch(err => console.error(errMsg, err));
   };
+  this.put = (endpoint, data, errMsg, callback) => {
+    $http({
+      method: 'PUT',
+      url: window.serverUri + endpoint,
+      data: data
+    })
+    .then(res => callback(res.data))
+    .catch(err => console.error(errMsg, err));
+  };
 });

@@ -1,6 +1,6 @@
 angular.module('app', [])
 
-  .controller('AppCtrl', function($scope, $http, request) {
+  .controller('AppCtrl', function($scope, request) {
 
     var that = this;
 
@@ -39,9 +39,9 @@ angular.module('app', [])
         username: this.currentUser,
         type: vote
       });
+      let errMsg = 'Could not submit vote: ';
       // if user hasnt voted before, new vote:
       if (this.uservote === null) {
-        let errMsg = 'Could not submit vote: ';
         request.post('/urlvote', data, errMsg, (postResponse) => {
           that.tabUrl = postResponse;
           request.get(`/urlvote/${that.tabUrl}`, null, null, errMsg, (getResponse) => {
@@ -51,14 +51,14 @@ angular.module('app', [])
           });
         });
       } else if (this.uservote !== vote) { // if user is changing vote
-        $http.put(`${window.serverUri}/urlvote`, data).then(function(res) {
-          that.tabUrl = res.data;
-          $http.get(`${window.serverUri}/urlvote/${that.tabUrl}`).then(function(response) {
-            that.rating = response.data;
+        request.put('/urlvote', data, errMsg, (postResponse) => {
+          that.tabUrl = postResponse;
+          request.get(`/urlvote/${that.tabUrl}`, null, null, errMsg, (getResponse) => {
+            that.rating = getResponse;
             that.uservote = vote;
             chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'taburl': that.tabUrl});
           });
-        }, function(err) {console.error('Could not submit vote ', err);});
+        });
 
       } else if (this.uservote === vote) {
         return; // don't let user send same rating twice for same URL
