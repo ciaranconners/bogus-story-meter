@@ -217,4 +217,30 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
   });
 };
 
+handler.postAuth = function(req, res, next) {
+  console.log(req.body);
+  db.User.findOne({
+    where: {
+      username: req.body.email
+    }
+  })
+  .then(function(user) {
+    // save they are logged in
+  });
+  res.status(200);
+};
+
+handler.getAuth = function(req, res, next) {
+  console.log(req.body);
+  db.User.findOne({
+    where: {
+      username: req.body.email
+    }
+  })
+  .then(function(user) {
+    // save they are not logged in
+  });
+  res.status(200);
+};
+
 module.exports = handler;
