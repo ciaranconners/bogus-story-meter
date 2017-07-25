@@ -1,12 +1,13 @@
+// YOU CAN ONLY GET TO THIS PAGE IF YOU ARE LOGGED IN - WILL SEND A REQUEST TO SERVER TO VERIFY AUTH WITH GOOGLE
 angular.module('app')
 
-.controller('AppCtrl', function($scope, requests) {
-	this.profileInfo = {};
-	this.profileInfo.name = '';
-	this.profileInfo.url = '';
-	this.profileInfo.email = '';
-	this.profileInfo.id = '';
-	this.signedIn = false;
+.controller('AppCtrl', function($scope, requests, $http, $rootScope, $window) {
+  var that = this;
+  this.name = '';
+  this.imageUrl = '';
+  this.email = '';
+  this.id = '';
+  this.signedIn = false;
 
   let errMsg = 'Could not retrieve user data '
 

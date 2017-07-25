@@ -213,6 +213,39 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
   });
 };
 
+
+handler.postAuth = function(req, res, next) {
+  console.log(req.body.username);
+  db.User.findCreateFind({
+    where: {
+      username: req.body.username
+    }
+  })
+  .spread(function(user) {
+    console.log('all set, new');
+    res.status(200);
+  })
+  .catch(function(err) {
+    console.error(err);
+  });
+};
+
+handler.getAuth = function(req, res, next) {
+  console.log('USERNAME:', req.body.username);
+  db.User.findOne({
+    where: {
+      username: req.body.username
+    }
+  })
+  .then(function(user) {
+    console.log('all set');
+    res.status(200);
+  })
+  .catch(function(err) {
+    console.error(err);
+  });
+};
+
 handler.getUserActivity = (req, res) => {
   let username = req.query.username;
 
