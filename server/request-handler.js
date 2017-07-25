@@ -83,6 +83,7 @@ handler.postUrlComment = (req, res) => {
       db.User.findCreateFind({where: {username: username}})
       .spread((user) => {
         db.Comment.create({text: comment, commentId: null, urlId: url.id, userId: user.id});
+        res.status(201).json(url.id);
       }).catch(err => {
         res.sendStatus(500);
       });
@@ -151,7 +152,7 @@ handler.putUrlVotes = (req, res) => {
   let type = req.body.type;
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
-console.log('==========================put request.body ', req.body)
+
   db.Url.findOne( {where: {id: url}} )
   .then((urlEntry) => {
     db.User.findOne( {where: {username: username}} )
@@ -160,15 +161,10 @@ console.log('==========================put request.body ', req.body)
       .then((voteEntry) => {
         let oldTypeCount = voteEntry.type+'Count';
         let oldType = voteEntry.type;
-console.log('=========================== oldTypeCount', oldTypeCount)
         userEntry.decrement(oldTypeCount);
         urlEntry.decrement(oldTypeCount);
         userEntry.increment(typeCount);
         urlEntry.increment(typeCount)
-        // db.User.increment(typeCount, {where: {id: userEntry.id}} );
-        // db.Url.increment(typeCount, {where: {id: urlEntry.id}} );
-        // db.User.decrement(oldTypeCount, {where: {id: userEntry.id}} );
-        // db.Url.decrement(oldTypeCount, {where: {id: urlEntry.id}} )
         .then(() => {
           db.UrlVote.update( {type: type}, {where: {userId: userEntry.id, urlId: urlEntry.id}} )
           res.status(201).json(urlEntry.id);
