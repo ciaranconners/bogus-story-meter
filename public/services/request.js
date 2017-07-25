@@ -1,6 +1,6 @@
 angular.module('app')
 
-.service('requests', function($http, $window) {
+.service('request', function($http, $window) {
 	this.get = (endpoint, data = {}, params = {}, errMsg, callback) => {
 		$http({
 			method: 'GET',

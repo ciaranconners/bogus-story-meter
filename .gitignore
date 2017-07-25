@@ -15,3 +15,5 @@ keys.txt
 settings.config
 server/db/db-config.js
 ec2-user@52.36.33.73
+.floo
+.flooignore

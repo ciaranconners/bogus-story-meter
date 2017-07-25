@@ -1,0 +1,48 @@
+<div class="container" ng-controller="StatCtrl as stat">
+  <header class="text-center">Statistics for</header>
+  <div class="text-center">{{stat.url}}:</div>
+  <div class="row">
+    <div class="col-xs-2"></div>
+    <div class="col-xs-8">
+      <h1 class="text-center" ng-if="$ctrl.rated" >{{$ctrl.rating}}%</h1>
+    </div>
+    <div class="col-xs-2 profilebutton">
+      <button class="btn btn-default" ng-click="$ctrl.handleProfile()"><span class="glyphicon glyphicon-user"></span></button>
+    </div>
+  </div>
+
+  <div class="dropdown">
+    <div ng-if="!$ctrl.rated && !$ctrl.uservote" class="dropdown dd-heading unrated-heading">
+      <p class="text-center">This page has not yet been rated by our users, be the first to submit your thoughts!</p>
+    </div>
+
+    <div ng-if="$ctrl.rated && !$ctrl.uservote" class="dd-heading rated-heading">
+      <p class="text-center">of users believe the information presented on this page is accurate, what do you think?</p>
+    </div>
+
+    <div ng-if="$ctrl.rated && $ctrl.uservote === 'upvote'" class="dd-heading rated-heading">
+      <p class="text-center">of users believe the information presented on this page is accurate, as well as agree with your previous 'true' rating.</p>
+    </div>
+
+    <div ng-if="$ctrl.rated && $ctrl.uservote === 'downvote'" class="dd-heading rated-heading">
+      <p class="text-center">of users believe the information presented on this page is accurate, as well as disagree with your previous 'false' rating.</p>
+    </div>
+
+    <div class="dd-tfbtn">
+      <button class="dd-truth btn btn-success dd-button" ng-click="$ctrl.handleVote('upvote')" ng-disabled="$ctrl.uservote === 'upvote'"><h4>True</h4></button>
+      <button class="dd-false btn btn-danger dd-button" ng-click="$ctrl.handleVote('downvote')" ng-disabled="$ctrl.uservote === 'downvote'"><h4>False</h4></button>
+    </div>
+
+    <textarea class="dd-comment" placeholder="Leave a comment" ng-model="$ctrl.comment" id="commentField"></textarea>
+
+    <div class="row">
+      <div class="col-xs-8"></div>
+      <div class="col-xs-4">
+        <button class="dd-submit btn btn-default pull-right" ng-click="$ctrl.handleSubmitComment($ctrl.comment)">Submit</button>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
