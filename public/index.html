@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
-  <meta name="google-signin-client_id" content="266363285075-j69o8kv6pq8agofle7sfvqap59ceqsfu.apps.googleusercontent.com">
+<!--   <meta name="google-signin-client_id" content="266363285075-j69o8kv6pq8agofle7sfvqap59ceqsfu.apps.googleusercontent.com"> -->
   <title>Bogus Stories</title>
   <link rel="stylesheet" type="text/css" href="styles/stylesheet.css">
 
@@ -20,15 +21,34 @@
   <!-- bootstrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <base href="/">
 </head>
 
 <body ng-app="app">
   <div class="g-signin2" data-onsuccess="onSignIn"></div>
   <a href="/" onclick="signOut();">Click Here to Sign Out</a>
+  <!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
+  <script src="https://apis.google.com/js/plus.js?onload=init"></script>
   <script type="text/javascript">
-    function onSignIn(googleUser) {
+    gapi.load('auth2', function() {
+      auth2 = gapi.auth2.init({
+        client_id: '266363285075-j69o8kv6pq8agofle7sfvqap59ceqsfu.apps.googleusercontent.com',
+        scope: 'email',
+        fetch_basic_profile: true
+      });
+      if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
+        var profile = auth2.currentUser.get().getBasicProfile();
+        console.log('ID: ' + profile.getId());
+        console.log('Full Name: ' + profile.getName());
+        console.log('Given Name: ' + profile.getGivenName());
+        console.log('Family Name: ' + profile.getFamilyName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail());
+      } else {
+        console.log('not logged in it would seem');
+      }
+    });
+        function onSignIn(googleUser) {
       var profile = googleUser.getBasicProfile();
       window.userName = profile.getName();
       window.userEmail = profile.getEmail();
@@ -39,19 +59,20 @@
       //   data: {name: userName, email: userEmail, signedIn: true},
       // });
     }
+
     function signOut() {
-     var auth2 = gapi.auth2.getAuthInstance();
-     auth2.signOut().then(function () {
-      window.userName = '';
-      window.userEmail = '';
-      window.userImage = '';
-      console.log('User signed out.');
-     });
-     // $.ajax({
-     //    type: 'POST',
-     //    url: 'http://localhost:8080/auth',
-     //    data: {signedIn: false}
-     // });
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function() {
+        window.userName = '';
+        window.userEmail = '';
+        window.userImage = '';
+        console.log('User signed out.');
+      });
+      // $.ajax({
+      //    type: 'POST',
+      //    url: 'http://localhost:8080/auth',
+      //    data: {signedIn: false}
+      // });
     }
   </script>
   <div ng-view></div>
@@ -63,4 +84,5 @@
   <script src="/components/recentActivity.js"></script>
   <script src="/components/stats.js"></script>
 </body>
+
 </html>
