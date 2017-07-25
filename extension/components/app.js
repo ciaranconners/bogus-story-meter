@@ -12,7 +12,7 @@ angular.module('app', [])
     chrome.runtime.sendMessage({msg: 'Give me data on this tab'});
 
     chrome.extension.onMessage.addListener(function(urlObj) {
-      console.log("FROM BACKGROUND ", urlObj)
+      console.log("Data from background.js ", urlObj)
         that.rating = urlObj.rating;
         that.tabUrl = urlObj.urlId;
         that.currentUser = urlObj.username;
@@ -31,10 +31,10 @@ angular.module('app', [])
     };
 
     this.handleVote = (vote) => {
-      console.log('hello', this.tabUrl);
       if (this.tabUrl === null) {
         return;
       }
+      console.log('inside handlevote - taburl ', this.tabUrl)
       var data = JSON.stringify({
         url: this.tabUrl,
         username: this.currentUser,
@@ -44,21 +44,20 @@ angular.module('app', [])
       if(this.uservote === null) {
         $http.post(`${window.serverUri}/urlvote`, data).then(function(res) {
           that.tabUrl = res.data;
-
           $http.get(`${window.serverUri}/urlvote/${that.tabUrl}`).then(function(response) {
             that.rating = response.data;
-            chrome.runtime.sendMessage({rating: that.rating});
+            that.uservote = vote;
+            chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'taburl': that.tabUrl});
           });
         }, function(err) {console.error('Could not submit vote ', err);});
+
       } else if (this.uservote !== vote) { // if user is changing vote
-
-        // PUT REQUEST TO CHANGE VOTE
-
         $http.put(`${window.serverUri}/urlvote`, data).then(function(res) {
           that.tabUrl = res.data;
           $http.get(`${window.serverUri}/urlvote/${that.tabUrl}`).then(function(response) {
             that.rating = response.data;
-            chrome.runtime.sendMessage({rating: that.rating});
+            that.uservote = vote;
+            chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'taburl': that.tabUrl});
           });
         }, function(err) {console.error('Could not submit vote ', err);});
 
