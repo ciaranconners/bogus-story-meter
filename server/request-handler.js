@@ -213,4 +213,31 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
   });
 };
 
+handler.getUserActivity = (req, res) => {
+  let username = req.query.username;
+
+  db.User.findOne( {'where': {'username': username}} )
+  .then((userEntry) => {
+    return db.UrlVote.findAll( {'where': {'userId': userEntry.id}} )
+    .then((userVotes) => {
+      return db.Comment.findAll( {'where': {'userId': userEntry.id}} )
+      .then((userComments) => {
+        res.status(200).json({'userVotes': userVotes, 'userComments': userComments})
+      })
+      .catch(function(err) {
+        console.error(err);
+        res.sendStatus(404);
+      })
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.sendStatus(404);
+    })
+  })
+  .catch(function(err) {
+    console.error(err);
+    res.sendStatus(404);
+  })
+}
+
 module.exports = handler;
