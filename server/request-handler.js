@@ -218,29 +218,35 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
 };
 
 handler.postAuth = function(req, res, next) {
-  console.log(req.body);
-  db.User.findOne({
+  console.log(req.body.username);
+  db.User.findCreateFind({
     where: {
-      username: req.body.email
+      username: req.body.username
     }
   })
-  .then(function(user) {
-    // save they are logged in
+  .spread(function(user) {
+    console.log('all set, new');
+    res.status(200);
+  })
+  .catch(function(err) {
+    console.error(err);
   });
-  res.status(200);
 };
 
 handler.getAuth = function(req, res, next) {
-  console.log(req.body);
+  console.log('USERNAME:', req.body.username);
   db.User.findOne({
     where: {
-      username: req.body.email
+      username: req.body.username
     }
   })
   .then(function(user) {
-    // save they are not logged in
+    console.log('all set');
+    res.status(200);
+  })
+  .catch(function(err) {
+    console.error(err);
   });
-  res.status(200);
 };
 
 module.exports = handler;

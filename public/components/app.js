@@ -1,5 +1,4 @@
 // YOU CAN ONLY GET TO THIS PAGE IF YOU ARE LOGGED IN - WILL SEND A REQUEST TO SERVER TO VERIFY AUTH WITH GOOGLE
-
 angular.module('app')
 
 .controller('AppCtrl', function($scope, requests, $http, $rootScope, $window) {

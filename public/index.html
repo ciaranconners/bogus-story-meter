@@ -1,15 +1,12 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
   <meta charset="UTF-8">
-<!--   <meta name="google-signin-client_id" content="266363285075-j69o8kv6pq8agofle7sfvqap59ceqsfu.apps.googleusercontent.com"> -->
+  <!--   <meta name="google-signin-client_id" content="266363285075-j69o8kv6pq8agofle7sfvqap59ceqsfu.apps.googleusercontent.com"> -->
   <title>Bogus Stories</title>
   <link rel="stylesheet" type="text/css" href="styles/stylesheet.css">
-
-  <!-- Google Platform Library (for google authentication) -->
-  <!--<script src="https://apis.google.com/js/platform.js" async defer></script>-->
-  <!-- Google Client ID (for google authentication) -->
 
   <!-- angular, originally using v 1.6.4 for the routes, switched to match our Angular CDN-->
 
@@ -25,56 +22,95 @@
 </head>
 
 <body ng-app="app">
-  <div class="g-signin2" data-onsuccess="onSignIn"></div>
-  <a href="/" onclick="signOut();">Click Here to Sign Out</a>
-  <!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
-  <script src="https://apis.google.com/js/plus.js?onload=init"></script>
-  <script type="text/javascript">
-    gapi.load('auth2', function() {
-      auth2 = gapi.auth2.init({
-        client_id: '266363285075-j69o8kv6pq8agofle7sfvqap59ceqsfu.apps.googleusercontent.com',
-        scope: 'email',
-        fetch_basic_profile: true
-      });
-      if (gapi.auth2.getAuthInstance().isSignedIn.get()) {
-        var profile = auth2.currentUser.get().getBasicProfile();
-        console.log('ID: ' + profile.getId());
-        console.log('Full Name: ' + profile.getName());
-        console.log('Given Name: ' + profile.getGivenName());
-        console.log('Family Name: ' + profile.getFamilyName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail());
-      } else {
-        console.log('not logged in it would seem');
-      }
-    });
-        function onSignIn(googleUser) {
-      var profile = googleUser.getBasicProfile();
-      window.userName = profile.getName();
-      window.userEmail = profile.getEmail();
-      window.userImage = profile.getImageUrl();
-      // $.ajax({
-      //   type: 'POST',
-      //   url: 'http://localhost:8080/auth',
-      //   data: {name: userName, email: userEmail, signedIn: true},
-      // });
+  <script>
+    var GoogleAuth;
+
+    function handleClientLoad() {
+      gapi.load('client:auth2', initClient);
     }
 
-    function signOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function() {
-        window.userName = '';
-        window.userEmail = '';
-        window.userImage = '';
-        console.log('User signed out.');
+    function initClient() {
+      gapi.client.init({
+        'clientId': '266363285075-j69o8kv6pq8agofle7sfvqap59ceqsfu.apps.googleusercontent.com',
+        'scope': 'email',
+        'fetch_basic_profile': true
+      }).then(function() {
+        GoogleAuth = gapi.auth2.getAuthInstance();
+
+        GoogleAuth.isSignedIn.listen(updateSigninStatus);
+
+        GoogleAuth.currentUser.get();
+        setSigninStatus();
+
+        $('#sign-in-or-out-button').click(function() {
+          handleAuthClick();
+        });
+        $('#revoke-access-button').click(function() {
+          revokeAccess();
+        });
       });
-      // $.ajax({
-      //    type: 'POST',
-      //    url: 'http://localhost:8080/auth',
-      //    data: {signedIn: false}
-      // });
+    }
+
+    function handleAuthClick() {
+      if (GoogleAuth.isSignedIn.get()) {
+        GoogleAuth.signOut();
+      } else {
+        GoogleAuth.signIn();
+      }
+    }
+
+    // we have the option to allow users to revoke the token if we wish to:
+
+    function revokeAccess() {
+      GoogleAuth.disconnect();
+    }
+
+    function setSigninStatus(isSignedIn) {
+      var user = GoogleAuth.currentUser.get();
+      var isAuthorized = user.hasGrantedScopes('email');
+      if (isAuthorized) {
+        var email = user.w3.U3;
+        var accessToken = user.Zi.access_token;
+        var name = user.w3.ig;
+        var imageUrl = user.w3.Paa;
+        $('#sign-in-or-out-button').html('Sign out');
+        $('#revoke-access-button').css('display', 'inline-block');
+        $('#auth-status').html('You are currently signed in and have granted ' +
+          'access to this app.');
+        $.ajax({
+          type: 'POST',
+          url: 'http://localhost:8080/auth',
+          data: {
+            yo: 'what up',
+            username: email,
+            firstLast: name,
+            image: imageUrl,
+            token: accessToken
+          },
+        });
+      } else {
+        $('#sign-in-or-out-button').html('Sign in With Google to See Your Info');
+        $('#revoke-access-button').css('display', 'none');
+        $('#auth-status').html('You have not authorized this app or you are ' +
+          'signed out.');
+      }
+    }
+
+    function updateSigninStatus(isSignedIn) {
+      setSigninStatus();
     }
   </script>
+
+  <button id="sign-in-or-out-button" style="margin-left: 25px">Sign in With Google to See Your Info</button>
+  <button id="revoke-access-button" style="display: none; margin-left: 25px">Revoke access</button>
+
+  <div id="auth-status" style="display: inline; padding-left: 25px"></div>
+  <hr>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()">
+  </script>
+
   <div ng-view></div>
   <script src="/index.js"></script>
   <script src="/components/app.js"></script>
