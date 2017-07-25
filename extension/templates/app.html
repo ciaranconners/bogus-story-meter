@@ -19,8 +19,12 @@
       <p class="text-center">of users believe the information presented on this page is accurate, what do you think?</p>
     </div>
 
-    <div ng-if="app.rated && app.uservote" class="dd-heading rated-heading">
-      <p class="text-center">of users agree with your previous rating, as indicated below. Change your rating if you'd like!</p>
+    <div ng-if="app.rated && app.uservote === 'upvote'" class="dd-heading rated-heading">
+      <p class="text-center">of users believe the information presented on this page is accurate, as well as agree with your previous 'true' rating.</p>
+    </div>
+
+    <div ng-if="app.rated && app.uservote === 'downvote'" class="dd-heading rated-heading">
+      <p class="text-center">of users believe the information presented on this page is accurate, as well as disagree with your previous 'false' rating.</p>
     </div>
 
     <div class="dd-tfbtn">
@@ -46,34 +50,4 @@
     </div>
 
   </div>
-
-  <!-- <div ng-if="!app.loggedIn" class="dropdown">
-
-    <div ng-if="app.rated" class="dd-heading rated-heading">
-      <h1 class="text-center">{{app.rating}}</h1>
-      <p class="text-center">of users believe the information presented on this page is accurate, log in or create an account to share your thoughts!</p>
-    </div>
-
-    <div ng-if="!app.rated" class="dd-heading unrated-heading">
-      <p class="text-center">This page has not yet been rated by our users, log in or create an account to be the first to submit your thoughts!</p>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-2"></div>
-      <div class="col-xs-8 dd-login-container">
-        <button class="dd-login btn btn-default">Login with Google</button>
-      </div>
-      <div class="col-xs-2"></div>
-    </div>
-
-    <div class="dd-stats row">
-      <div class="col-xs-1"></div>
-      <div class="col-xs-10 dd-stats">
-        <button class="dd-stats-link btn btn-primary" ng-click="app.handleStatsLink()">Click to view comments</button>
-      </div>
-      <div class="col-xs-1"></div>
-    </div>
-
-  </div> -->
-
 </div>

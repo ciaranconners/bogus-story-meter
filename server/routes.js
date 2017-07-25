@@ -16,6 +16,8 @@ app.get('/urlvote/:urlId', handler.getUrlVotes);
 
 app.post('/urlvote', handler.postUrlVotes);
 
+app.put('/urlvote', handler.putUrlVotes);
+
 app.get('/urldata', handler.getUrlData);
 
 app.get('/stats/generate-retrieve', handler.generateRetrieveStatsPageUrl);

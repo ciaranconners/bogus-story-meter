@@ -124,8 +124,12 @@ const sendResponse = () => {
 };
 
 chrome.extension.onMessage.addListener(function(message) {
+  console.log('message from controller ', message);
+
     if(message.hasOwnProperty('rating')) {
       rating = message.rating;
+      uservote = message.uservote;
+      urlId = message.taburl;
       updateIcon(rating);
     }
     sendResponse();

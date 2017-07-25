@@ -33,6 +33,7 @@ angular.module('app', [])
       if (this.tabUrl === null) {
         return;
       }
+      console.log('inside handlevote - taburl ', this.tabUrl)
       var data = JSON.stringify({
         url: this.tabUrl,
         username: this.currentUser,
@@ -45,18 +46,17 @@ angular.module('app', [])
           that.tabUrl = postResponse;
           request.get(`/urlvote/${that.tabUrl}`, null, null, errMsg, (getResponse) => {
             that.rating = getResponse;
-            chrome.runtime.sendMessage({rating: that.rating});
+            that.uservote = vote;
+            chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'taburl': that.tabUrl});
           });
         });
       } else if (this.uservote !== vote) { // if user is changing vote
-
-        // PUT REQUEST TO CHANGE VOTE
-
         $http.put(`${window.serverUri}/urlvote`, data).then(function(res) {
           that.tabUrl = res.data;
           $http.get(`${window.serverUri}/urlvote/${that.tabUrl}`).then(function(response) {
             that.rating = response.data;
-            chrome.runtime.sendMessage({rating: that.rating});
+            that.uservote = vote;
+            chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'taburl': that.tabUrl});
           });
         }, function(err) {console.error('Could not submit vote ', err);});
 
