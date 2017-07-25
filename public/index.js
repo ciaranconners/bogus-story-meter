@@ -11,7 +11,7 @@ angular.module('app', ['ngRoute'])
         controller: 'AppCtrl'
       }).
       when('/stats/redirect/:id', {
-        templateUrl: './templates/statsPage.html',
+        templateUrl: './templates/stats.html',
         controller: 'StatCtrl'
       });
       // .otherwise({
