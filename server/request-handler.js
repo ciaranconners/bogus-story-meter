@@ -180,8 +180,6 @@ console.log('=========================== oldTypeCount', oldTypeCount)
 
 // the following function will generate a new stat page url or retrieve one if it exists in the DB
 
-// TODO => send 404 if page doesn't exist (resource not found)
-
 handler.generateRetrieveStatsPageUrl = (req, res) => {
   console.log('stat page url request received');
   let currentUrl = req.query.currentUrl;
