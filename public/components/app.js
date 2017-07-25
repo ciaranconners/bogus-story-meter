@@ -8,6 +8,16 @@ angular.module('app')
 	this.profileInfo.id = '';
 	this.signedIn = false;
 
+  let errMsg = 'Could not retrieve user data '
+
+  requests.get('/useractivity', null, {username: 'patrick.tang1086@gmail.com'},errMsg, (getResponse) => {
+    this.userVotes = getResponse.userVotes;
+    this.userComments = getResponse.userComments;
+    // console.log('user data ', getResponse)
+    this.userActivity = this.userVotes.concat(this.userComments);
+    console.log(this.userActivity)
+  })
+
 	this.onSignIn = function(googleUser) {
 	  var profile = googleUser.getBasicProfile();
 	  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.

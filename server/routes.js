@@ -30,4 +30,6 @@ app.get('/stats/redirect/*', (req, res, next) => {
 
 app.post('/urlcomment', handler.postUrlComment);
 
+app.get('/useractivity', handler.getUserActivity);
+
 module.exports = app;
