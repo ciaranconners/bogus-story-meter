@@ -46,10 +46,41 @@
   list-style: none
 }
 
-.navbar {
-  background-color: blue;
+textarea {
+  min-width: 700px;
+  min-height: 60px;
 }
 
-body {
-  padding: 500px;
+.dd-tfbtn, .dd-stats, .dd-login-container {
+  display: flex;
+}
+
+.dd-button {
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 25px;
+  text-align: center;
+  height: 70;
+  width: 80px;
+}
+
+.dd-login {
+  margin: auto;
+}
+.dd-stats-link {
+  margin-top: 15px;
+  /*margin-left: 37px;*/
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+
+.unrated-heading {
+  margin-top: 10px;
+}
+
+.profilebutton {
+  padding-left: 0;
+  margin-left: 0;
+  margin-top: 10px;
 }

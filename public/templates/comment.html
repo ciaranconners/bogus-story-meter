@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-3">
+      {{$ctrl.comment.username}}
+    </div>
+    <div class="col-xs-6">
+      {{$ctrl.comment.text}}
+    </div>
+    <div class="col-xs-3">
+      <button
+        class="reply btn btn-default pull-right"
+        ng-click="$ctrl.handleReply(comment.id)">Reply
+      </button>
+    </div>
+  </div>
+  <div
+    class="comment reply text-center"
+    ng-repeat="reply in $ctrl.comment.replies"
+  >
+    <reply reply="reply" />
+  </div>
+</div>
