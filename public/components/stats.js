@@ -7,12 +7,13 @@ angular.module('app')/*eslint-disable indent*/
   this.rating;
   this.comments = [
     {
+      id: 1,
       username: 'User One',
       text: 'comment1',
       replies: [{username: 'User Two', text: 'comment1a'}]
     },
-    {username: 'User Three', text: 'comment2', replies: []},
-    {username: 'User Four', text: 'comment3', replies: []}
+    {id: 2, username: 'User Three', text: 'comment2', replies: []},
+    {id: 3, username: 'User Four', text: 'comment3', replies: []}
   ];
 
   this.getUrlStats = function() {
