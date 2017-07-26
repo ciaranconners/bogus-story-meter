@@ -32,6 +32,10 @@ app.put('/urlvote', handler.putUrlVotes);
 
 app.get('/urldata', handler.getUrlData);
 
+app.post('/urlcomment', handler.postUrlComment);
+
+app.get('/useractivity', handler.getUserActivity);
+
 app.get('/stats/generate-retrieve', handler.generateRetrieveStatsPageUrl);
 
 app.post('/auth', handler.postAuth);
@@ -40,12 +44,20 @@ app.get('/auth', handler.getAuth);
 
 // TODO => for the below route send a 404 error if the corresponding url doesn't exist in the DB:
 
-app.get('/stats/redirect/*', (req, res, next) => {
+app.get('/home', (req, res, next) => {
   res.sendFile('./index.html', {root: path.join(__dirname, '../public')});
 });
 
-app.post('/urlcomment', handler.postUrlComment);
+app.get('/profile', (req, res, next) => {
+  res.sendFile('./index.html', {root: path.join(__dirname, '../public')});
+});
 
-app.get('/useractivity', handler.getUserActivity);
+app.get('/login', (req, res, next) => {
+  res.sendFile('./index.html', {root: path.join(__dirname, '../public')});
+});
+
+app.get('/stats/redirect/*', (req, res, next) => {
+  res.sendFile('./index.html', {root: path.join(__dirname, '../public')});
+});
 
 module.exports = app;
