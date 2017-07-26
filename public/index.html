@@ -22,6 +22,7 @@
 </head>
 
 <body ng-app="app">
+  <navbar></navbar>
   <script>
     var GoogleAuth;
 
@@ -70,7 +71,6 @@
       var isAuthorized = user.hasGrantedScopes('email');
       if (isAuthorized) {
         var email = user.w3.U3;
-        var accessToken = user.Zi.access_token;
         var name = user.w3.ig;
         var imageUrl = user.w3.Paa;
         $('#sign-in-or-out-button').html('Sign out');
@@ -81,11 +81,9 @@
           type: 'POST',
           url: 'http://localhost:8080/auth',
           data: {
-            yo: 'what up',
             username: email,
             firstLast: name,
-            image: imageUrl,
-            token: accessToken
+            image: imageUrl
           },
         });
       } else {

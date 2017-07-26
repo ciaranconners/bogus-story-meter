@@ -165,7 +165,17 @@ describe('Database tests', () => {
 
   });
 
+  it('should insert a User into AuthUser', (done) => {
+      db.AuthUser.create({username: 'ciaranconners@gmail.com', image: 'somepic', firstLast: 'yo'})
+      .then(() => {
+        return db.AuthUser.findOne({where:{username: 'ciaranconners@gmail.com'}});
+    }).then((user) => {
+      expect(user.username).to.equal('ciaranconners@gmail.com');
+    })
+    .catch((err) => {
+      done(err);
+    });
+  });
 });
 
 
-  

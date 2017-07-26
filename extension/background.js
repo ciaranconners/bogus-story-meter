@@ -64,7 +64,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
           console.error(err);
         },
         success: function(data) {
-          console.log('updated data', data)
+          console.log('updated data', data);
 
           lastUrl = url;
           updateIcon(data.rating);

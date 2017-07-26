@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
+// var connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
 
 var db = new Sequelize('bsm', 'root', '', {
   dialect: 'mysql',
@@ -34,6 +34,19 @@ var User = db.define('User', {
       User.hasMany(models.Comment);
       User.hasMany(models.CommentVote);
     }
+  }
+});
+
+var AuthUser = db.define('AuthUser', {
+  username: {
+    type: Sequelize.STRING,
+    unique: true
+  },
+  firstLast: {
+    type: Sequelize.STRING
+  },
+  image: {
+    type: Sequelize.STRING
   }
 });
 
@@ -139,6 +152,9 @@ User.sync()
   })
   .then(() => {
     CommentVote.sync();
+  })
+  .then(() => {
+    AuthUser.sync();
   });
 
 module.exports = db.models;
