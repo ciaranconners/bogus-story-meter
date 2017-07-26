@@ -38,11 +38,19 @@ app.get('/useractivity', handler.getUserActivity);
 
 app.get('/stats/generate-retrieve', handler.generateRetrieveStatsPageUrl);
 
-app.post('/auth', handler.postAuth);
+app.post('/auth/signup', handler.signup);
 
-app.get('/auth', handler.getAuth);
+app.post('/auth/login', handler.login);
+
+app.get('/auth/logout', handler.logout);
+
+app.get('/auth/status', handler.checkLoginStatus);
 
 // TODO => for the below route send a 404 error if the corresponding url doesn't exist in the DB:
+
+app.get('/stats/redirect/*', (req, res, next) => {
+  res.sendFile('./index.html', {root: path.join(__dirname, '../public')});
+});
 
 app.get('/home', (req, res, next) => {
   res.sendFile('./index.html', {root: path.join(__dirname, '../public')});

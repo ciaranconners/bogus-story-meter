@@ -12,8 +12,8 @@ angular.module('app')/*eslint-disable indent*/
     });
   };
   this.getUrlStats();
+})
+.component('statsPage', {
+  templateUrl: './templates/stats.html',
+  controller: 'StatCtrl'
 });
-// .component('statsPage', {
-//   templateUrl: './templates/stats.html',
-//   controller: 'StatCtrl'
-// });

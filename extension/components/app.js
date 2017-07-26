@@ -77,7 +77,7 @@ angular.module('app', [])
       request.post('/urlcomment', data, 'Could not submit comment: ', (resData) => {
         console.log(resData);
         that.tabUrl = resData;
-        chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'taburl': that.tabUrl})
+        chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'taburl': that.tabUrl});
       });
       this.comment = '';
     };
