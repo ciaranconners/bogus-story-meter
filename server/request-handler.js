@@ -9,7 +9,7 @@ handler.getUrlData = (req, res) => {
 
   db.User.findCreateFind( {where: {'username': username}} )
   .spread((userEntry) => {
-    return db.Url.findOne( {where: {'url': url}} )
+    return db.Url.findOne( {where: {url: url}} )
     .then((urlEntry) => {
       if (urlEntry === null) {
         res.json( {
@@ -66,18 +66,19 @@ handler.getUrlVotes = (req, res) => {
 
 handler.postUrlComment = (req, res) => {
   let url = req.body.url;
+  let urlId = req.body.urlId;
   let username = req.body.username;
   let comment = req.body.comment;
 
-  if (typeof url === 'number') {
+  if (urlId !== null) {
     db.User.findCreateFind({where: {username: username}})
     .spread((user) => {
-      db.Comment.create({text: comment, commentId: null, urlId: url, userId: user.id});
+      db.Comment.create({text: comment, commentId: null, urlId: urlId, userId: user.id});
     })
     .catch(err => {
       res.sendStatus(400);
     });
-  } else {
+  } else if (urlId === null) {
     db.Url.findCreateFind({where: {'url': url}})
     .spread(url => {
       db.User.findCreateFind({where: {username: username}})
@@ -96,12 +97,13 @@ handler.postUrlComment = (req, res) => {
 handler.postUrlVotes = (req, res) => {
   console.log(req.body);
   let url = req.body.url;
+  let urlId = req.body.urlId;
   let type = req.body.type;
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
 
-  if (typeof url === 'number') {
-    db.Url.findOne({where: {id: url}})
+  if (urlId !== null) {
+    db.Url.findOne({where: {id: urlId}})
     .then(url => {
       db.User.findCreateFind({where: {username: username}})
       .spread((user) => {
@@ -122,7 +124,7 @@ handler.postUrlVotes = (req, res) => {
     .catch(err => {
       res.sendStatus(400);
     });
-  } else {
+  } else if (urlId === null) {
     db.Url.findCreateFind({where: {'url': url}})
     .spread(url => {
       return db.Url.increment(typeCount, {where: {id: url.id}})
@@ -148,12 +150,14 @@ handler.postUrlVotes = (req, res) => {
 };
 
 handler.putUrlVotes = (req, res) => {
+  console.log(req.body);
   let url = req.body.url;
+  let urlId = req.body.urlId;
   let type = req.body.type;
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
 
-  db.Url.findOne( {where: {id: url}} )
+  db.Url.findOne( {where: {id: urlId}} )
   .then((urlEntry) => {
     db.User.findOne( {where: {username: username}} )
     .then((userEntry) => {
@@ -179,39 +183,115 @@ handler.putUrlVotes = (req, res) => {
 handler.generateRetrieveStatsPageUrl = (req, res) => {
   console.log('stat page url request received');
   let currentUrl = req.query.currentUrl;
-  db.Url.findCreateFind({
-      where: {
-        url: currentUrl
-      }
-    })
-    .spread(url => {
-      console.log('inside else');
-      let stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
-      db.Url.update({
-          statsPageUrl: stpUrl
-        }, {
-          where: {
-            id: url.id
-          }
-        })
-        .then(() => {
-          console.log('new stat page URL created, transmitting: ', stpUrl);
-          res.status(200).json(stpUrl);
-        })
-        .catch(function(err) {
-          console.error(err);
-          res.sendStatus(500);
-        });
+  console.log('---------------currentUrl', currentUrl);
+  if (typeof currentUrl === 'number') {
+    db.Url.findCreateFind({
+        where: {
+          id: currentUrl
+        }
+      })
+      .spread(url => {
+        console.log('inside if');
+        let stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
+        db.Url.update({
+            statsPageUrl: stpUrl
+          }, {
+            where: {
+              id: url.id
+            }
+          })
+          .then(() => {
+            console.log('new stat page URL created, transmitting: ', stpUrl);
+            res.status(200).json(stpUrl);
+          })
+          .catch((err) => {
+            console.error(err);
+            res.sendStatus(500);
+          });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
     })
     .catch((err) => {
       console.error(err);
       res.sendStatus(500);
-  })
-  .catch((err) => {
-    console.error(err);
-    res.sendStatus(500);
-  });
+    });    
+  } else {
+    db.Url.findCreateFind({
+        where: {
+          url: currentUrl
+        }
+      })
+      .spread(url => {
+        console.log('inside else');
+        let stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
+        db.Url.update({
+            statsPageUrl: stpUrl
+          }, {
+            where: {
+              id: url.id
+            }
+          })
+          .then(() => {
+            console.log('new stat page URL created, transmitting: ', stpUrl);
+            res.status(200).json(stpUrl);
+          })
+          .catch((err) => {
+            console.error(err);
+            res.sendStatus(500);
+          });
+      })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+  }
 };
+
+handler.getUrlStats = (req, res) => {
+  console.log('------------------req.body', req.body);
+  console.log('-------------------req.query', req.query);
+  let urlId = JSON.parse(req.query.urlId);
+
+  console.log('-----------------------urlid: ', urlId);
+
+  if (typeof urlId === 'number') {
+    console.log('-----------------------------in if');
+    db.Url.findOne({
+      where: {
+        id: urlId
+      }
+    })
+    .then((data) => {
+      console.log('------------------data.url', data.url);
+      res.send(data.url);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+  } else {
+    ('-----------------------------in else');
+    db.Url.findOne({
+      where: {
+        url: urlId
+      }
+    })
+    .then((data) => {
+      console.log('------------------data.url', data.url);
+      res.send(data.url);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+  }
+}
 
 
 handler.postAuth = function(req, res, next) {
