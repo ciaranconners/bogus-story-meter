@@ -22,6 +22,8 @@ app.get('/urldata', handler.getUrlData);
 
 app.get('/stats/generate-retrieve', handler.generateRetrieveStatsPageUrl);
 
+app.get('/urlstats', handler.getUrlStats);
+
 app.post('/auth', handler.postAuth);
 
 app.get('/auth', handler.getAuth);

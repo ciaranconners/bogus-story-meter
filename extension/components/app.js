@@ -89,7 +89,9 @@ angular.module('app', [])
     };
 
     this.handleStatsLink = () => {
-      let currentUrl = this.urlId;
+      let currentUrlId = this.urlId;
+      let currentUrl = this.url;
+      console.log('------currentUrl:', currentUrl);
       let params = {
         currentUrl
       };
