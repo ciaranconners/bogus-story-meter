@@ -66,18 +66,19 @@ handler.getUrlVotes = (req, res) => {
 
 handler.postUrlComment = (req, res) => {
   let url = req.body.url;
+  let urlId = req.body.urlId;
   let username = req.body.username;
   let comment = req.body.comment;
 
-  if (typeof url === 'number') {
+  if (urlId !== null) {
     db.User.findCreateFind({where: {username: username}})
     .spread((user) => {
-      db.Comment.create({text: comment, commentId: null, urlId: url, userId: user.id});
+      db.Comment.create({text: comment, commentId: null, urlId: urlId, userId: user.id});
     })
     .catch(err => {
       res.sendStatus(400);
     });
-  } else {
+  } else if (urlId === null) {
     db.Url.findCreateFind({where: {'url': url}})
     .spread(url => {
       db.User.findCreateFind({where: {username: username}})
@@ -96,12 +97,13 @@ handler.postUrlComment = (req, res) => {
 handler.postUrlVotes = (req, res) => {
   console.log(req.body);
   let url = req.body.url;
+  let urlId = req.body.urlId;
   let type = req.body.type;
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
 
-  if (typeof url === 'number') {
-    db.Url.findOne({where: {id: url}})
+  if (urlId !== null) {
+    db.Url.findOne({where: {id: urlId}})
     .then(url => {
       db.User.findCreateFind({where: {username: username}})
       .spread((user) => {
@@ -122,7 +124,7 @@ handler.postUrlVotes = (req, res) => {
     .catch(err => {
       res.sendStatus(400);
     });
-  } else {
+  } else if (urlId === null) {
     db.Url.findCreateFind({where: {'url': url}})
     .spread(url => {
       return db.Url.increment(typeCount, {where: {id: url.id}})
@@ -148,12 +150,14 @@ handler.postUrlVotes = (req, res) => {
 };
 
 handler.putUrlVotes = (req, res) => {
+  console.log(req.body);
   let url = req.body.url;
+  let urlId = req.body.urlId;
   let type = req.body.type;
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
 
-  db.Url.findOne( {where: {id: url}} )
+  db.Url.findOne( {where: {id: urlId}} )
   .then((urlEntry) => {
     db.User.findOne( {where: {username: username}} )
     .then((userEntry) => {
