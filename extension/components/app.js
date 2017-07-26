@@ -84,6 +84,7 @@ angular.module('app', [])
 
     this.handleStatsLink = () => {
       let currentUrl = this.tabUrl;
+      console.log('------currentUrl:', currentUrl);
       let params = {
         currentUrl
       };
