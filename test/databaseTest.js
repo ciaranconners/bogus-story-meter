@@ -6,7 +6,7 @@ const db = require('../server/db/index.js');
 describe('Database tests', () => {
 
   it('should retrieve a user', (done) => {
-    db.User.upsert({username: 'joe'})
+    db.User.upsert({username: 'joe', password: 'ciaran'})
     .then((data) => {
       return db.User.findOne({ where: {username: 'joe'} });
     })

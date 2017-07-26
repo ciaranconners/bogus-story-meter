@@ -15,6 +15,9 @@ var User = db.define('User', {
     type: Sequelize.STRING,
     unique: true
   },
+  password: {
+    type: Sequelize.STRING
+  },
   upvoteCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
