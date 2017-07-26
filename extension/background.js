@@ -2,6 +2,7 @@ let rating = null;
 let urlId = null;
 let username = null;
 let uservote = null;
+let url = null;
 
 const updateIcon = (rating) => {
   const CBA = chrome.browserAction;
@@ -120,7 +121,7 @@ chrome.identity.getProfileUserInfo(function(userObj) {
 });
 
 const sendResponse = () => {
-  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote});
+  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote, 'url': url});
 };
 
 chrome.extension.onMessage.addListener(function(message) {

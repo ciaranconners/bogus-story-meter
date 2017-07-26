@@ -6,8 +6,10 @@ angular.module('app')/*eslint-disable indent*/
     let path = $location.url().split('/');
     let urlId = path[path.length - 1];
     let errMsg = 'couldn\'t get URL stats';
-    request.get('/urlstats', urlId, null, (response) => {
+    let params = {urlId: urlId};
+    request.get('/urlstats', null, params, errMsg, (response) => {
       this.url = response;
+      console.log('this.url', this.url);
     });
   };
   this.getUrlStats();
