@@ -24,6 +24,10 @@ app.get('/stats/generate-retrieve', handler.generateRetrieveStatsPageUrl);
 
 app.get('/urlstats', handler.getUrlStats);
 
+app.post('/auth', handler.postAuth);
+
+app.get('/auth', handler.getAuth);
+
 // TODO => for the below route send a 404 error if the corresponding url doesn't exist in the DB:
 
 app.get('/stats/redirect/*', (req, res, next) => {
@@ -31,5 +35,7 @@ app.get('/stats/redirect/*', (req, res, next) => {
 });
 
 app.post('/urlcomment', handler.postUrlComment);
+
+app.get('/useractivity', handler.getUserActivity);
 
 module.exports = app;

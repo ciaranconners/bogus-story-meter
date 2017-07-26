@@ -289,4 +289,64 @@ handler.getUrlStats = (req, res) => {
   }
 }
 
+
+handler.postAuth = function(req, res, next) {
+  console.log(req.body.username);
+  db.User.findCreateFind({
+    where: {
+      username: req.body.username
+    }
+  })
+  .spread(function(user) {
+    console.log('all set, new');
+    res.status(200);
+  })
+  .catch(function(err) {
+    console.error(err);
+  });
+};
+
+handler.getAuth = function(req, res, next) {
+  console.log('USERNAME:', req.body.username);
+  db.User.findOne({
+    where: {
+      username: req.body.username
+    }
+  })
+  .then(function(user) {
+    console.log('all set');
+    res.status(200);
+  })
+  .catch(function(err) {
+    console.error(err);
+  });
+};
+
+handler.getUserActivity = (req, res) => {
+  let username = req.query.username;
+
+  db.User.findOne( {'where': {'username': username}} )
+  .then((userEntry) => {
+    return db.UrlVote.findAll( {'where': {'userId': userEntry.id}} )
+    .then((userVotes) => {
+      return db.Comment.findAll( {'where': {'userId': userEntry.id}} )
+      .then((userComments) => {
+        res.status(200).json({'userVotes': userVotes, 'userComments': userComments})
+      })
+      .catch(function(err) {
+        console.error(err);
+        res.sendStatus(404);
+      })
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.sendStatus(404);
+    })
+  })
+  .catch(function(err) {
+    console.error(err);
+    res.sendStatus(404);
+  })
+}
+
 module.exports = handler;

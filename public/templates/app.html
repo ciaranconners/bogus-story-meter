@@ -1,11 +1,9 @@
 <div class="container top-offset">
-	<div class="sign-in">
-		<div ng-show="!$ctrl.signedIn" class="g-signin2" data-onsuccess="onSignIn"></div>
-		<a ng-show="$ctrl.signedIn" href="/" ng-click="$ctrl.signOut()">Sign out</a>
-	</div>
 	<div class="row profile-info">
 		<div class="col-sm-4">
 			<div class="img-parent">
+				<!-- <img ng-if="$ctrl.signedIn" class="profile-pic" ng-src={{$ctrl.profileInfo.url}} alt="profile picture">
+				<p ng-if="$ctrl.signedIn" class="username">{{$ctrl.profileInfo.name}}</p> -->
 				<img  class="profile-pic" ng-src={{$ctrl.profileInfo.url}} alt="profile picture">
 				<p  class="username">{{$ctrl.profileInfo.name}}</p>
 			</div>

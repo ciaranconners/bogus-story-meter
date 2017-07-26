@@ -1,5 +1,6 @@
 angular.module('app')/*eslint-disable indent*/
 
+
 .controller('StatCtrl', function(request, $location) {
   this.url;
   this.getUrlStats = function() {
