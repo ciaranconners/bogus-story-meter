@@ -49,3 +49,7 @@
 .navbar {
   background-color: blue;
 }
+
+body {
+  padding: 500px;
+}

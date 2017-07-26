@@ -172,11 +172,11 @@ handler.putUrlVotes = (req, res) => {
         .then(() => {
           db.UrlVote.update( {type: type}, {where: {userId: userEntry.id, urlId: urlEntry.id}} )
           res.status(201).json(urlEntry.id);
-        })
-      })
-    })
-  })
-}
+        });
+      });
+    });
+  });
+};
 
 // the following function will generate a new stat page url or retrieve one if it exists in the DB
 
@@ -295,18 +295,21 @@ handler.getUrlStats = (req, res) => {
 
 
 handler.postAuth = function(req, res, next) {
-  console.log(req.body.username);
+  console.log(req.body);
   db.User.findCreateFind({
     where: {
-      username: req.body.username
+      username: req.body.username,
+      image: req.body.image,
+      firstLast: req.body.name
     }
   })
   .spread(function(user) {
-    console.log('all set, new');
+    console.log('all set, new', user);
     res.status(200);
   })
   .catch(function(err) {
     console.error(err);
+    res.status(500);
   });
 };
 
@@ -340,17 +343,17 @@ handler.getUserActivity = (req, res) => {
       .catch(function(err) {
         console.error(err);
         res.sendStatus(404);
-      })
+      });
     })
     .catch(function(err) {
       console.error(err);
       res.sendStatus(404);
-    })
+    });
   })
   .catch(function(err) {
     console.error(err);
     res.sendStatus(404);
-  })
-}
+  });
+};
 
 module.exports = handler;
