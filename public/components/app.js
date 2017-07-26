@@ -1,6 +1,6 @@
 // YOU CAN ONLY GET TO THIS PAGE IF YOU ARE LOGGED IN - WILL SEND A REQUEST TO SERVER TO VERIFY AUTH WITH GOOGLE
 angular.module('app')
-.controller('AppCtrl', function($scope, requests, $http, $rootScope, $window) {
+.controller('AppCtrl', function($scope, request, $http, $rootScope, $window) {
   var that = this;
   this.name = '';
   this.imageUrl = '';
@@ -10,13 +10,23 @@ angular.module('app')
 
   let errMsg = 'Could not retrieve user data ';
 
-  requests.get('/useractivity', null, {username: 'patrick.tang1086@gmail.com'},errMsg, (getResponse) => {
+  var date_sort_desc = function (obj1, obj2) {
+    var date1 = new Date(obj1.updatedAt);
+    var date2 = new Date(obj2.updatedAt);
+    if (date1 > date2) return -1;
+    if (date1 < date2) return 1;
+    return 0;
+  };
+
+  request.get('/useractivityTEST', null, {username: 'patrick.tang1086@gmail.com'},errMsg, (getResponse) => {
+    // console.log(getResponse)
+    this.name = 'Patrick Tang'
     this.userVotes = getResponse.userVotes;
     this.userComments = getResponse.userComments;
-    // console.log('user data ', getResponse)
-    this.userActivity = this.userVotes.concat(this.userComments);
-    console.log(this.userActivity);
+    this.userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
+    console.log('user activity ', this.userActivity);
   });
+
 
 	// this.onSignIn = function(googleUser) {
 	//   var profile = googleUser.getBasicProfile();
@@ -50,6 +60,5 @@ angular.module('app')
  //  console.log(this.signedIn);
 })
 .component('app', {
-  templateUrl: './templates/app.html',
-  controller: 'AppCtrl'
+  templateUrl: './templates/app.html'
 });

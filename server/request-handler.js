@@ -216,7 +216,7 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
     .catch((err) => {
       console.error(err);
       res.sendStatus(500);
-    });    
+    });
   } else {
     db.Url.findCreateFind({
         where: {
@@ -276,7 +276,7 @@ handler.getUrlStats = (req, res) => {
       res.sendStatus(500);
     });
   } else {
-    ('-----------------------------in else');
+    console.log('-----------------------------in else');
     db.Url.findOne({
       where: {
         url: urlId
@@ -329,13 +329,45 @@ handler.getAuth = function(req, res, next) {
   });
 };
 
-handler.getUserActivity = (req, res) => {
-  let username = req.query.username;
+// db.allDocs({include_docs: true}).then(function (result) {
+//   return Promise.all(result.rows.map(function (row) {
+//     return db.remove(row.doc);
+//   }));
+// }).then(function (arrayOfResults) {
+//   // All docs have really been removed() now!
+// });
 
+handler.getUserActivityTEST = (req, res) => {
+  let username = req.query.username;
   db.User.findOne( {'where': {'username': username}} )
   .then((userEntry) => {
     return db.UrlVote.findAll( {'where': {'userId': userEntry.id}} )
     .then((userVotes) => {
+// console.log('========================user votes ', userVotes.length)
+      var userPromises = userVotes.map((row) => {
+// console.log('================ row.urlId ', row.urlId)
+        return db.Url.findOne( {'where': {'id': row.urlId}} )
+        .then((urlEntry) => {
+console.log('================ urlEntry ', urlEntry)
+          row.dataValues.url = urlEntry.url;
+          return row;
+        })
+      })
+      Promise.all(userPromises).then((userVotesNew) => {
+        console.log('================================= uservotesnew ', userVotesNew)
+        res.json({'userVotes': userVotesNew})
+      })
+    })
+  })
+}
+
+handler.getUserActivity = (req, res) => {
+  let username = req.query.username;
+  db.User.findOne( {'where': {'username': username}} )
+  .then((userEntry) => {
+    return db.UrlVote.findAll( {'where': {'userId': userEntry.id}} )
+    .then((userVotes) => {
+      console.log('========================user votes ', userVotes)
       return db.Comment.findAll( {'where': {'userId': userEntry.id}} )
       .then((userComments) => {
         res.status(200).json({'userVotes': userVotes, 'userComments': userComments})
