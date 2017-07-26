@@ -1,16 +1,25 @@
-<div class="container top-offset">
+<div ng-controller="AppCtrl as app" class="container top-offset">
 	<div class="row profile-info">
 		<div class="col-sm-4">
 			<div class="img-parent">
 				<!-- <img ng-if="$ctrl.signedIn" class="profile-pic" ng-src={{$ctrl.profileInfo.url}} alt="profile picture">
 				<p ng-if="$ctrl.signedIn" class="username">{{$ctrl.profileInfo.name}}</p> -->
-				<img  class="profile-pic" ng-src={{$ctrl.profileInfo.url}} alt="profile picture">
-				<p  class="username">{{$ctrl.profileInfo.name}}</p>
+				<img  class="profile-pic" ng-src={{app.profileInfo.url}} alt="profile picture">
+				<p  class="username">{{app.name}}</p>
 			</div>
 		</div>
 		<div class="col-sm-8">
 			<search-form></search-form>
-			<recent-activity></recent-activity>
+			<h4>Your recent activity:</h4>
+			<ul ng-repeat="activity in app.userActivity">
+			  <li ng-show="activity.type">You rated the page: {{activity.url}} as {{activity.type === 'upvote'}}</li>
+			  <li ng-show="activity.text">You commented on the page: {{activity.url}}
+			    <ul ng-show="activity.text">
+			      <li>{{activity.text}}</li>
+			    </ul>
+			  </li>
+			</ul>
+
 		</div>
 	</div>
 </div>
