@@ -216,7 +216,7 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
     .catch((err) => {
       console.error(err);
       res.sendStatus(500);
-    });    
+    });
   } else {
     db.Url.findCreateFind({
         where: {
@@ -270,18 +270,42 @@ handler.getUrlStats = (req, res) => {
     })
     .then((data) => {
       console.log('------------------data.url', data.url);
-      db.Comment.findAll({attributes: ['text'], where: {urlId : urlId}})
+      return db.Comment.findAll({where: {urlId : urlId}})
       .then((results) => {
-        var comments = results.map(function (comment) {
-          return comment.text;
-        });
-
-        urlData.comments = comments;
-        urlData.url = data.url;
-        console.log('------------urlData:', urlData);
-
-        res.send(urlData);
+        var commentInfo = results.map(function(comment) {
+          var result = {}
+          result.userId = comment.userId;
+          result.id = comment.id;
+          result.commentId = comment.commentId;
+          result.commentText = comment.text;
+          return result;
+        })
+        return commentInfo;
       })
+      .then((comments) => {
+        console.log('===================comments', comments);
+        var pComments = comments.map((comment, index) => {
+          return db.User.findOne({where: {id: comment.userId}})
+          .then((user) => {
+            comment.replies = [];
+            comment.username = user.username;
+
+            if (comment.commentId) {
+              comments[comment.commentId - 1].replies.push(comment);
+              console.log('------------pComments first replymess', comments[comment.commentId - 1].replies[0])
+            }
+            return comment;
+          });
+        });
+        Promise.all(pComments).then((updatedComments) => {
+          console.log('=================updatedComments', updatedComments);
+          urlData.comments = updatedComments;
+          urlData.url = data.url;
+          console.log('------------urlsData:', urlData);
+
+          res.send(urlData);
+        });
+      });
     })
     .catch((err) => {
       console.error(err);
@@ -303,7 +327,7 @@ handler.getUrlStats = (req, res) => {
       res.sendStatus(500);
     });
   }
-};  
+};
 
 
 handler.postAuth = function(req, res, next) {
