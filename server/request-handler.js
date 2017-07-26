@@ -257,8 +257,9 @@ handler.getUrlStats = (req, res) => {
   console.log('------------------req.body', req.body);
   console.log('-------------------req.query', req.query);
   let urlId = JSON.parse(req.query.urlId);
+  var urlData = {};
 
-  console.log('-----------------------urlid: ', urlId);
+  console.log('-----------------------urlId: ', urlId);
 
   if (typeof urlId === 'number') {
     console.log('-----------------------------in if');
@@ -269,7 +270,18 @@ handler.getUrlStats = (req, res) => {
     })
     .then((data) => {
       console.log('------------------data.url', data.url);
-      res.send(data.url);
+      db.Comment.findAll({attributes: ['text'], where: {urlId : urlId}})
+      .then((results) => {
+        var comments = results.map(function (comment) {
+          return comment.text;
+        });
+
+        urlData.comments = comments;
+        urlData.url = data.url;
+        console.log('------------urlData:', urlData);
+
+        res.send(urlData);
+      })
     })
     .catch((err) => {
       console.error(err);
@@ -291,7 +303,7 @@ handler.getUrlStats = (req, res) => {
       res.sendStatus(500);
     });
   }
-}
+};  
 
 
 handler.postAuth = function(req, res, next) {
