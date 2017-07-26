@@ -215,7 +215,7 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
 
 
 handler.postAuth = function(req, res, next) {
-  console.log(req.body.username);
+  console.log(req.body);
   db.User.findCreateFind({
     where: {
       username: req.body.username,
