@@ -13,11 +13,11 @@
 
   <div class="dropdown">
     <div ng-if="!stat.rated && !stat.uservote" class="dropdown dd-heading unrated-heading">
-      <p class="text-center">This page has not yet been rated by our users, be the first to submit your thoughts!</p>
+      <p class="text-center">This page has not yet been rated by our users. Be the first to submit your thoughts!</p>
     </div>
 
     <div ng-if="stat.rated && !stat.uservote" class="dd-heading rated-heading">
-      <p class="text-center">of users believe the information presented on this page is accurate, what do you think?</p>
+      <p class="text-center">of users believe the information presented on this page is accurate. What do you think?</p>
     </div>
 
     <div ng-if="stat.rated && stat.uservote === 'upvote'" class="dd-heading rated-heading">
