@@ -1,6 +1,6 @@
 // YOU CAN ONLY GET TO THIS PAGE IF YOU ARE LOGGED IN - WILL SEND A REQUEST TO SERVER TO VERIFY AUTH WITH GOOGLE
 angular.module('app')
-.controller('AppCtrl', function($scope, requests, $http, $rootScope, $window) {
+.controller('AppCtrl', function($scope, request, $http, $rootScope, $window) {
   var that = this;
   this.name = '';
   this.imageUrl = '';
@@ -10,7 +10,7 @@ angular.module('app')
 
   let errMsg = 'Could not retrieve user data ';
 
-  requests.get('/useractivity', null, {username: 'patrick.tang1086@gmail.com'},errMsg, (getResponse) => {
+  request.get('/useractivity', null, {username: 'patrick.tang1086@gmail.com'},errMsg, (getResponse) => {
     this.userVotes = getResponse.userVotes;
     this.userComments = getResponse.userComments;
     // console.log('user data ', getResponse)

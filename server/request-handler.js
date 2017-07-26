@@ -2,6 +2,10 @@ const db = require('./db/index.js');
 
 const handler = {};
 
+var calculateRating = (upvoteCount, downvoteCount) => {
+  return Math.round((upvoteCount / (upvoteCount + downvoteCount)) * 100) || null;
+}
+
 /*eslint-disable indent*/
 handler.getUrlData = (req, res) => {
   let url = req.query.currentUrl;
@@ -21,9 +25,7 @@ handler.getUrlData = (req, res) => {
       } else {
         return db.UrlVote.findOne( {where: {'userId': userEntry.id, 'urlId': urlEntry.id}} )
         .then((voteEntry) => {
-          let upvotes = urlEntry.upvoteCount;
-          let downvotes = urlEntry.downvoteCount;
-          rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
+          rating = calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
           if (voteEntry) {
             res.json( {
               'rating': rating,
@@ -216,7 +218,7 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
     .catch((err) => {
       console.error(err);
       res.sendStatus(500);
-    });    
+    });
   } else {
     db.Url.findCreateFind({
         where: {
@@ -257,8 +259,9 @@ handler.getUrlStats = (req, res) => {
   console.log('------------------req.body', req.body);
   console.log('-------------------req.query', req.query);
   let urlId = JSON.parse(req.query.urlId);
+  var urlData = {};
 
-  console.log('-----------------------urlid: ', urlId);
+  console.log('-----------------------urlId: ', urlId);
 
   if (typeof urlId === 'number') {
     console.log('-----------------------------in if');
@@ -268,8 +271,44 @@ handler.getUrlStats = (req, res) => {
       }
     })
     .then((data) => {
-      console.log('------------------data.url', data.url);
-      res.send(data.url);
+      urlData.rating = calculateRating(data.upvoteCount, data.downvoteCount);
+      console.log('------------------urlData.rating', urlData.rating);
+      return db.Comment.findAll({where: {urlId : urlId}})
+      .then((results) => {
+        var commentInfo = results.map(function(comment) {
+          var result = {}
+          result.userId = comment.userId;
+          result.id = comment.id;
+          result.commentId = comment.commentId;
+          result.commentText = comment.text;
+          return result;
+        })
+        return commentInfo;
+      })
+      .then((comments) => {
+        console.log('===================comments', comments);
+        var pComments = comments.map((comment, index) => {
+          return db.User.findOne({where: {id: comment.userId}})
+          .then((user) => {
+            comment.replies = [];
+            comment.username = user.username;
+
+            if (comment.commentId) {
+              comments[comment.commentId - 1].replies.push(comment);
+              console.log('------------pComments first replymess', comments[comment.commentId - 1].replies[0]);
+            }
+            return comment;
+          });
+        });
+        Promise.all(pComments).then((updatedComments) => {
+          console.log('=================updatedComments', updatedComments);
+          urlData.comments = updatedComments;
+          urlData.url = data.url;
+          console.log('------------urlsData:', urlData);
+
+          res.send(urlData);
+        });
+      });
     })
     .catch((err) => {
       console.error(err);
@@ -291,7 +330,7 @@ handler.getUrlStats = (req, res) => {
       res.sendStatus(500);
     });
   }
-}
+};
 
 
 handler.postAuth = function(req, res, next) {
