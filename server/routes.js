@@ -36,8 +36,6 @@ app.post('/urlcomment', handler.postUrlComment);
 
 app.get('/useractivity', handler.getUserActivity);
 
-          app.get('/useractivityTEST', handler.getUserActivityTEST);
-
 app.get('/stats/generate-retrieve', handler.generateRetrieveStatsPageUrl);
 
 app.get('/urlstats', handler.getUrlStats);

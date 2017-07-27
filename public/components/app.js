@@ -18,12 +18,13 @@ angular.module('app')
     return 0;
   };
 
-  request.get('/useractivityTEST', null, {username: 'patrick.tang1086@gmail.com'},errMsg, (getResponse) => {
-    // console.log(getResponse)
+  request.get('/useractivity', null, {username: 'patrick.tang1086@gmail.com'},errMsg, (getResponse) => {
+    console.log(getResponse)
     this.name = 'Patrick Tang'
     this.userVotes = getResponse.userVotes;
     this.userComments = getResponse.userComments;
     this.userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
+    // this.userActivity = this.userComments
     console.log('user activity ', this.userActivity);
   });
 
