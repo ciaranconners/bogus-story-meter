@@ -14,8 +14,8 @@
     </div>
   </div>
   <div
-    class="comment reply text-center"
-    ng-repeat="reply in $ctrl.comment.replies"
+    class="comment reply"
+    ng-repeat="reply in $ctrl.comment.replies track by $index"
   >
     <reply reply="reply" />
   </div>

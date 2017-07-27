@@ -1,40 +1,42 @@
-angular.module('app')/*eslint-disable indent*/
+angular.module('app') /*eslint-disable indent*/
 
 
-.controller('StatCtrl', function(request, $location) {
+.controller('StatCtrl', function(request, $location, $scope) {
 
   this.url;
   this.rating;
-  this.comments = [
-    {
-      id: 1,
-      username: 'User One',
-      text: 'comment1',
-      replies: [{username: 'User Two', text: 'comment1a'}]
-    },
-    {id: 2, username: 'User Three', text: 'comment2', replies: []},
-    {id: 3, username: 'User Four', text: 'comment3', replies: []}
-  ];
+  this.comments;
+  this.urlId;
 
-  this.getUrlStats = function() {
+  const getUrlId = () => {
     let path = $location.url().split('/');
-    let urlId = path[path.length - 1];
+    return path[path.length - 1];
+  };
+
+  const getUrlStats = () => {
     let errMsg = 'couldn\'t get URL stats';
-    let params = {urlId: urlId};
-    request.get('/urlstats', null, params, errMsg, (response) => {
-      // this.url = response.url;
-      this.url = response.url;
-      // this.rating = response.rating;
-      // this.comments = response.comments;
-      console.log('this.url', this.url);
-      console.log('this.rating', this.rating);
-      console.log('this.comments', this.comments);
+    let params = {urlId: getUrlId()};
+    request.get('/urlstats', null, params, errMsg, res => {
+    this.url = res.url;
+    this.rating = res.rating;
     });
   };
-  this.getUrlStats();
+
+  const getUrlComments = () => {
+    let errMsg = 'couldn\'t get URL comments';
+    let params = {urlId: getUrlId()};
+    request.get('/urlcomments', null, params, errMsg, res => {
+      this.comments = res.comments.filter(comment => comment /* filters out null comments */);
+    });
+  };
+
+  $scope.$on('$routeChangeSuccess', () => {
+    getUrlStats();
+    getUrlComments();
+  });
 
   this.handleReply = function(commentId) {
 
   };
 
-})
+});
