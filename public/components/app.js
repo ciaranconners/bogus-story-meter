@@ -20,7 +20,9 @@ angular.module('app')
 
   request.get('/useractivity', null, {username: 'patrick.tang1086@gmail.com'},errMsg, (getResponse) => {
     console.log(getResponse)
-    this.name = 'Patrick Tang'
+    this.name = 'Patrick Tang';
+    this.firstName = this.name.split(' ')[0];
+    this.lastName =this.name.split(' ')[1];
     this.userVotes = getResponse.userVotes;
     this.userComments = getResponse.userComments;
     this.userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
