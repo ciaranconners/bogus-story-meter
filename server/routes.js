@@ -34,9 +34,9 @@ app.get('/urldata', handler.getUrlData);
 
 app.post('/urlcomment', handler.postUrlComment);
 
-app.get('/useractivity', handler.getUserActivity);
+// app.get('/useractivity', handler.getUserActivity);
 
-          app.get('/useractivityTEST', handler.getUserActivityTEST);
+app.get('/useractivityTEST', handler.getUserActivityTEST);
 
 app.get('/stats/generate-retrieve', handler.generateRetrieveStatsPageUrl);
 
@@ -48,7 +48,7 @@ app.post('/auth/login', handler.login);
 
 app.get('/auth/logout', handler.logout);
 
-app.get('/auth/status', handler.checkLoginStatus);
+// app.get('/auth/status', handler.checkLoginStatus);
 
 // TODO => for the below route send a 404 error if the corresponding url doesn't exist in the DB:
 
