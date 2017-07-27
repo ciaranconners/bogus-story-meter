@@ -11,11 +11,12 @@
 		<div class="col-sm-8">
 			<search-form></search-form>
 			<h4>Your recent activity:</h4>
-			<ul ng-repeat="activity in app.userActivity">
-			  <li ng-show="activity.type">You rated the page: {{activity.url}} as {{activity.type === 'upvote'}}</li>
-			  <li ng-show="activity.text">You commented on the page: {{activity.url}}
-			    <ul ng-show="activity.text">
-			      <li>{{activity.text}}</li>
+			<ul class="profileList" ng-repeat="activity in app.userActivity">
+				<li class="profileTime">{{ activity.updatedAt.slice(0,16).split('T').join(' ') }}</li>
+			  <li ng-show="activity.type">You rated the page: <i><a href={{activity.url}}>{{activity.url}}</a></i> as <b><a class="{{activity.type}}" href="/stats/redirect/{{activity.id}}">{{activity.type === 'upvote'}}</a></b></li>
+			  <li ng-show="activity.text">You commented on the page: <i><a href={{activity.url}}>{{activity.url}}</a></i>
+			    <ul class="profileList" ng-show="activity.text">
+			      <li><a class="profileComment" href="/stats/redirect/{{activity.id}}">{{activity.text}}</a></li>
 			    </ul>
 			  </li>
 			</ul>
