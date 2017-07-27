@@ -14,6 +14,12 @@ angular.module('app')
             $location.path('/profile');
           }
         }, function(err) {
+            if (err.status === 400) {
+              alert(err.data);
+              this.accName = '';
+              this.accPw = '';
+              this.accVerifyPw = '';
+            }
           console.error(err);
         });
       } else {
@@ -33,16 +39,14 @@ angular.module('app')
         }).then(function(response) {
           if (response.status === 200) {
             $location.path('/profile');
-          } else {
-            alert('please try again');
-            this.loginName = '';
-            this.loginPw = '';
           }
         }, function(err) {
-          this.loginName = '';
-          this.loginPw = '';
-          alert('please try again');
-          console.error(err);
+          if (err.status === 400) {
+            this.loginName = '';
+            this.loginPw = '';
+            alert(err.data);
+            console.error(err);
+          }
         });
     };
 
