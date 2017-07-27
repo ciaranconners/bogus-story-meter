@@ -23,12 +23,12 @@ angular.module('app')/*eslint-disable indent*/
     let params = {urlId: urlId};
     request.get('/urlstats', null, params, errMsg, (response) => {
       // this.url = response.url;
-      this.url = response;
+      this.url = response.url;
       // this.rating = response.rating;
       // this.comments = response.comments;
       console.log('this.url', this.url);
-      console.log('this.url', this.rating);
-      console.log('this.url', this.comments);
+      console.log('this.rating', this.rating);
+      console.log('this.comments', this.comments);
     });
   };
   this.getUrlStats();
@@ -37,4 +37,4 @@ angular.module('app')/*eslint-disable indent*/
 
   };
 
-});
+})

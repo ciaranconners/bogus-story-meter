@@ -20,7 +20,7 @@
   </div>
 </nav> -->
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default" ng-controller="NavCtrl as nav">
     <div class="container-fluid">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#my-navbar">
@@ -36,6 +36,7 @@
           <li><a id="home-btn" href="/home">Home</a></li>
           <li><a id="profile-btn" href="/profile">Profile</a></li>
           <li><a id="login-btn" href="/login">Sign In/Sign Up To See The Sites You've Rated Via Our Extension</a></li>
+          <li ng-click="nav.logout()"><a id="logout-btn" href="/home">Log Out</a></li>
         </ul>
       </div>
     </div>
