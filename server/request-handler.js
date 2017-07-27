@@ -65,12 +65,13 @@ handler.getUrlVotes = (req, res) => {
 handler.postUrlComment = (req, res) => {
   let url = req.body.url;
   let urlId = req.body.urlId;
-  let username = req.body.username;
+  let username = req.body.username || 'test@test.test';
   let comment = req.body.comment;
+  let commentId = req.body.commentId || null;
   if (urlId !== null) {
     db.User.findCreateFind({where: {username: username}})
     .spread((user) => {
-      db.Comment.create({text: comment, commentId: null, urlId: urlId, userId: user.id});
+      db.Comment.create({text: comment, commentId: commentId, urlId: urlId, userId: user.id});
     })
     .catch(err => {
       res.sendStatus(400);
@@ -278,26 +279,29 @@ handler.getUrlStats = (req, res) => {
 // split comments into a separate handler to improve page load speed
 handler.getUrlComments = (req, res) => {
   let urlId = req.query.urlId;
+  let idxMap = {};
+  let temp;
   db.Comment.findAll({where: {urlId: urlId}})
   .then(comments => {
-    let idxMap = {};
+    temp = comments;
     return comments.map((comment, i) => {
       idxMap[comment.id] = i;
       comment.dataValues.replies = [];
-      if (comment.commentId) {
-        // push reply comments to replies array in parent comments
-        comments[idxMap[comment.commentId]].dataValues.replies.push(comment);
-      } else { return comment; }
-    });
-  })
-  .mapSeries(comment => {
-    return !comment ? null : db.User.findOne({where: {id: comment.userId}})
-    .then(user => {
-      comment.dataValues.username = user.username;
       return comment;
     });
   })
+  .mapSeries(comment => {
+    return db.User.findOne({where: {id: comment.userId}})
+    .then(user => {
+      comment.dataValues.username = user.username;
+      if (comment.commentId) {
+        // push reply comments to replies array in parent comments
+        temp[idxMap[comment.commentId]].dataValues.replies.push(comment);
+      } else { return comment; }
+    });
+  })
   .then(comments => {
+    console.log(comments);
     res.send({comments: comments});
   })
   .catch(err => {
