@@ -1,14 +1,15 @@
 var Sequelize = require('sequelize');
-// var connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
+var connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
 
-var db = new Sequelize('bsm', 'root', '', {
+// var db = new Sequelize('bsm', 'root', '', {
+//   dialect: 'mysql',
+//   logging: false
+// });
+
+var db = new Sequelize(connectionUrl, {
   dialect: 'mysql',
   logging: false
 });
-
-// var db = new Sequelize(connectionUrl, {
-//   dialect: 'mysql'
-// });
 
 var User = db.define('User', {
   username: {

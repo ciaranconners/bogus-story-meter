@@ -1,4 +1,4 @@
-angular.module('app')
+angular.module('app')/*eslint-disable indent*/
 
 .service('request', function($http, $window) {
 	this.get = (endpoint, data = {}, params = {}, errMsg, callback) => {

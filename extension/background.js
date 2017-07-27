@@ -2,6 +2,8 @@ let rating = null;
 let urlId = null;
 let username = null;
 let uservote = null;
+let tabUrl = null;
+let userId = null;
 
 const updateIcon = (rating) => {
   const CBA = chrome.browserAction;
@@ -41,7 +43,7 @@ let lastUrl;
 chrome.tabs.onUpdated.addListener(function(tabId, tab) {
   // Note to Ciaran: removed "if (changeInfo.status === 'complete')" because it was making the icon update after a long delay on sites with a lot of ads. the below if statement allows it to load faster while repeating the GET request at most twice.
   // Feel free to delete this and ^ that after you read it
-  let url = tab.url;
+  url = tab.url;
 
   if (url !== lastUrl) {
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
@@ -64,13 +66,15 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
           console.error(err);
         },
         success: function(data) {
-          console.log('updated data', data);
-
+          console.log('updated data', data)
+          console.log('updated url ', url)
           lastUrl = url;
           updateIcon(data.rating);
+          tabUrl = url;
           rating = data.rating;
-          urlId = data.urlId || url;
+          urlId = data.urlId;
           uservote = data.userVote;
+          userId = data.userId;
         }
       });
     }
@@ -81,7 +85,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function(tab) {
 
-    let url = tab.url;
+    url = tab.url;
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
       rating = null;
       urlId = null;
@@ -103,12 +107,14 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
         },
         success: function(data) {
           console.log('activated data', data)
+          console.log('updated url ', url)
 
           updateIcon(data.rating);
           rating = data.rating;
-          urlId = data.urlId || url;
+          urlId = data.urlId;
           uservote = data.userVote;
           userId = data.userId;
+          tabUrl = url;
         }
       });
     }
@@ -120,7 +126,8 @@ chrome.identity.getProfileUserInfo(function(userObj) {
 });
 
 const sendResponse = () => {
-  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote});
+  console.log('in send message ', tabUrl)
+  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote, 'tabUrl': tabUrl, 'userId': userId});
 };
 
 chrome.extension.onMessage.addListener(function(message) {
@@ -129,7 +136,7 @@ chrome.extension.onMessage.addListener(function(message) {
     if(message.hasOwnProperty('rating')) {
       rating = message.rating;
       uservote = message.uservote;
-      urlId = message.taburl;
+      urlId = message.urlId;
       updateIcon(rating);
     }
     sendResponse();
