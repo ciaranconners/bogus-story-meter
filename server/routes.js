@@ -42,6 +42,8 @@ app.post('/auth/signup', handler.signup);
 
 app.get('/urlstats', handler.getUrlStats);
 
+app.get('/urlcomments', handler.getUrlComments);
+
 app.post('/auth/login', handler.login);
 
 app.get('/auth/logout', handler.logout);

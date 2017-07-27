@@ -1,8 +1,11 @@
 const db = require('./db/index.js');
+
 const handler = {};
+
 var calculateRating = (upvoteCount, downvoteCount) => {
   return Math.round((upvoteCount / (upvoteCount + downvoteCount)) * 100) || null;
-}
+};
+
 /*eslint-disable indent*/
 handler.getUrlData = (req, res) => {
   let url = req.query.currentUrl;
@@ -90,7 +93,7 @@ handler.postUrlComment = (req, res) => {
     })
     .catch(err => {
       res.sendStatus(400);
-    });    
+    });
   }
 };
 
@@ -101,7 +104,7 @@ handler.postUrlVotes = (req, res) => {
   let type = req.body.type;
   let username = req.body.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
-  
+
   if (urlId !== null) {
     db.Url.findOne({where: {id: urlId}})
     .then(url => {
@@ -255,78 +258,54 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
     });
   }
 };
+
 handler.getUrlStats = (req, res) => {
-  console.log('------------------req.body', req.body);
-  console.log('-------------------req.query', req.query);
-  let urlId = JSON.parse(req.query.urlId);
-  var urlData = {};
-  console.log('-----------------------urlId: ', urlId);
-  if (typeof urlId === 'number') {
-    console.log('-----------------------------in if');
-    db.Url.findOne({
-      where: {
-        id: urlId
-      }
-    })
-    .then((data) => {
-      urlData.rating = calculateRating(data.upvoteCount, data.downvoteCount);
-      console.log('------------------urlData.rating', urlData.rating);
-      return db.Comment.findAll({where: {urlId : urlId}})
-      .then((results) => {
-        var commentInfo = results.map(function(comment) {
-          var result = {};
-          result.userId = comment.userId;
-          result.id = comment.id;
-          result.commentId = comment.commentId;
-          result.commentText = comment.text;
-          return result;
-        });
-        return commentInfo;
-      })
-      .then((comments) => {
-        console.log('===================comments', comments);
-        var pComments = comments.map((comment, index) => {
-          return db.User.findOne({where: {id: comment.userId}})
-          .then((user) => {
-            comment.replies = [];
-            comment.username = user.username;
-            if (comment.commentId) {
-              comments[comment.commentId - 1].replies.push(comment);
-              console.log('------------pComments first replymess', comments[comment.commentId - 1].replies[0]);
-            }
-            return comment;
-          });
-        });
-        Promise.all(pComments).then((updatedComments) => {
-          console.log('=================updatedComments', updatedComments);
-          urlData.comments = updatedComments;
-          urlData.url = data.url;
-          console.log('------------urlsData:', urlData);
-          res.send(urlData);
-        });
-      });
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
-  } else {
-    console.log('-----------------------------in else');
-    db.Url.findOne({
-      where: {
-        url: urlId
-      }
-    })
-    .then((data) => {
-      console.log('------------------data.url', data.url);
-      res.send(data.url);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
-  }
+  let urlId = req.query.urlId;
+  db.Url.findOne({where: {id: urlId}})
+  .then(urlEntry => {
+    let urlData = {
+      url: urlEntry.url,
+      rating: calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount)
+    };
+    res.send(urlData);
+  })
+  .catch(err => {
+    console.error(err);
+    res.sendStatus(500);
+  });
 };
+
+// split comments into a separate handler to improve page load speed
+handler.getUrlComments = (req, res) => {
+  let urlId = req.query.urlId;
+  db.Comment.findAll({where: {urlId: urlId}})
+  .then(comments => {
+    let idxMap = {};
+    return comments.map((comment, i) => {
+      idxMap[comment.id] = i;
+      comment.dataValues.replies = [];
+      if (comment.commentId) {
+        // push reply comments to replies array in parent comments
+        comments[idxMap[comment.commentId]].dataValues.replies.push(comment);
+      } else { return comment; }
+    });
+  })
+  .mapSeries(comment => {
+    return !comment ? null : db.User.findOne({where: {id: comment.userId}})
+    .then(user => {
+      comment.dataValues.username = user.username;
+      return comment;
+    });
+  })
+  .then(comments => {
+    res.send({comments: comments});
+  })
+  .catch(err => {
+    console.error(err);
+    res.sendStatus(500);
+  });
+};
+
 var bcrypt = require('bcrypt');
 var saltRounds = 10;
 handler.signup = function(req, res, next) {
@@ -365,6 +344,7 @@ handler.signup = function(req, res, next) {
       res.status(500);
     });
 };
+
 handler.login = function(req, res, next) {
   var username = req.body.username;
   var password = req.body.password;
@@ -387,9 +367,10 @@ handler.login = function(req, res, next) {
     res.status(500);
   });
 };
+
 handler.logout = function(req, res, next) {
-  req.session.destroy(function(err){
-        if(err){
+  req.session.destroy(function(err) {
+        if (err) {
             console.log(err);
         } else {
             res.status(200);
@@ -433,4 +414,3 @@ handler.getUserActivity = (req, res) => {
 }
 
 module.exports = handler;
-
