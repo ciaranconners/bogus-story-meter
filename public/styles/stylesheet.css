@@ -97,3 +97,11 @@ textarea {
   color: purple;
 }
 
+.profileList {
+  margin-top: 4px;
+  list-style-type: none;
+}
+
+.profileTime {
+  color: grey;
+}
