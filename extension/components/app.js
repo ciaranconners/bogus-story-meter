@@ -10,6 +10,15 @@ angular.module('app', [])
     this.uservote = null;
     this.url = null;
 
+    chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+    // Use the token.
+      console.log('token: ', token, new Date());
+      if (token) {
+        this.loggedIn = true;
+        $scope.$apply();
+      }
+    }.bind(this));
+
     chrome.runtime.sendMessage({msg: 'Give me data on this tab'});
 
     chrome.extension.onMessage.addListener(function(urlObj) {
