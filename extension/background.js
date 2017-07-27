@@ -44,6 +44,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
   // Note to Ciaran: removed "if (changeInfo.status === 'complete')" because it was making the icon update after a long delay on sites with a lot of ads. the below if statement allows it to load faster while repeating the GET request at most twice.
   // Feel free to delete this and ^ that after you read it
   url = tab.url;
+  chrome.identity.getProfileUserInfo(function(userObj) {
+    username = userObj.email;
+  });
 
   if (url !== lastUrl) {
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
@@ -84,6 +87,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
 // get rating for url after switching tabs
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function(tab) {
+
+    chrome.identity.getProfileUserInfo(function(userObj) {
+      username = userObj.email;
+    });
 
     url = tab.url;
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {

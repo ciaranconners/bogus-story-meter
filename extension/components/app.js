@@ -37,7 +37,7 @@ angular.module('app', [])
     });
 
     this.handleProfile = () => {
-      chrome.tabs.create({url: `${window.serverUri}` });
+      chrome.tabs.create({url: `${window.serverUri}/profile` });
       window.close();
     };
 
