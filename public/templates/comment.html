@@ -6,17 +6,39 @@
     <div class="col-xs-6">
       {{$ctrl.comment.text}}
     </div>
-    <div class="col-xs-3">
+    <div class="text-center">
+      <textarea
+        class="reply-ta"
+        placeholder="Leave a reply"
+        ng-model="$ctrl.replyText"
+        id="replyField"
+        ng-if="$ctrl.replying"
+        hidden>
+      </textarea>
+    </div>
+    <div class="reply-submit">
+      <button
+        class="dd-submit btn btn-default pull-right"
+        ng-click="$ctrl.postComment($ctrl.commentText)"
+        ng-if="$ctrl.replying"
+        hidden>
+        Submit
+      </button>
+    </div>
+    <div class="reply-btn" hidden>
       <button
         class="reply btn btn-default pull-right"
-        ng-click="$ctrl.handleReply(comment.id)">Reply
+        ng-click="$ctrl.setReplying()"
+        ng-if="!$ctrl.replying"
+        hidden>
+        Reply
       </button>
     </div>
   </div>
   <div
-    class="comment reply text-center"
-    ng-repeat="reply in $ctrl.comment.replies"
-  >
+    class="comment reply"
+    ng-repeat="reply in $ctrl.comment.replies track by $index"
+    hidden>
     <reply reply="reply" />
   </div>
 </div>

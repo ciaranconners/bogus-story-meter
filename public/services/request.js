@@ -38,4 +38,26 @@ angular.module('app')/*eslint-disable indent*/
 		})
 		.catch(error => console.error(errMsg, error));
 	};
+
+	// this.post = (postEndpoint, getEndpoint, data = {}, params = {}, errMsg, postCallback, getCallback) => {
+	// 	$http({
+	// 		method: 'POST',
+	// 		url: postEndpoint,
+	// 		data: data
+	// 	})
+	// 	.then(response => {
+	// 		postCallback(response.data);
+	// 	})
+	// 	.then(() => {
+	// 		$http({
+	// 			method: 'GET',
+	// 			url: getEndpoint,
+	// 			params: params
+	// 		})
+	// 		.then((response => {
+	// 			getCallback(response.data);
+	// 		})
+	// 	})
+	// };
+
 });

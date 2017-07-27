@@ -3,6 +3,9 @@ angular.module('app') /*eslint-disable indent*/
   templateUrl: '../templates/comment.html',
 
   bindings: {
-    comment: '<'
+    comment: '<',
+    postComment: '<',
+    replying: '<',
+    setReplying: '<'
   }
 });

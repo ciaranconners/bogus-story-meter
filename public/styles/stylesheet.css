@@ -1,3 +1,7 @@
+body {
+  margin-top: 80px;
+}
+
 .top-offset {
 	margin-top: 30px;
 }
@@ -43,7 +47,7 @@
   list-style: none
 }
 
-textarea {
+.comment-ta {
   min-width: 700px;
   min-height: 60px;
 }
@@ -52,13 +56,17 @@ textarea {
   display: flex;
 }
 
-.dd-button {
+.btn h3 {
+  padding-top: 0;
+}
+
+.stats-button {
   margin: auto;
   margin-top: 10px;
   margin-bottom: 25px;
   text-align: center;
-  height: 70;
-  width: 80px;
+  height: 100px;
+  width: 100px;
 }
 
 .dd-login {
@@ -102,4 +110,8 @@ textarea {
 
 .profileTime {
   color: grey;
+}
+
+.comment {
+  padding-bottom: 18px;
 }
