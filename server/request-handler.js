@@ -45,6 +45,7 @@ handler.getUrlData = (req, res) => {
     });
   });
 };
+
 handler.getUrlVotes = (req, res) => {
   let urlId = req.params.urlId;
   db.Url.findOne({
@@ -62,7 +63,9 @@ handler.getUrlVotes = (req, res) => {
       console.error(err);
     });
 };
+
 handler.postUrlComment = (req, res) => {
+  // console.log(req.session.username);
   let url = req.body.url;
   let urlId = req.body.urlId;
   let username = req.body.username || 'test@test.test';
@@ -301,7 +304,6 @@ handler.getUrlComments = (req, res) => {
     });
   })
   .then(comments => {
-    console.log(comments);
     res.send({comments: comments});
   })
   .catch(err => {
@@ -330,7 +332,7 @@ handler.signup = function(req, res, next) {
               user.update({
                   password: hash
               }).then(function() {
-                  req.session.key = req.body.username;
+                  // req.session.key = req.body.username;
                   res.status(200).json('all good');
               })
               .catch(function(err) {
@@ -359,7 +361,7 @@ handler.login = function(req, res, next) {
       if (err || result === false) {
         res.status(400).json('your passwords do not match; please try again');
       }
-      req.session.key = req.body.username;
+      // req.session.key = req.body.username;
       res.status(200).json('all set');
     });
   } else {
