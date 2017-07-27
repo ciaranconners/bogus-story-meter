@@ -3,7 +3,8 @@ const db = require('./db/index.js');
 const handler = {};
 
 var calculateRating = (upvoteCount, downvoteCount) => {
-  return Math.round((upvoteCount / (upvoteCount + downvoteCount)) * 100) || null;
+  rating = Math.round((upvoteCount / (upvoteCount + downvoteCount)) * 100);
+  return rating === NaN ? null : rating;
 };
 
 /*eslint-disable indent*/
