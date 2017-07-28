@@ -30,4 +30,15 @@ angular.module('app') /*eslint-disable indent*/
     .then(res => callback(res.data))
     .catch(err => console.error(errMsg, err));
   };
+
+  this.getGoogleProfile = (token, data = {}, params = {}, errMsg, callback) => {
+    $http({
+      method: 'GET',
+      url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + token
+    }).then(function(userData) {
+      console.log('userData', userData);
+    }, function() {
+      console.log(errMsg);
+    });
+  }
 });

@@ -1,6 +1,6 @@
 angular.module('app', [])
 
-  .controller('AppCtrl', function($http, $scope, request) {
+  .controller('AppCtrl', function($scope, request) {
 
     var that = this;
 
@@ -14,22 +14,14 @@ angular.module('app', [])
     // Use the token.
       console.log('new token: ', token, new Date());
       if (token) {
-        // var url = 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=';
-        //var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?access_token='
-
         this.loggedIn = true;
         $scope.$apply();
 
+        let errMsg = 'could not get profile information';
 
-        $http({
-          method: 'GET',
-          url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + token
-        }).then(function(userData) {
-          console.log('userData', userData);
-        }.bind(this), function() {
-          console.log('error');
+        request.getGoogleProfile(token, null, null, errMsg, response => {
+          console.log(response);
         });
-
       }
     }.bind(this));
 
