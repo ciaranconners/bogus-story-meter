@@ -1,6 +1,6 @@
 angular.module('app', [])
 
-  .controller('AppCtrl', function($scope, request) {
+  .controller('AppCtrl', function($http, $scope, request) {
 
     var that = this;
 
@@ -12,10 +12,24 @@ angular.module('app', [])
 
     chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
     // Use the token.
-      console.log('token: ', token, new Date());
+      console.log('new token: ', token, new Date());
       if (token) {
+        // var url = 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=';
+        //var url = 'https://www.googleapis.com/oauth2/v3/tokeninfo?access_token='
+
         this.loggedIn = true;
         $scope.$apply();
+
+
+        $http({
+          method: 'GET',
+          url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + token
+        }).then(function(userData) {
+          console.log('userData', userData);
+        }.bind(this), function() {
+          console.log('error');
+        });
+
       }
     }.bind(this));
 
