@@ -336,6 +336,7 @@ handler.signup = function(req, res, next) {
                   password: hash
               }).then(function() {
                   // req.session.key = req.body.username;
+                  req.session.username = req.body.username;
                   res.status(200).json('all good');
               })
               .catch(function(err) {
@@ -354,28 +355,38 @@ handler.signup = function(req, res, next) {
     });
 };
 
-handler.login = function(req, res, next) {
-  var username = req.body.username;
-  var password = req.body.password;
-  db.User.findOne({where: {username: username}})
-  .then((user) => {
-    if (user !== null) {
-    bcrypt.compare(password, user.password, function(err, result) {
-      if (err || result === false) {
-        res.status(400).json('your passwords do not match; please try again');
-      }
-      // req.session.key = req.body.username;
-      res.status(200).json('all set');
-    });
+handler.getAuthStatus = (req, res) => {
+  if (req.session.username) {
+    res.status(200).json({'username': req.session.username});
   } else {
-    res.status(400).json('user not found; try again');
+    console.log('no session');
+    res.sendStatus(200);
   }
-  })
-  .catch((err) => {
-    console.error(err);
-    res.status(500);
-  });
 };
+
+// handler.login = function(req, res, next) {
+//   var username = req.body.username;
+//   var password = req.body.password;
+//   db.User.findOne({where: {username: username}})
+//   .then((user) => {
+//     if (user !== null) {
+//     bcrypt.compare(password, user.password, function(err, result) {
+//       if (err || result === false) {
+//         res.status(400).json('your passwords do not match; please try again');
+//       }
+//       // req.session.key = req.body.username;
+//       req.session.username = req.body.username;
+//       res.status(200).json('all set');
+//     });
+//   } else {
+//     res.status(400).json('user not found; try again');
+//   }
+//   })
+//   .catch((err) => {
+//     console.error(err);
+//     res.status(500);
+//   });
+// };
 
 handler.logout = function(req, res, next) {
   req.session.destroy(function(err) {
@@ -383,7 +394,7 @@ handler.logout = function(req, res, next) {
             console.log(err);
         } else {
             res.status(200);
-            console.log('session destroyed');
+            console.log('===================session destroyed');
         }
     });
 };

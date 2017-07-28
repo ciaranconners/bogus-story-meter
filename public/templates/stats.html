@@ -1,28 +1,28 @@
 <div class="container" ng-controller="StatCtrl as stat">
-  <header class="text-center">Statistics for</header>
-  <div class="text-center"><a href={{stat.url}} target="_blank">{{stat.url}}</a></div>
+  <header class="text-center stats-text">Statistics for</header>
+  <div class="text-center"><a class="stats-text" href={{stat.url}} target="_blank">{{stat.url}}</a></div>
   <div class="row">
     <div class="col-xs-2"></div>
     <div class="col-xs-8">
-      <h1 class="text-center" ng-if="stat.rated" >{{stat.rating}}%</h1>
+      <h1 class="text-center stats-rating" ng-if="stat.rated" >{{stat.rating}}%</h1>
     </div>
   </div>
 
   <div class="dropdown">
     <div ng-if="!stat.rated && !stat.uservote" class="dropdown dd-heading unrated-heading">
-      <p class="text-center">This page has not yet been rated by our users. Be the first to submit your thoughts!</p>
+      <p class="text-center">The above URL has not yet been rated by our users. Be the first to submit your thoughts!</p>
     </div>
 
     <div ng-if="stat.rated && !stat.uservote" class="dd-heading rated-heading">
-      <p class="text-center">of users believe the information presented on this page is accurate. What do you think?</p>
+      <p class="text-center">of users believe the information presented on the above URL is accurate. What do you think?</p>
     </div>
 
     <div ng-if="stat.rated && stat.uservote === 'upvote'" class="dd-heading rated-heading">
-      <p class="text-center">of users believe the information presented on this page is accurate, as well as agree with your previous 'true' rating.</p>
+      <p class="text-center">of users believe the information presented on the above URL is accurate, as well as agree with your previous 'true' rating.</p>
     </div>
 
     <div ng-if="stat.rated && stat.uservote === 'downvote'" class="dd-heading rated-heading">
-      <p class="text-center">of users believe the information presented on this page is accurate, as well as disagree with your previous 'false' rating.</p>
+      <p class="text-center">of users believe the information presented on the above URL is accurate, as well as disagree with your previous 'false' rating.</p>
     </div>
 
     <div class="row">
@@ -35,14 +35,14 @@
     </div>
 
     <div class="text-center">
-      <textarea class="comment-ta" placeholder="Leave a comment" ng-model="stat.commentText" id="commentField"></textarea>
+      <textarea class="comment-ta stats-text" placeholder="Leave a comment" ng-model="stat.commentText" id="commentField"></textarea>
     </div>
 
     <div class="row">
       <div class="col-xs-8"></div>
       <div class="col-xs-4">
         <button
-          class="dd-submit btn btn-default pull-right"
+          class="dd-submit btn btn-default pull-right stats-text"
           ng-click="stat.postComment(stat.commentText)">
           Submit
         </button>

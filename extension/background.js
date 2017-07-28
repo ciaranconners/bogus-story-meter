@@ -43,7 +43,6 @@ let lastUrl;
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   // Note to Ciaran: removed "if (changeInfo.status === 'complete')" because it was making the icon update after a long delay on sites with a lot of ads. the below if statement allows it to load faster while repeating the GET request at most twice.
   // Feel free to delete this and ^ that after you read it
-  console.log('onUpdated ', tabUrl)
   url = tab.url;
   chrome.identity.getProfileUserInfo(function(userObj) {
     username = userObj.email;
@@ -72,7 +71,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         },
         success: function(data) {
           console.log('updated data', data)
-          console.log('updated url', urlId)
           lastUrl = url;
           updateIcon(data.rating);
           tabUrl = url;
@@ -131,6 +129,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 
 chrome.identity.getProfileUserInfo(function(userObj) {
   username = userObj.email;
+  console.log('userObj ', userObj)
 });
 
 const sendResponse = () => {
