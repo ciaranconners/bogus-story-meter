@@ -5,7 +5,7 @@ angular.module('app')
   var that = this;
   this.name = '';
   this.imageUrl = '';
-  this.email = 'patrick.tang1086@gmail.com'; // CHANGE THIS
+  this.email = '';
   this.id = '';
   this.signedIn = false;
 
@@ -33,8 +33,7 @@ angular.module('app')
         this.userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
       });
     }
-  })
-
+  });
 })
 .component('app', {
   templateUrl: './templates/app.html'

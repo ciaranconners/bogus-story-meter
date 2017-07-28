@@ -1,15 +1,15 @@
 var Sequelize = require('sequelize');
 var connectionUrl = require('./db-config.js').RDS_CONNECTION_URL;
 
-// var db = new Sequelize('bsm', 'root', '', {
-//   dialect: 'mysql',
-//   logging: false
-// });
-
-var db = new Sequelize(connectionUrl, {
+var db = new Sequelize('bsm', 'root', '', {
   dialect: 'mysql',
   logging: false
 });
+
+// var db = new Sequelize(connectionUrl, {
+//   dialect: 'mysql',
+//   logging: false
+// });
 
 var User = db.define('User', {
   username: {
@@ -17,6 +17,12 @@ var User = db.define('User', {
     unique: true
   },
   password: {
+    type: Sequelize.STRING
+  },
+  fullname: {
+    type: Sequelize.STRING
+  },
+  profilepicture: {
     type: Sequelize.STRING
   },
   upvoteCount: {
@@ -41,18 +47,18 @@ var User = db.define('User', {
   }
 });
 
-var AuthUser = db.define('AuthUser', {
-  username: {
-    type: Sequelize.STRING,
-    unique: true
-  },
-  firstLast: {
-    type: Sequelize.STRING
-  },
-  image: {
-    type: Sequelize.STRING
-  }
-});
+// var AuthUser = db.define('AuthUser', {
+//   username: {
+//     type: Sequelize.STRING,
+//     unique: true
+//   },
+//   firstLast: {
+//     type: Sequelize.STRING
+//   },
+//   image: {
+//     type: Sequelize.STRING
+//   }
+// });
 
 var Category = db.define('Category', {
   name: {
@@ -156,9 +162,9 @@ User.sync()
   })
   .then(() => {
     CommentVote.sync();
-  })
-  .then(() => {
-    AuthUser.sync();
   });
+  // .then(() => {
+  //   AuthUser.sync();
+  // });
 
 module.exports = db.models;

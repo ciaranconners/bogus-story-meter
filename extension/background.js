@@ -4,6 +4,8 @@ let username = null;
 let uservote = null;
 let tabUrl = null;
 let userId = null;
+let fullname = null;
+let profilepicture = null;
 
 const updateIcon = (rating) => {
   const CBA = chrome.browserAction;
@@ -63,7 +65,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         params: {},
         data: {
           currentUrl: url,
-          currentUser: username
+          currentUser: username,
+          currentProfilePicture: profilepicture,
+          currentName: fullname          
         },
         error: function(err) {
           console.log(`Failed to get data for ${url}`);
@@ -106,7 +110,9 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
         params: {},
         data: {
           currentUrl: url,
-          currentUser: username
+          currentUser: username,
+          currentProfilePicture: profilepicture,
+          currentName: fullname
         },
         error: function(err) {
           console.log(`Failed to get data for ${url}`);
@@ -127,20 +133,39 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
   });
 });
 
-chrome.identity.getProfileUserInfo(function(userObj) {
-  username = userObj.email;
-  console.log('userObj ', userObj)
+chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+  // Use the token.
+  console.log('token from background: ', token, new Date());
+
+  let errMsg = 'could not get profile information';
+
+  $.ajax({
+    type: 'GET',
+    url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + token,
+    params: {},
+    data: {},
+    error: function(err) {
+      console.log('failed to get profile information');
+      console.error(err);
+    },
+    success: function(profileData) {
+      console.log('data inside getAuthToken', profileData);
+      fullname = profileData.name;
+      profilepicture = profileData.picture;
+      username = profileData.email;
+    }
+  });        
 });
 
 const sendResponse = () => {
-  console.log('in send message ', {'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote, 'tabUrl': tabUrl, 'userId': userId})
-  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote, 'tabUrl': tabUrl, 'userId': userId});
+  console.log('in send message ', {'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote, 'tabUrl': tabUrl, 'userId': userId, 'profilepicture': profilepicture, 'fullname': fullname})
+  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote, 'tabUrl': tabUrl, 'userId': userId, 'profilepicture': profilepicture, 'fullname': fullname});
 };
 
 chrome.extension.onMessage.addListener(function(message) {
   console.log('message from controller ', message);
 
-    if(message.hasOwnProperty('rating')) {
+    if (message.hasOwnProperty('rating')) {
       rating = message.rating;
       uservote = message.uservote;
       urlId = message.urlId;
