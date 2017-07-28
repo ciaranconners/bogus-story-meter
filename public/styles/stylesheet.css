@@ -2,6 +2,23 @@ body {
   margin-top: 80px;
 }
 
+li {
+  font-size: 14pt;
+}
+
+p, .stats-text, .comment-text {
+  font-size: 14pt;
+}
+
+.stats-rating {
+  margin: 5px 0 5px 0;
+  font-size: 40pt;
+}
+
+body > div > div > div.dropdown > div:nth-child(2) > div.dd-tfbtn.text-center.col-xs-6 > button.dd-truth.btn.btn-success.stats-button > h3 {
+  margin: auto;
+}
+
 .top-offset {
 	margin-top: 30px;
 }
@@ -99,7 +116,7 @@ body {
 }
 
 .profileComment {
-  color: purple;
+  color: darkgrey;
 }
 
 .profileList {

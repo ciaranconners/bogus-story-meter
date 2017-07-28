@@ -7,20 +7,16 @@ angular.module('app', ['ngRoute'])
 
     $routeProvider.
       when('/profile', {
-        templateUrl: './templates/app.html',
-        controller: 'AppCtrl'
+        templateUrl: './templates/app.html'
       }).
       when('/stats/redirect/:id', {
-        templateUrl: './templates/stats.html',
-        controller: 'StatCtrl'
+        templateUrl: './templates/stats.html'
       }).
       when('/home', {
-        templateUrl: './templates/home.html',
-        controller: 'HomeCtrl'
+        templateUrl: './templates/home.html'
       }).
       when('/login', {
-        templateUrl: './templates/login.html',
-        controller: 'LoginCtrl'
+        templateUrl: './templates/login.html'
       }).
       otherwise({
         redirectTo: '/home'
