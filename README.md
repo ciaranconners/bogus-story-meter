@@ -81,8 +81,8 @@ $ npm test
 ```
 > go to chrome://extensions in the browser
 
-> click load unpacked extension...
-> select bogus-story-meter/extension directory
+> click load unpacked extension... 
+> select bogus-story-meter/extension directory 
 > webapp is available at http://localhost:8080
 
 ### Roadmap
