@@ -12,13 +12,6 @@ var app = express();
 
 // app.use(cors()); => at the moment CORS doesn't appear to be necessary (no errors thrown without it)
 
-function authenticate(req, res, next) {
-  if(req.session.key) {
-    console.log('in authenticate function')
-    next();
-  }
-};
-
 app.use(session({
     secret: 'nosuchagency',
     store: new redisStore({ host: 'localhost', port: 6379, client: client, ttl :  260}),
