@@ -66,7 +66,7 @@ handler.getUrlVotes = (req, res) => {
 };
 
 handler.postUrlComment = (req, res) => {
-  // console.log(req.session.username);
+  console.log(req.session.username);
   let url = req.body.url;
   let urlId = req.body.urlId;
   let username = req.body.username || 'test@test.test';
@@ -335,9 +335,8 @@ handler.signup = function(req, res, next) {
               user.update({
                   password: hash
               }).then(function() {
-                  // req.session.key = req.body.username;
-                  req.session.username = req.body.username;
-                  res.status(200).json('all good');
+                req.session.username = req.body.username;
+                res.status(200).json('all good');
               })
               .catch(function(err) {
                   console.error(err);
