@@ -40,15 +40,17 @@ const updateIcon = (rating) => {
 
 let lastUrl;
 // get rating for url when address on current tab changes/on tab creation
-chrome.tabs.onUpdated.addListener(function(tabId, tab) {
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   // Note to Ciaran: removed "if (changeInfo.status === 'complete')" because it was making the icon update after a long delay on sites with a lot of ads. the below if statement allows it to load faster while repeating the GET request at most twice.
   // Feel free to delete this and ^ that after you read it
+  console.log('onUpdated ', tabUrl)
   url = tab.url;
   chrome.identity.getProfileUserInfo(function(userObj) {
     username = userObj.email;
   });
 
   if (url !== lastUrl) {
+  // if (changeInfo.status === 'loading') {
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
       rating = null;
       urlId = null;
@@ -70,7 +72,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
         },
         success: function(data) {
           console.log('updated data', data)
-
+          console.log('updated url', urlId)
           lastUrl = url;
           updateIcon(data.rating);
           tabUrl = url;
@@ -114,7 +116,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
         },
         success: function(data) {
           console.log('activated data', data)
-
+          lastUrl = url;
           updateIcon(data.rating);
           rating = data.rating;
           urlId = data.urlId;
