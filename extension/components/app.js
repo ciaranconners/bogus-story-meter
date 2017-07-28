@@ -45,7 +45,6 @@ angular.module('app', [])
       if (this.url === null) {
         return;
       }
-      console.log('inside handlevote - urlId ', this.urlId)
       var data = {
         urlId: this.urlId,
         url: this.url,
@@ -53,6 +52,9 @@ angular.module('app', [])
         type: vote
       };
       let errMsg = 'Could not submit vote: ';
+
+      console.log('inside handlevote - data ', data)
+
       // if user hasnt voted before, new vote:
       if (this.uservote === null) {
         request.post('/urlvote', data, errMsg, (postResponse) => {
@@ -91,6 +93,7 @@ angular.module('app', [])
       request.post('/urlcomment', data, 'Could not submit comment: ', (resData) => {
         if(resData) {
           that.urlId = resData;
+          chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'urlId': that.urlId});
         }
         console.log('that.urlId after comment response ', that.urlId);
       });

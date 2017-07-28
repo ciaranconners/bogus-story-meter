@@ -70,7 +70,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, tab) {
         },
         success: function(data) {
           console.log('updated data', data)
-          console.log('updated url ', url)
+
           lastUrl = url;
           updateIcon(data.rating);
           tabUrl = url;
@@ -114,7 +114,6 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
         },
         success: function(data) {
           console.log('activated data', data)
-          console.log('updated url ', url)
 
           updateIcon(data.rating);
           rating = data.rating;
@@ -133,7 +132,7 @@ chrome.identity.getProfileUserInfo(function(userObj) {
 });
 
 const sendResponse = () => {
-  console.log('in send message ', tabUrl)
+  console.log('in send message ', {'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote, 'tabUrl': tabUrl, 'userId': userId})
   chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote, 'tabUrl': tabUrl, 'userId': userId});
 };
 
