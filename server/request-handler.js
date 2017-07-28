@@ -76,6 +76,7 @@ handler.postUrlComment = (req, res) => {
     db.User.findCreateFind({where: {username: username}})
     .spread((user) => {
       db.Comment.create({text: comment, commentId: commentId, urlId: urlId, userId: user.id});
+      // res.status(201).json(urlId)
     })
     .catch(err => {
       res.sendStatus(400);
@@ -91,6 +92,7 @@ handler.postUrlComment = (req, res) => {
           urlId: url.id,
           userId: user.id
         });
+        res.status(201).json(url.id);
       })
       .catch(err => {
         res.sendStatus(400);
