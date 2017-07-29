@@ -19,6 +19,12 @@ var User = db.define('User', {
   password: {
     type: Sequelize.STRING
   },
+  fullname: {
+    type: Sequelize.STRING
+  },
+  profilepicture: {
+    type: Sequelize.STRING
+  },
   upvoteCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
@@ -41,18 +47,18 @@ var User = db.define('User', {
   }
 });
 
-var AuthUser = db.define('AuthUser', {
-  username: {
-    type: Sequelize.STRING,
-    unique: true
-  },
-  firstLast: {
-    type: Sequelize.STRING
-  },
-  image: {
-    type: Sequelize.STRING
-  }
-});
+// var AuthUser = db.define('AuthUser', {
+//   username: {
+//     type: Sequelize.STRING,
+//     unique: true
+//   },
+//   firstLast: {
+//     type: Sequelize.STRING
+//   },
+//   image: {
+//     type: Sequelize.STRING
+//   }
+// });
 
 var Category = db.define('Category', {
   name: {
@@ -156,9 +162,9 @@ User.sync()
   })
   .then(() => {
     CommentVote.sync();
-  })
-  .then(() => {
-    AuthUser.sync();
   });
+  // .then(() => {
+  //   AuthUser.sync();
+  // });
 
 module.exports = db.models;

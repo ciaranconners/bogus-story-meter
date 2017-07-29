@@ -9,13 +9,23 @@ angular.module('app', [])
     this.currentUser = null;
     this.uservote = null;
     this.url = null;
+    this.fullName = null;
+    this.profilePicture = null;
 
     chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
     // Use the token.
-      console.log('token: ', token, new Date());
+      console.log('new token: ', token, new Date());
       if (token) {
-        this.loggedIn = true;
+        // this.loggedIn = true;
         $scope.$apply();
+
+        // let errMsg = 'could not get profile information';
+
+        // request.getGoogleProfile(token, null, null, errMsg, profileInfo => {
+        //   console.log(profileInfo);
+        //   this.fullName = profileInfo.data.name;
+        //   this.profilePicture = profileInfo.data.picture;
+        // });
       }
     }.bind(this));
 
@@ -28,6 +38,8 @@ angular.module('app', [])
       that.url = urlObj.tabUrl;
       that.currentUser = urlObj.username;
       that.uservote = urlObj.uservote;
+      that.name = urlObj.name;
+      that.profilePicture = urlObj.profilepicture;
       if (that.rating === 0) {
         that.rated = true;
       } else {

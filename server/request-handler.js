@@ -11,7 +11,9 @@ var calculateRating = (upvoteCount, downvoteCount) => {
 handler.getUrlData = (req, res) => {
   let url = req.query.currentUrl;
   let username = req.query.currentUser;
-  db.User.findCreateFind( {where: {'username': username}} )
+  let profilepicture = req.query.currentProfilePicture
+  let fullname = req.query.currentName
+  db.User.findCreateFind( {where: {'username': username, 'profilepicture': profilepicture, 'fullname': fullname}} )
   .spread((userEntry) => {
     return db.Url.findOne( {where: {url: url}} )
     .then((urlEntry) => {
@@ -430,6 +432,7 @@ handler.getUserActivity = (req, res) => {
       });
     });
   });
-}
+};
+
 
 module.exports = handler;
