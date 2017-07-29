@@ -78,7 +78,10 @@ router.get('/logout', (req, res, next) => {
 
 router.get('/getStatus', (req, res) => {
   if (req.session.username) {
-    res.status(200).json({'username': req.session.username});
+    db.User.findOne( {'where': {'username': req.session.username}} )
+    .then(userEntry => {
+      res.status(200).json({'username': req.session.username, 'fullname': userEntry.fullname, 'profilepicture': userEntry.profilepicture});
+    })
   } else {
     console.log('no session');
     res.sendStatus(200);
