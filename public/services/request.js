@@ -26,11 +26,10 @@ angular.module('app')/*eslint-disable indent*/
 		.catch(error => console.error(errMsg, error));
 	};
 
-	this.put = (endpoint, data = {}, params = {}, errMsg, callback) => {
+	this.put = (endpoint, data = {}, errMsg, callback) => {
 		$http({
 			method: 'PUT',
 			url: endpoint,
-			params: params,
 			data: data
 		})
 		.then(response => {
