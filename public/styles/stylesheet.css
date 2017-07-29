@@ -67,6 +67,13 @@ p, .stats-text, .comment-text {
 .comment-ta {
   min-width: 700px;
   min-height: 60px;
+  padding-bottom: 50px;
+  margin-bottom: 60px;
+}
+
+.reply-ta {
+  min-width: 700px;
+  min-height: 15px;
 }
 
 .dd-tfbtn, .dd-stats, .dd-login-container {
@@ -75,6 +82,20 @@ p, .stats-text, .comment-text {
 
 .btn h3 {
   padding-top: 0;
+}
+
+.reply-btn {
+  margin-top: 0;
+}
+
+.comment-submit {
+  display: inline;
+  margin-top: 64px;
+}
+
+.reply-submit {
+  display: inline;
+  margin-top: 24px;
 }
 
 .stats-button {
