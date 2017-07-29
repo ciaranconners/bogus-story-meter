@@ -6,6 +6,7 @@ angular.module('app') /*eslint-disable indent*/
     comment: '<',
     postComment: '<',
     replying: '<',
-    setReplying: '<'
+    toggleReplying: '<',
+    getUrlComments: '<'
   }
 });

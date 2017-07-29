@@ -6,6 +6,10 @@ li {
   font-size: 14pt;
 }
 
+.navbar-brand {
+  font-size: 18pt;
+}
+
 p, .stats-text, .comment-text {
   font-size: 14pt;
 }
@@ -32,7 +36,7 @@ p, .stats-text, .comment-text {
 }
 
 .profile-info {
-  margin-top: 80px;
+  margin-top: 20px;
 }
 
 .profile-pic {
@@ -67,6 +71,13 @@ p, .stats-text, .comment-text {
 .comment-ta {
   min-width: 700px;
   min-height: 60px;
+  padding-bottom: 50px;
+  margin-bottom: 60px;
+}
+
+.reply-ta {
+  min-width: 700px;
+  min-height: 15px;
 }
 
 .dd-tfbtn, .dd-stats, .dd-login-container {
@@ -75,6 +86,20 @@ p, .stats-text, .comment-text {
 
 .btn h3 {
   padding-top: 0;
+}
+
+.reply-btn {
+  margin-top: 0;
+}
+
+.comment-submit {
+  display: inline;
+  margin-top: 64px;
+}
+
+.reply-submit {
+  display: inline;
+  margin-top: 24px;
 }
 
 .stats-button {
@@ -116,7 +141,7 @@ p, .stats-text, .comment-text {
 }
 
 .profileComment {
-  color: darkgrey;
+  color: grey;
 }
 
 .profileList {
@@ -126,13 +151,13 @@ p, .stats-text, .comment-text {
 }
 
 .profileTime {
-  color: grey;
+  color: darkgrey;
 }
 
 .comment {
   padding-bottom: 18px;
 }
 
-.placeholder {
-  font-size: 14px;
+.form-control {
+  font-size: 16pt;
 }

@@ -1,6 +1,5 @@
 angular.module('app')
 .controller('NavCtrl', function($http, $location) {
-  this.loggedIn = false;
 
   this.logout = function() {
     $http.get('http://localhost:8080/auth/logout')
@@ -12,7 +11,6 @@ angular.module('app')
     });
   };
 })
-  .component('navbar', {
-    templateUrl: '../templates/navbar.html',
-    controller: 'NavCtrl'
-  });
+.component('navbar', {
+  templateUrl: '../templates/navbar.html'
+});
