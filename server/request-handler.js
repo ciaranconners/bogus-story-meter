@@ -183,40 +183,6 @@ handler.postUrlVotes = (req, res) => {
   }
 };
 
-handler.putUrlVotes = (req, res) => {
-  console.log(req.body);
-  let url = req.body.url;
-  let urlId = req.body.urlId;
-  let type = req.body.type;
-  let username = req.body.username || req.session.username;
-  let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
-  db.Url.findOne( {where: {id: urlId}} )
-  .then((urlEntry) => {
-    return db.User.findOne( {where: {username: username}} )
-    .then((userEntry) => {
-      return db.UrlVote.findOne( {where: {userId: userEntry.id, urlId: urlEntry.id}} )
-      .then((voteEntry) => {
-        let oldTypeCount = voteEntry.type + 'Count';
-        let oldType = voteEntry.type;
-        userEntry.decrement(oldTypeCount);
-        urlEntry.decrement(oldTypeCount);
-        userEntry.increment(typeCount);
-        urlEntry.increment(typeCount)
-        .then(() => {
-          console.log('new stat page URL created, transmitting: ', stpUrl);
-          res.status(200).json(stpUrl);
-        })
-        .catch((err) => {
-          console.error(err);
-          res.sendStatus(500);
-        });
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-  });
-};
-
 handler.getUrlStats = (req, res) => {
   let urlId = req.query.urlId;
   let urlData = {username: req.session.username};
@@ -242,7 +208,7 @@ handler.getUrlStats = (req, res) => {
     res.sendStatus(500);
   });
 };
-    
+
 handler.getUserActivity = (req, res) => {
   let username = req.query.username;
   db.User.findOne( {'where': {'username': username}} )
