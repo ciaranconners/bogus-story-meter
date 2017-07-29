@@ -8,8 +8,8 @@ const redisStore = require('connect-redis')(session);
 
 const auth = require('./requestHandlers/auth.js');
 const vote = require('./requestHandlers/vote.js');
-const comment = require('./requestHandlers/comment.js');
-const comments = require('./requestHandlers/comments.js');
+const comment = require('./requestHandlers/postUrlComment.js');
+const comments = require('./requestHandlers/getUrlComments.js');
 
 
 const client = redis.createClient();
