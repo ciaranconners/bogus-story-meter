@@ -59,7 +59,7 @@ angular.module('app') /*eslint-disable indent*/
     let errMsg = 'failed to post comment';
     let data = {urlId: this.urlId, comment: text, commentId: commentId};
     request.post('/urlcomment', data, errMsg, res => {
-      console.log('posted the comment');
+      getUrlComments(); // get comments after posting or refactor to socket.io
     });
   };
 
