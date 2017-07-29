@@ -15,7 +15,7 @@ p, .stats-text, .comment-text {
   font-size: 40pt;
 }
 
-body > div > div > div.dropdown > div:nth-child(2) > div.dd-tfbtn.text-center.col-xs-6 > button.dd-truth.btn.btn-success.stats-button > h3 {
+.stats-button > h3 {
   margin: auto;
 }
 
@@ -83,7 +83,7 @@ body > div > div > div.dropdown > div:nth-child(2) > div.dd-tfbtn.text-center.co
   margin-bottom: 25px;
   text-align: center;
   height: 100px;
-  width: 100px;
+  width: 130px;
 }
 
 .dd-login {
@@ -131,4 +131,8 @@ body > div > div > div.dropdown > div:nth-child(2) > div.dd-tfbtn.text-center.co
 
 .comment {
   padding-bottom: 18px;
+}
+
+.placeholder {
+  font-size: 14px;
 }
