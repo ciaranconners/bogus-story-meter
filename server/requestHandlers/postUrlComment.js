@@ -3,16 +3,19 @@ const router = express.Router();
 const db = require('../db/index.js');
 
 router.post('/', (req, res, next) => {
+  console.log('session username: ', req.session.username);
   let url = req.body.url;
   let urlId = req.body.urlId;
-  let username = req.body.username || 'test@test.test';
+  let username = req.body.username || req.session.username;
   let comment = req.body.comment;
   let commentId = req.body.commentId || null;
   if (urlId !== null) {
     db.User.findCreateFind({where: {username: username}})
     .spread((user) => {
-      db.Comment.create({text: comment, commentId: commentId, urlId: urlId, userId: user.id});
-      // res.status(201).json(urlId)
+      return db.Comment.create({text: comment, commentId: commentId, urlId: urlId, userId: user.id});
+    })
+    .then(comment => {
+      res.sendStatus(201);
     })
     .catch(err => {
       res.sendStatus(400);
@@ -22,12 +25,7 @@ router.post('/', (req, res, next) => {
     .spread(url => {
       return db.User.findCreateFind({where: {username: username}})
       .spread((user) => {
-        db.Comment.create({
-          text: comment,
-          commentId: null,
-          urlId: url.id,
-          userId: user.id
-        });
+        db.Comment.create({text: comment, commentId: null, urlId: url.id, userId: user.id});
         res.status(201).json(url.id);
       })
       .catch(err => {
