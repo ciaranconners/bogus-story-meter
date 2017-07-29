@@ -4,7 +4,7 @@ const handler = {};
 
 var calculateRating = (upvoteCount, downvoteCount) => {
   rating = Math.round((upvoteCount / (upvoteCount + downvoteCount)) * 100);
-  return rating === NaN ? null : rating;
+  return isNaN(rating) ? null : rating;
 };
 
 /*eslint-disable indent*/
@@ -49,22 +49,38 @@ handler.getUrlData = (req, res) => {
   });
 };
 
-handler.getUrlVotes = (req, res) => {
-  let urlId = req.params.urlId;
-  db.Url.findOne({
+// the following function will generate a new stat page url or retrieve one if it exists in the DB
+handler.generateRetrieveStatsPageUrl = (req, res) => {
+  console.log('stat page url request received');
+  let currentUrl = req.query.currentUrl;
+  db.Url.findCreateFind({
       where: {
-        id: urlId
+        url: currentUrl
       }
     })
-    .then(url => {
-      let upvotes = url.upvoteCount;
-      let downvotes = url.downvoteCount;
-      let rating = Math.round((upvotes / (upvotes + downvotes)) * 100);
-      res.json(rating);
+    .spread(url => {
+      console.log('inside else');
+      let stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
+      db.Url.update({
+          statsPageUrl: stpUrl
+        }, {
+          where: {
+            id: url.id
+          }
+        })
+        .then(() => {
+          console.log('new stat page URL created, transmitting: ', stpUrl);
+          res.status(200).json(stpUrl);
+        })
+        .catch((err) => {
+          console.error(err);
+          res.sendStatus(500);
+        });
     })
     .catch((err) => {
       console.error(err);
-    });
+      res.sendStatus(500);
+  });
 };
 
 handler.postUrlComment = (req, res) => {
@@ -187,85 +203,18 @@ handler.putUrlVotes = (req, res) => {
         userEntry.increment(typeCount);
         urlEntry.increment(typeCount)
         .then(() => {
-          db.UrlVote.update( {type: type}, {where: {userId: userEntry.id, urlId: urlEntry.id}} );
-          res.status(201).json(urlEntry.id);
+          console.log('new stat page URL created, transmitting: ', stpUrl);
+          res.status(200).json(stpUrl);
+        })
+        .catch((err) => {
+          console.error(err);
+          res.sendStatus(500);
         });
-      });
-    });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
   });
-};
-// the following function will generate a new stat page url or retrieve one if it exists in the DB
-handler.generateRetrieveStatsPageUrl = (req, res) => {
-  console.log('stat page url request received');
-  let currentUrl = req.query.currentUrl;
-  console.log('---------------currentUrl', currentUrl);
-  if (typeof currentUrl === 'number') {
-    db.Url.findCreateFind({
-        where: {
-          id: currentUrl
-        }
-      })
-      .spread(url => {
-        console.log('inside if');
-        let stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
-        db.Url.update({
-            statsPageUrl: stpUrl
-          }, {
-            where: {
-              id: url.id
-            }
-          })
-          .then(() => {
-            console.log('new stat page URL created, transmitting: ', stpUrl);
-            res.status(200).json(stpUrl);
-          })
-          .catch((err) => {
-            console.error(err);
-            res.sendStatus(500);
-          });
-      })
-      .catch((err) => {
-        console.error(err);
-        res.sendStatus(500);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
-  } else {
-    db.Url.findCreateFind({
-        where: {
-          url: currentUrl
-        }
-      })
-      .spread(url => {
-        console.log('inside else');
-        let stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
-        db.Url.update({
-            statsPageUrl: stpUrl
-          }, {
-            where: {
-              id: url.id
-            }
-          })
-          .then(() => {
-            console.log('new stat page URL created, transmitting: ', stpUrl);
-            res.status(200).json(stpUrl);
-          })
-          .catch((err) => {
-            console.error(err);
-            res.sendStatus(500);
-          });
-      })
-      .catch((err) => {
-        console.error(err);
-        res.sendStatus(500);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
-  }
 };
 
 handler.getUrlStats = (req, res) => {
@@ -293,126 +242,7 @@ handler.getUrlStats = (req, res) => {
     res.sendStatus(500);
   });
 };
-
-// split comments into a separate handler to improve page load speed
-handler.getUrlComments = (req, res) => {
-  let urlId = req.query.urlId;
-  let idxMap = {};
-  let temp;
-  db.Comment.findAll({where: {urlId: urlId}})
-  .then(comments => {
-    temp = comments;
-    return comments.map((comment, i) => {
-      idxMap[comment.id] = i;
-      comment.dataValues.replies = [];
-      return comment;
-    });
-  })
-  .mapSeries(comment => {
-    return db.User.findOne({where: {id: comment.userId}})
-    .then(user => {
-      comment.dataValues.username = user.username;
-      if (comment.commentId) {
-        // push reply comments to replies array in parent comments
-        temp[idxMap[comment.commentId]].dataValues.replies.push(comment);
-      } else { return comment; }
-    });
-  })
-  .then(comments => {
-    res.send({comments: comments});
-  })
-  .catch(err => {
-    console.error(err);
-    res.sendStatus(500);
-  });
-};
-
-var bcrypt = require('bcrypt');
-var saltRounds = 10;
-handler.signup = function(req, res, next) {
-  var username = req.body.username;
-  var password = req.body.password;
-  db.User.find({
-      where: {
-        username: username
-      }
-    })
-    .then((user) => {
-      if (user !== null) {
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-          bcrypt.hash(password, salt, function(err, hash) {
-            if (err) {
-              console.error(err);
-            } else {
-              user.update({
-                  password: hash
-              }).then(function() {
-                req.session.username = req.body.username;
-                res.status(200).json('all good');
-              })
-              .catch(function(err) {
-                  console.error(err);
-                  res.status(500);
-              });
-            }
-          });
-        });
-      } else {
-        res.status(400).json('use our extension first to login to our site');
-      }
-    })
-    .catch((err) => {
-      res.status(500);
-    });
-};
-
-handler.getAuthStatus = (req, res) => {
-  if (req.session.username) {
-    db.User.findOne({'where': {'username': req.session.username}})
-    .then(userEntry => {
-      res.status(200).json({'username': req.session.username, 'fullname': userEntry.fullname, 'profilepicture': userEntry.profilepicture});
-    })
-  } else {
-    console.log('no session');
-    res.sendStatus(200);
-  }
-};
-
-// handler.login = function(req, res, next) {
-//   var username = req.body.username;
-//   var password = req.body.password;
-//   db.User.findOne({where: {username: username}})
-//   .then((user) => {
-//     if (user !== null) {
-//     bcrypt.compare(password, user.password, function(err, result) {
-//       if (err || result === false) {
-//         res.status(400).json('your passwords do not match; please try again');
-//       }
-//       // req.session.key = req.body.username;
-//       req.session.username = req.body.username;
-//       res.status(200).json('all set');
-//     });
-//   } else {
-//     res.status(400).json('user not found; try again');
-//   }
-//   })
-//   .catch((err) => {
-//     console.error(err);
-//     res.status(500);
-//   });
-// };
-
-handler.logout = function(req, res, next) {
-  req.session.destroy(function(err) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.status(200);
-            console.log('===================session destroyed');
-        }
-    });
-};
-
+    
 handler.getUserActivity = (req, res) => {
   let username = req.query.username;
   db.User.findOne( {'where': {'username': username}} )
@@ -427,25 +257,24 @@ handler.getUserActivity = (req, res) => {
           .then((urlEntry) => {
             row.dataValues.url = urlEntry.url;
             return row;
-          })
-        })
+          });
+        });
 
         var userCommentsPromises = userComments.map((row) => {
           return db.Url.findOne( {'where': {'id': row.urlId}} )
           .then((urlEntry) => {
             row.dataValues.url = urlEntry.url;
             return row;
-          })
-        })
+          });
+        });
         Promise.all(userVotesPromises).then((userVotesNew) => {
           Promise.all(userCommentsPromises).then((userCommentsNew) => {
-            res.json({'userComments': userCommentsNew, 'userVotes': userVotesNew})
+            res.json({'userComments': userCommentsNew, 'userVotes': userVotesNew});
           });
         });
       });
     });
   });
 };
-
 
 module.exports = handler;
