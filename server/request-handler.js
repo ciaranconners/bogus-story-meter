@@ -59,29 +59,18 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
       }
     })
     .spread(url => {
-      console.log('inside else');
       let stpUrl = 'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
-      db.Url.update({
-          statsPageUrl: stpUrl
-        }, {
-          where: {
-            id: url.id
-          }
-        })
-        .then(() => {
-          console.log('new stat page URL created, transmitting: ', stpUrl);
-          res.status(200).json(stpUrl);
-        })
-        .catch((err) => {
-          console.error(err);
-          res.sendStatus(500);
-        });
+      console.log('new stat page URL created, transmitting: ', stpUrl);
+      res.status(200).json(stpUrl);
+
     })
     .catch((err) => {
       console.error(err);
       res.sendStatus(500);
-  });
+    });
 };
+
+// this function should check if there's a session first, otherwise you get type errors when the user is set to null
 
 handler.getUrlStats = (req, res) => {
   let urlId = req.query.urlId;

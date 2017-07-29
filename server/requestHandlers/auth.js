@@ -13,7 +13,6 @@ router.post('/login', function(req, res, next) {
       if (err || result === false) {
         res.status(400).json('your passwords do not match; please try again');
       }
-      // req.session.key = req.body.username;
       req.session.username = req.body.username;
       res.status(200).json('all set');
     });
@@ -81,7 +80,7 @@ router.get('/getStatus', (req, res) => {
     db.User.findOne( {'where': {'username': req.session.username}} )
     .then(userEntry => {
       res.status(200).json({'username': req.session.username, 'fullname': userEntry.fullname, 'profilepicture': userEntry.profilepicture});
-    })
+    });
   } else {
     console.log('no session');
     res.sendStatus(200);
