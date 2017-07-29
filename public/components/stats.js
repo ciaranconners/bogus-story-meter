@@ -4,45 +4,51 @@ angular.module('app') /*eslint-disable indent*/
 .controller('StatCtrl', function(request, $location, $scope) {
 
   this.url;
+  this.username;
   this.rating;
   this.comments;
   this.urlId;
-  this.rated = true; // set up request to see if user voted
+  this.rated;
+  this.userVote = null;
   this.replying = false;
 
   const getUrlId = () => {
     let path = $location.url().split('/');
-    return path[path.length - 1];
+    this.urlId = path[path.length - 1];
   };
 
   const getUrlStats = () => {
     let errMsg = 'couldn\'t get URL stats';
-    let params = {urlId: getUrlId()};
+    let params = {urlId: this.urlId};
     request.get('/urlstats', null, params, errMsg, res => {
     this.url = res.url;
+    this.username = res.username;
     this.rating = res.rating;
-    console.log(this.rating);
+    this.rating || this.rating === 0 ? this.rated = true : this.rated = false;
+    this.userVote = res.vote;
     });
   };
 
-  const getUrlComments = () => {
+  this.getUrlComments = () => {
     console.log('IN GETURLCOMMENTS');
     let errMsg = 'couldn\'t get URL comments';
-    let params = {urlId: getUrlId()};
+    let params = {urlId: this.urlId};
     request.get('/urlcomments', null, params, errMsg, res => {
       this.comments = res.comments.filter(comment => comment /* filters out null comments */);
     });
   };
 
   $scope.$on('$routeChangeSuccess', () => {
+    getUrlId();
     getUrlStats();
-    getUrlComments();
+    this.getUrlComments();
   });
 
   this.commentText = '';
   this.replyText = '';
 
-  this.setReplying = () => {
+  this.toggleReplying = () => {
+    console.log('in replying');
     this.replying = !this.replying;
   };
 
@@ -51,11 +57,51 @@ angular.module('app') /*eslint-disable indent*/
     this.commentText = '';
     this.replyText = '';
     let errMsg = 'failed to post comment';
-    let data = {urlId: getUrlId(), comment: text, commentId: commentId};
+    let data = {urlId: this.urlId, comment: text, commentId: commentId};
     request.post('/urlcomment', data, errMsg, res => {
       console.log('posted the comment');
-      // getUrlComments(); // get comments after posting or refactor to socket.io
     });
+  };
+
+  this.handleVote = (vote) => {
+    if (this.url === null) {
+      return;
+    }
+    var data = {
+      urlId: this.urlId,
+      url: this.url,
+      username: this.username,
+      type: vote
+    };
+    let errMsg = 'Could not submit vote: ';
+
+    console.log('inside handlevote - data ', data);
+
+    // if user hasnt voted before, new vote:
+    if (this.userVote === null) {
+      request.post('/urlvote', data, errMsg, (res) => {
+        this.urlId = res;
+        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
+          this.rating = res;
+          this.rated = true;
+          this.userVote = vote;
+          // chrome.runtime.sendMessage({'rating': that.rating, 'userVote': that.userVote, 'urlId': that.urlId});
+        });
+      });
+    } else if (this.userVote !== vote) { // if user is changing vote
+      request.put('/urlvote', data, errMsg, (res) => {
+        this.urlId = res;
+        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
+          this.rating = res;
+          this.rated = true;
+          this.userVote = vote;
+          // chrome.runtime.sendMessage({'rating': this.rating, 'userVote': this.userVote, 'urlId': that.urlId});
+        });
+      });
+
+    } else if (this.userVote === vote) {
+      return; // don't let user send same rating twice for same URL
+    }
   };
 
 });

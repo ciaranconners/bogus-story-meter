@@ -6,4 +6,3 @@ angular.module('app') /*eslint-disable indent*/
     reply: '<'
   }
 });
-

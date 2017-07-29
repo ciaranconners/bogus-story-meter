@@ -9,48 +9,42 @@
   </div>
 
   <div class="dropdown">
-    <div ng-if="!stat.rated && !stat.uservote" class="dropdown dd-heading unrated-heading">
+    <div ng-if="!stat.rated && !stat.userVote" class="dropdown dd-heading unrated-heading">
       <p class="text-center">The above URL has not yet been rated by our users. Be the first to submit your thoughts!</p>
     </div>
 
-    <div ng-if="stat.rated && !stat.uservote" class="dd-heading rated-heading">
+    <div ng-if="stat.rated && !stat.userVote" class="dd-heading rated-heading">
       <p class="text-center">of users believe the information presented on the above URL is accurate. What do you think?</p>
     </div>
 
-    <div ng-if="stat.rated && stat.uservote === 'upvote'" class="dd-heading rated-heading">
+    <div ng-if="stat.rated && stat.userVote === 'upvote'" class="dd-heading rated-heading">
       <p class="text-center">of users believe the information presented on the above URL is accurate, as well as agree with your previous 'true' rating.</p>
     </div>
 
-    <div ng-if="stat.rated && stat.uservote === 'downvote'" class="dd-heading rated-heading">
+    <div ng-if="stat.rated && stat.userVote === 'downvote'" class="dd-heading rated-heading">
       <p class="text-center">of users believe the information presented on the above URL is accurate, as well as disagree with your previous 'false' rating.</p>
     </div>
 
     <div class="row">
       <div class="col-xs-3"></div>
       <div class="dd-tfbtn text-center col-xs-6">
-        <button class="dd-truth btn btn-success stats-button" ng-click="stat.handleVote('upvote')" ng-disabled="stat.uservote === 'upvote'"><h3>True</h3></button>
-        <button class="dd-false btn btn-danger stats-button" ng-click="stat.handleVote('downvote')" ng-disabled="stat.uservote === 'downvote'"><h3>False</h3></button>
+        <button class="dd-truth btn btn-success stats-button" ng-click="stat.handleVote('upvote')" ng-disabled="stat.userVote === 'upvote'"><h3>True</h3></button>
+        <button class="dd-false btn btn-danger stats-button" ng-click="stat.handleVote('downvote')" ng-disabled="stat.userVote === 'downvote'"><h3>False</h3></button>
       </div>
       <div class="col-xs-3"></div>
     </div>
 
     <div class="text-center">
       <textarea class="comment-ta stats-text" placeholder="Leave a comment" ng-model="stat.commentText" id="commentField"></textarea>
+      <button
+        class="comment-submit btn btn-default pull-right stats-text"
+        ng-click="stat.postComment(stat.commentText)">
+        Submit
+      </button>
     </div>
 
-    <div class="row">
-      <div class="col-xs-8"></div>
-      <div class="col-xs-4">
-        <button
-          class="dd-submit btn btn-default pull-right stats-text"
-          ng-click="stat.postComment(stat.commentText)">
-          Submit
-        </button>
-      </div>
-    </div>
-
-    <div class="comment no-parent text-center" ng-repeat="comment in stat.comments track by $index">
-      <comment comment="comment" post-comment="stat.postComment"/>
+    <div class="comment no-parent text-center" ng-repeat="comment in stat.comments track by comment.id">
+      <comment comment="comment" post-comment="stat.postComment" toggle-replying="stat.toggleReplying" replying="stat.replying" get-url-comments="stat.getUrlComments"/>
     </div>
 
   </div>
