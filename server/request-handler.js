@@ -13,7 +13,7 @@ handler.getUrlData = (req, res) => {
   let username = req.query.currentUser;
   let profilepicture = req.query.currentProfilePicture
   let fullname = req.query.currentName
-  db.User.findCreateFind( {where: {'username': username, 'profilepicture': profilepicture, 'fullname': fullname}} )
+  db.User.findCreateFind( {where: {'username': username/*, 'profilepicture': profilepicture, 'fullname': fullname*/}} )
   .spread((userEntry) => {
     return db.Url.findOne( {where: {url: url}} )
     .then((urlEntry) => {
@@ -71,7 +71,7 @@ handler.postUrlComment = (req, res) => {
   console.log(req.session.username);
   let url = req.body.url;
   let urlId = req.body.urlId;
-  let username = req.body.username || 'test@test.test';
+  let username = req.body.username || req.session.username;
   let comment = req.body.comment;
   let commentId = req.body.commentId || null;
   if (urlId !== null) {
@@ -111,7 +111,7 @@ handler.postUrlVotes = (req, res) => {
   let url = req.body.url;
   let urlId = req.body.urlId;
   let type = req.body.type;
-  let username = req.body.username;
+  let username = req.body.username || req.session.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
 
   if (urlId !== null) {
@@ -172,15 +172,15 @@ handler.putUrlVotes = (req, res) => {
   let url = req.body.url;
   let urlId = req.body.urlId;
   let type = req.body.type;
-  let username = req.body.username;
+  let username = req.body.username || req.session.username;
   let typeCount = type === 'upvote' ? 'upvoteCount' : type === 'downvote' ? 'downvoteCount' : 'neutralCount';
   db.Url.findOne( {where: {id: urlId}} )
   .then((urlEntry) => {
-    db.User.findOne( {where: {username: username}} )
+    return db.User.findOne( {where: {username: username}} )
     .then((userEntry) => {
-      db.UrlVote.findOne( {where: {userId: userEntry.id, urlId: urlEntry.id}} )
+      return db.UrlVote.findOne( {where: {userId: userEntry.id, urlId: urlEntry.id}} )
       .then((voteEntry) => {
-        let oldTypeCount = voteEntry.type+'Count';
+        let oldTypeCount = voteEntry.type + 'Count';
         let oldType = voteEntry.type;
         userEntry.decrement(oldTypeCount);
         urlEntry.decrement(oldTypeCount);
@@ -270,12 +270,22 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
 
 handler.getUrlStats = (req, res) => {
   let urlId = req.query.urlId;
+  let urlData = {username: req.session.username};
   db.Url.findOne({where: {id: urlId}})
   .then(urlEntry => {
-    let urlData = {
-      url: urlEntry.url,
-      rating: calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount)
-    };
+    urlData.url = urlEntry.url;
+    urlData.rating = calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
+  // res.send(urlData);
+  })
+  .then(() => {
+    return db.User.findOne({where: {username: urlData.username}});
+  })
+  .then(user => {
+    return db.UrlVote.findOne({where: {userId: user.id, urlId: urlId}});
+  })
+  .then(vote => {
+    vote ? urlData.vote = vote.type : urlData.vote = null;
+    // urlData.vote = vote.type || null;
     res.send(urlData);
   })
   .catch(err => {
