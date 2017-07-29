@@ -3,11 +3,10 @@ angular.module('app')
 .controller('AppCtrl', function($scope, request, $http, $rootScope, $window) {
 
   var that = this;
-  this.name = '';
+  this.fullname = '';
   this.imageUrl = '';
   this.email = '';
   this.id = '';
-  this.signedIn = false;
 
   let errMsg = 'Could not retrieve user data ';
 
@@ -20,17 +19,18 @@ angular.module('app')
   };
 
   request.get('/auth/getStatus', null, null, errMsg, (authResponse) => {
-    console.log('authresponse: ', authResponse);
     if (authResponse.username) {
       that.email = authResponse.username;
+      that.fullname = authResponse.fullname;
+      that.imageUrl = authResponse.profilepicture;
       request.get('/useractivity', null, {'username': this.email}, errMsg, (getResponse) => {
-        console.log(getResponse)
-        // this.name = getResponse.name;
-        // this.firstName = this.name.split(' ')[0];
-        // this.lastName =this.name.split(' ')[1];
         this.userVotes = getResponse.userVotes;
         this.userComments = getResponse.userComments;
         this.userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
+        this.userActivity.map(function(activity) {
+          var d = new Date(activity.updatedAt);
+          activity.updatedAt = d.toDateString();
+        })
       });
     }
   });

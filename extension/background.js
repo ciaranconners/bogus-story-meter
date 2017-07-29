@@ -7,6 +7,26 @@ let userId = null;
 let fullname = null;
 let profilepicture = null;
 
+function getUserData() {
+  chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+    $.ajax({
+      type: 'GET',
+      url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + token,
+      params: {},
+      data: {},
+      error: function(err) {
+        console.log('failed to get profile information');
+        console.error(err);
+      },
+      success: function(profileData) {
+        fullname = profileData.name;
+        profilepicture = profileData.picture;
+        username = profileData.email;
+      }
+    });
+  });
+};
+
 const updateIcon = (rating) => {
   const CBA = chrome.browserAction;
 
@@ -41,17 +61,14 @@ const updateIcon = (rating) => {
 };
 
 let lastUrl;
-// get rating for url when address on current tab changes/on tab creation
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   // Note to Ciaran: removed "if (changeInfo.status === 'complete')" because it was making the icon update after a long delay on sites with a lot of ads. the below if statement allows it to load faster while repeating the GET request at most twice.
   // Feel free to delete this and ^ that after you read it
   url = tab.url;
-  chrome.identity.getProfileUserInfo(function(userObj) {
-    username = userObj.email;
-  });
-
+  if (username === null) {
+    getUserData();
+  }
   if (url !== lastUrl) {
-  // if (changeInfo.status === 'loading') {
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
       rating = null;
       urlId = null;
@@ -67,7 +84,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
           currentUrl: url,
           currentUser: username,
           currentProfilePicture: profilepicture,
-          currentName: fullname          
+          currentName: fullname
         },
         error: function(err) {
           console.log(`Failed to get data for ${url}`);
@@ -88,14 +105,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   }
 });
 
-// get rating for url after switching tabs
+
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function(tab) {
-
-    chrome.identity.getProfileUserInfo(function(userObj) {
-      username = userObj.email;
-    });
-
+    if (username === null) {
+      getUserData();
+    }
     url = tab.url;
     if(url === 'about:blank' || url === 'chrome://newtab/' || url === '') {
       rating = null;
@@ -133,38 +148,21 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
   });
 });
 
-chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-  // Use the token.
-  console.log('token from background: ', token, new Date());
-
-  let errMsg = 'could not get profile information';
-
-  $.ajax({
-    type: 'GET',
-    url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + token,
-    params: {},
-    data: {},
-    error: function(err) {
-      console.log('failed to get profile information');
-      console.error(err);
-    },
-    success: function(profileData) {
-      console.log('data inside getAuthToken', profileData);
-      fullname = profileData.name;
-      profilepicture = profileData.picture;
-      username = profileData.email;
-    }
-  });        
-});
-
 const sendResponse = () => {
-  console.log('in send message ', {'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote, 'tabUrl': tabUrl, 'userId': userId, 'profilepicture': profilepicture, 'fullname': fullname})
-  chrome.runtime.sendMessage({'rating': rating, 'urlId': urlId, 'username': username, 'uservote': uservote, 'tabUrl': tabUrl, 'userId': userId, 'profilepicture': profilepicture, 'fullname': fullname});
+  chrome.runtime.sendMessage({
+    'rating': rating,
+    'urlId': urlId,
+    'username': username,
+    'uservote': uservote,
+    'tabUrl': tabUrl,
+    'userId': userId,
+    'profilepicture': profilepicture,
+    'fullname': fullname
+  });
 };
 
 chrome.extension.onMessage.addListener(function(message) {
   console.log('message from controller ', message);
-
     if (message.hasOwnProperty('rating')) {
       rating = message.rating;
       uservote = message.uservote;
