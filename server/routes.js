@@ -1,15 +1,20 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var path = require('path');
-var handler = require('./request-handler.js');
-var redis = require('redis');
-var session = require('express-session');
-var auth = require('./requestHandlers/auth.js');
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const handler = require('./request-handler.js');
+const redis = require('redis');
+const session = require('express-session');
+const redisStore = require('connect-redis')(session);
 
-var redisStore = require('connect-redis')(session);
-var client = redis.createClient();
+const auth = require('./requestHandlers/auth.js');
+const vote = require('./requestHandlers/vote.js');
+const comment = require('./requestHandlers/comment.js');
+const comments = require('./requestHandlers/comments.js');
 
-var app = express();
+
+const client = redis.createClient();
+
+const app = express();
 
 app.use(session({
   secret: 'nosuchagency',
@@ -24,32 +29,17 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/auth/', auth);
-
-app.get('/urlvote/:urlId', handler.getUrlVotes);
-
-app.post('/urlvote', handler.postUrlVotes);
-
-app.put('/urlvote', handler.putUrlVotes);
+app.use('/urlvote', vote);
+app.use('/urlcomment', comment);
+app.use('/urlcomments', comments);
 
 app.get('/urldata', handler.getUrlData);
-
-app.post('/urlcomment', handler.postUrlComment);
 
 app.get('/useractivity', handler.getUserActivity);
 
 app.get('/stats/generate-retrieve', handler.generateRetrieveStatsPageUrl);
 
-app.post('/auth/signup', handler.signup);
-
 app.get('/urlstats', handler.getUrlStats);
-
-app.get('/urlcomments', handler.getUrlComments);
-
-// app.post('/auth/login', handler.login);
-
-app.get('/auth/logout', handler.logout);
-
-app.get('/auth/getStatus', handler.getAuthStatus);
 
 // TODO => for the below route send a 404 error if the corresponding url doesn't exist in the DB:
 
