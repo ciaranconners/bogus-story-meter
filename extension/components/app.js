@@ -11,6 +11,8 @@ angular.module('app', [])
     this.url = null;
     this.fullName = null;
     this.profilePicture = null;
+    this.categories = null;
+    this.title = null;
 
     chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
     // Use the token.
@@ -40,6 +42,13 @@ angular.module('app', [])
       that.uservote = urlObj.uservote;
       that.name = urlObj.name;
       that.profilePicture = urlObj.profilepicture;
+
+      request.getCategory(that.url, 'could not retrieve data from Watson', (getCategoryRes) => {
+        that.title = getCategoryRes.metadata.title;
+        that.categories = getCategoryRes.categories;
+        console.log(that.categories)
+      })
+
       if (that.rating === 0) {
         that.rated = true;
       } else {
@@ -47,6 +56,8 @@ angular.module('app', [])
       }
       $scope.$apply();
     });
+
+
 
     this.handleProfile = () => {
       chrome.tabs.create({url: `${window.serverUri}/profile` });
@@ -61,7 +72,9 @@ angular.module('app', [])
         urlId: this.urlId,
         url: this.url,
         username: this.currentUser,
-        type: vote
+        type: vote,
+        title: this.title,
+        categories: this.categories
       };
       let errMsg = 'Could not submit vote: ';
 

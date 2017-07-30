@@ -19,12 +19,13 @@ angular.module('app')
   };
 
   request.get('/auth/getStatus', null, null, errMsg, (authResponse) => {
-    console.log(authResponse)
+    // console.log(authResponse)
     if (authResponse.username) {
       that.email = authResponse.username;
       that.fullname = authResponse.fullname;
       that.imageUrl = authResponse.profilepicture;
       request.get('/useractivity', null, {'username': this.email}, errMsg, (getResponse) => {
+        console.log(getResponse)
         this.userVotes = getResponse.userVotes;
         this.userComments = getResponse.userComments;
         this.userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);

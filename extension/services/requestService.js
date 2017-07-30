@@ -40,5 +40,35 @@ angular.module('app') /*eslint-disable indent*/
     }, function() {
       console.log(errMsg);
     });
-  }
+  };
+
+  this.getCategory = (url, errMsg, callback) => {
+    $http({
+      method: 'GET',
+      url: 'https://watson-api-explorer.mybluemix.net/natural-language-understanding/api/v1/analyze?version=2017-02-27',
+      params: {
+        'url': url,
+        'features': 'categories,metadata',
+        'return_analyzed_text': false,
+        'clean': true,
+        'fallback_to_raw': true,
+        'concepts.limit': 8,
+        'emotion.document': true,
+        'entities.limit': 50,
+        'entities.emotion': false,
+        'entities.sentiment': false,
+        'keywords.limit': 50,
+        'keywords.emotion': false,
+        'keywords.sentiment': false,
+        'relations.model': 'en-news',
+        'semantic_roles.limit': 50,
+        'semantic_roles.entities': false,
+        'semantic_roles.keywords': false,
+        'sentiment.document': true
+      }
+    })
+    .then(res => callback(res.data))
+    .catch(err => console.error(errMsg, err));
+  };
+
 });

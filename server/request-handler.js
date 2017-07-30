@@ -118,6 +118,7 @@ handler.getUserActivity = (req, res) => {
           return db.Url.findOne( {'where': {'id': row.urlId}} )
           .then((urlEntry) => {
             row.dataValues.url = urlEntry.url;
+            row.dataValues.title = urlEntry.title;
             return row;
           });
         });
@@ -126,6 +127,7 @@ handler.getUserActivity = (req, res) => {
           return db.Url.findOne( {'where': {'id': row.urlId}} )
           .then((urlEntry) => {
             row.dataValues.url = urlEntry.url;
+            row.dataValues.title = urlEntry.title;
             return row;
           });
         });
