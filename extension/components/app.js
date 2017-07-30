@@ -34,7 +34,7 @@ angular.module('app', [])
     chrome.runtime.sendMessage({msg: 'Give me data on this tab'});
 
     chrome.extension.onMessage.addListener(function(urlObj) {
-      console.log('from background ', urlObj)
+      console.log('from background ', urlObj);
       that.rating = urlObj.rating;
       that.urlId = urlObj.urlId;
       that.url = urlObj.tabUrl;
@@ -46,8 +46,8 @@ angular.module('app', [])
       request.getCategory(that.url, 'could not retrieve data from Watson', (getCategoryRes) => {
         that.title = getCategoryRes.metadata.title;
         that.categories = getCategoryRes.categories;
-        console.log(that.categories)
-      })
+        console.log(that.categories);
+      });
 
       if (that.rating === 0) {
         that.rated = true;
@@ -78,7 +78,7 @@ angular.module('app', [])
       };
       let errMsg = 'Could not submit vote: ';
 
-      console.log('inside handlevote - data ', data)
+      console.log('inside handlevote - data ', data);
 
       // if user hasnt voted before, new vote:
       if (this.uservote === null) {
@@ -127,7 +127,6 @@ angular.module('app', [])
 
     this.handleStatsLink = () => {
       let currentUrl = this.url;
-      console.log('------currentUrl:', currentUrl);
       let params = {
         currentUrl
       };
