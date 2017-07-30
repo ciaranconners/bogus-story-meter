@@ -1,14 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const handler = require('./request-handler.js');
 const redis = require('redis');
 const session = require('express-session');
 const redisStore = require('connect-redis')(session);
 
+const handler = require('./request-handler.js');
 const auth = require('./requestHandlers/auth.js');
 const vote = require('./requestHandlers/vote.js');
-
 const postUrlComment = require('./requestHandlers/postUrlComment.js');
 const getUrlComments = require('./requestHandlers/getUrlComments.js');
 
