@@ -38,6 +38,7 @@ angular.module('app')
         this.userActivity.map(function(activity) {
           let d = new Date(activity.updatedAt);
           activity.updatedAt = d.toDateString();
+        });
 
           var filteredObj = {};  
 
@@ -48,7 +49,7 @@ angular.module('app')
 
           this.userActivity.push(filteredObj);
         }.bind(this));
-      });
+      };
     }
   });
 })
