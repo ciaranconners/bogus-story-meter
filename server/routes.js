@@ -10,6 +10,7 @@ const auth = require('./requestHandlers/auth.js');
 const vote = require('./requestHandlers/vote.js');
 const postUrlComment = require('./requestHandlers/postUrlComment.js');
 const getUrlComments = require('./requestHandlers/getUrlComments.js');
+// const comments = require('./requestHandlers/getUrlComments.js');
 
 const client = redis.createClient();
 

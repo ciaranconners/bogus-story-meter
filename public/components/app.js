@@ -32,15 +32,14 @@ angular.module('app')
       that.fullname = authResponse.fullname;
       that.imageUrl = authResponse.profilepicture;
       request.get('/useractivity', null, {'username': this.email}, errMsg, (getResponse) => {
-        this.userVotes = getResponse.userVotes;
-        this.userComments = getResponse.userComments;
-        this.userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
-        this.userActivity.map(function(activity) {
-          let d = new Date(activity.updatedAt);
-          activity.updatedAt = d.toDateString();
-        });
+        let d = new Date(activity.updatedAt);
 
+        var userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
+        userActivity.map(function(activity) {
           var filteredObj = {};  
+          var d = new Date(activity.updatedAt);
+
+          activity.updatedAt = d.toDateString();
 
           filteredObj.url = activity.url;
           filteredObj.updatedAt = activity.updatedAt;
@@ -49,7 +48,7 @@ angular.module('app')
 
           this.userActivity.push(filteredObj);
         }.bind(this));
-      };
+      });
     }
   });
 })
