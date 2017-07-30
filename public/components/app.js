@@ -21,7 +21,7 @@ angular.module('app')
     return 0;
   };
 
-  this.updateSearch = function(searchText) {
+  this.updateSearchText = function(searchText) {
     this.searchText = searchText;
   }.bind(this);
 

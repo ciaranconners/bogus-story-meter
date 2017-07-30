@@ -1,7 +1,23 @@
 <div class="form-container parent">
 	<form class="form">
 	  <div class="form-group">
-	    <input type="text" class="form-control" placeholder="Search your activity" name="search" ng-keyup="$ctrl.updateSearch(searchText)" ng-model="searchText"/>
+	    <input type="text" class="form-control" placeholder="Search your activity" name="search" ng-keyup="$ctrl.updateSearchText(searchText)" ng-model="searchText"/>
 	  </div>
-	</form>
+	</form>	  
+
+	<div class="datepicker-container">
+		<div class="input-group date date-input" data-provide="datepicker">
+	    <input type="text" class="form-control">
+	    <div class="input-group-addon">
+	      <span class="glyphicon glyphicon-th"></span>
+	    </div>
+		</div>	  
+		<div class="input-group date date-input" data-provide="datepicker">
+	    <input type="text" class="form-control">
+	    <div class="input-group-addon">
+	      <span class="glyphicon glyphicon-th"></span>
+	    </div>
+		</div>	 
+	</div>	
+
 </div>

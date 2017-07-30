@@ -177,3 +177,12 @@ table{
   word-wrap:break-word;
   vertical-align: middle;
 }
+
+.datepicker-container {
+  display: table;
+}
+
+.date-input {
+  display: table-cell;
+  margin: 100px;
+}
