@@ -1,7 +1,7 @@
 <div class="form-container parent">
 	<form class="form">
 	  <div class="form-group">
-	    <input type="text" class="form-control" placeholder="Search your activity" name="search"/>
+	    <input type="text" class="form-control" placeholder="Search your activity" name="search" ng-keyup="$ctrl.sayHi(searchText)" ng-model="searchText"/>
 	  </div>
 	</form>
 </div>

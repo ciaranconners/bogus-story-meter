@@ -1,6 +1,6 @@
 // YOU CAN ONLY GET TO THIS PAGE IF YOU ARE LOGGED IN - WILL SEND A REQUEST TO SERVER TO VERIFY AUTH WITH GOOGLE
 angular.module('app')
-.controller('AppCtrl', function($scope, request, $http, $rootScope, $window) {
+.controller('AppCtrl', function(request, $http, $rootScope, $window) {
 
   let that = this;
 
@@ -8,6 +8,7 @@ angular.module('app')
   this.imageUrl = '';
   this.email = '';
   this.id = '';
+  this.searchText;
 
   let errMsg = 'Could not retrieve user data ';
 
@@ -18,6 +19,25 @@ angular.module('app')
     if (date1 < date2) return 1;
     return 0;
   };
+
+  var createStringArray = function(inputArray) {
+    var stringArray = [];
+
+    for (var i = 0; i < inputArray.length; i ++) {
+      var userObj = inputArray[i];
+      var string = '';
+
+      if (userObj.text) { string += userObj.text; }          
+      if (userObj.type) { string += userObj.type === 'upvote' ? true : false; }
+
+      stringArray.push(string);
+    }    
+    return stringArray;
+  }
+
+  this.updateSearch = function(searchText) {
+    this.searchText = searchText;
+  }.bind(this);
 
   request.get('/auth/getStatus', null, null, errMsg, (authResponse) => {
     // console.log(authResponse)
