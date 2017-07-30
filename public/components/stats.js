@@ -21,7 +21,7 @@ angular.module('app') /*eslint-disable indent*/
   const getUrlStats = () => {
     let errMsg = 'couldn\'t get URL stats';
     let params = {urlId: this.urlId};
-    request.get('/urlstats', null, params, errMsg, res => {
+    request.get('/urlstats', null, params, errMsg, (res) => {
       this.url = res.url;
       this.username = res.username;
       this.rating = res.rating;
@@ -33,7 +33,7 @@ angular.module('app') /*eslint-disable indent*/
   const getUrlComments = () => {
     let errMsg = 'couldn\'t get URL comments';
     let params = {urlId: this.urlId};
-    request.get('/urlcomments', null, params, errMsg, res => {
+    request.get('/urlcomments', null, params, errMsg, (res) => {
       this.comments = res.comments.filter(comment => comment /* filters out null comments */);
     });
   };
@@ -50,7 +50,7 @@ angular.module('app') /*eslint-disable indent*/
     let data = {urlId: this.urlId, comment: text, commentId: commentId};
     this.commentText = '';
     this.replyText = '';
-    request.post('/urlcomment', data, errMsg, res => {
+    request.post('/urlcomment', data, errMsg, (res) => {
       getUrlComments();
     });
   };
@@ -68,18 +68,18 @@ angular.module('app') /*eslint-disable indent*/
     let errMsg = 'Could not submit vote: ';
     // if user hasnt voted before, new vote:
     if (this.userVote === null) {
-      request.post('/urlvote', data, errMsg, res => {
+      request.post('/urlvote', data, errMsg, (res) => {
         this.urlId = res;
-        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, res => {
+        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
           this.rating = res;
           this.rated = true;
           this.userVote = vote;
         });
       });
     } else if (this.userVote !== vote) { // if user is changing vote
-      request.put('/urlvote', data, errMsg, res => {
+      request.put('/urlvote', data, errMsg, (res) => {
         this.urlId = res;
-        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, res => {
+        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
           this.rating = res;
           this.rated = true;
           this.userVote = vote;

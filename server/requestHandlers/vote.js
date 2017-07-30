@@ -11,7 +11,7 @@ router.post('/', (req, res, next) => {
   let username = req.body.username || req.session.username;
   let typeCount = `${type}Count`;
   let title = req.body.title;
-  let categories = req.body.categories
+  let categories = req.body.categories;
 
   if (urlId !== null) {
     db.Url.findOne({where: {id: urlId}})

@@ -35,15 +35,15 @@ router.post('/signup', (req, res, next) => {
           res.status(401).json('you\'ve already tried to sign up; check your email so we can verify your account');
           return;
         }
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-          bcrypt.hash(password, salt, function(err, hash) {
+        bcrypt.genSalt(saltRounds, (err, salt) => {
+          bcrypt.hash(password, salt, (err, hash) => {
             if (err) {
               console.error(err);
             } else {
               return user.update({
                   password: hash
                 })
-                .then(function(user) {
+                .then((user) => {
                   const token = uuidv4().toString();
                   const link = 'http://localhost:8080/auth/verify?id=' + token;
                   mailOptions = {
@@ -55,7 +55,7 @@ router.post('/signup', (req, res, next) => {
                       token: token
                     })
                     .then(() => {
-                      smtpTrans.sendMail(mailOptions, function(error, response) {
+                      smtpTrans.sendMail(mailOptions, (error, response) => {
                         if (error) {
                           console.error(error);
                           res.sendStatus(500);
@@ -69,7 +69,7 @@ router.post('/signup', (req, res, next) => {
                       res.sendStatus(500);
                     });
                 })
-                .catch(function(err) {
+                .catch((err) => {
                   console.error(err);
                   res.status(500);
                 });
@@ -86,7 +86,7 @@ router.post('/signup', (req, res, next) => {
     });
 });
 
-router.get('/verify', function(req, res) {
+router.get('/verify', (req, res) => {
   const token = req.query.id;
   db.User.findOne({where: {token: token}})
     .then((user) => {
@@ -107,9 +107,9 @@ router.get('/verify', function(req, res) {
     });
 });
 
-router.post('/login', function(req, res, next) {
-  var username = req.body.username;
-  var password = req.body.password;
+router.post('/login', (req, res, next) => {
+  let username = req.body.username;
+  let password = req.body.password;
   db.User.findOne({
       where: {
         username: username
@@ -117,11 +117,12 @@ router.post('/login', function(req, res, next) {
     })
     .then((user) => {
       if (user !== null && user.verified) {
-        bcrypt.compare(password, user.password, function(err, result) {
+        bcrypt.compare(password, user.password, (err, result) => {
           if (err || result === false) {
             res.status(400).json('that password doesn\'t match our records; please try again');
           }
           req.session.username = req.body.username;
+          console.log('session created');
           res.status(200).json('all set');
         });
       } else {
@@ -135,7 +136,7 @@ router.post('/login', function(req, res, next) {
 });
 
 router.get('/logout', (req, res, next) => {
-  req.session.destroy(function(err) {
+  req.session.destroy((err) => {
     if (err) {
       console.log(err);
       res.sendStatus(500);
@@ -161,7 +162,7 @@ router.get('/getStatus', (req, res) => {
         });
       });
   } else {
-    console.log('no session');
+    // THIS SHOULD CHANGE TO A STATUS CODE 401:
     res.sendStatus(200);
   }
 });
