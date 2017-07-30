@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<div class="col-sm-8">
-			<search-form say-hi="app.updateSearch"></search-form>
+			<search-form update-search="app.updateSearch"></search-form>
 			<h3>Your recent activity:</h3>
 			<ul class="profileList" ng-repeat="activity in app.userActivity | filter:app.searchText">
 				<li class="profileTime">{{ activity.updatedAt.slice(0,16).split('T').join(' ') }}</li>

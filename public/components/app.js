@@ -25,6 +25,26 @@ angular.module('app')
     this.searchText = searchText;
   }.bind(this);
 
+  let populateUserActivty = function(dbResponse) {
+    this.userActivity = [];      
+    this.userVotes = dbResponse.userVotes;
+    this.userComments = dbResponse.userComments;
+
+    let allUserActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
+    allUserActivity.map(function(activity) {
+      let filteredObj = {};  
+      let d = new Date(activity.updatedAt);
+      activity.updatedAt = d.toDateString();
+
+      filteredObj.url = activity.url;
+      filteredObj.updatedAt = activity.updatedAt;
+      if (activity.text !== undefined) { filteredObj.text = activity.text; }           
+      if (activity.type) { filteredObj.type = activity.type === 'upvote' ? 'true' : 'false'; }
+
+      this.userActivity.push(filteredObj);
+    }.bind(this));
+  }.bind(this);
+
   request.get('/auth/getStatus', null, null, errMsg, (authResponse) => {
     // console.log(authResponse)
     if (authResponse.username) {
@@ -32,26 +52,12 @@ angular.module('app')
       that.fullname = authResponse.fullname;
       that.imageUrl = authResponse.profilepicture;
       request.get('/useractivity', null, {'username': this.email}, errMsg, (getResponse) => {
-        let d = new Date(activity.updatedAt);
-
-        var userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
-        userActivity.map(function(activity) {
-          var filteredObj = {};  
-          var d = new Date(activity.updatedAt);
-
-          activity.updatedAt = d.toDateString();
-
-          filteredObj.url = activity.url;
-          filteredObj.updatedAt = activity.updatedAt;
-          if (activity.text !== undefined) { filteredObj.text = activity.text; }           
-          if (activity.type) { filteredObj.type = activity.type === 'upvote' ? 'true' : 'false'; }
-
-          this.userActivity.push(filteredObj);
-        }.bind(this));
+        populateUserActivty(getResponse);
       });
     }
   });
 })
+
 .component('app', {
   templateUrl: './templates/app.html'
 });

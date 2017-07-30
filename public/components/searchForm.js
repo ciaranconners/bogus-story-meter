@@ -3,6 +3,6 @@ angular.module('app')
 .component('searchForm', {
   templateUrl: '../templates/searchForm.html',
   bindings: {
-  	sayHi: '<'
+  	updateSearch: '<'
   }
 });
