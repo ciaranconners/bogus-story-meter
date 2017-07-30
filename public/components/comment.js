@@ -10,6 +10,7 @@ angular.module('app') /*eslint-disable indent*/
   bindings: {
     comment: '<',
     postComment: '<',
-    toggleReplying: '<'
+    toggleReplying: '<',
+    replyText: '<'
   }
 });
