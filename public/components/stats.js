@@ -60,6 +60,7 @@ angular.module('app') /*eslint-disable indent*/
     let data = {urlId: this.urlId, comment: text, commentId: commentId};
     request.post('/urlcomment', data, errMsg, res => {
       console.log('posted the comment');
+      this.getUrlComments();
     });
   };
 
