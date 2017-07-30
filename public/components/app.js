@@ -11,28 +11,13 @@ angular.module('app')
 
   let errMsg = 'Could not retrieve user data ';
 
-  var date_sort_desc = function (obj1, obj2) {
+  var date_sort_desc = (obj1, obj2) => {
     var date1 = new Date(obj1.updatedAt);
     var date2 = new Date(obj2.updatedAt);
     if (date1 > date2) return -1;
     if (date1 < date2) return 1;
     return 0;
   };
-
-  var createStringArray = function(inputArray) {
-    var stringArray = [];
-
-    for (var i = 0; i < inputArray.length; i ++) {
-      var userObj = inputArray[i];
-      var string = '';
-
-      if (userObj.text) { string += userObj.text; }          
-      if (userObj.type) { string += userObj.type === 'upvote' ? true : false; }
-
-      stringArray.push(string);
-    }    
-    return stringArray;
-  }
 
   this.updateSearch = function(searchText) {
     this.searchText = searchText;
