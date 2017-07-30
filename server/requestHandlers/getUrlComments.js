@@ -12,6 +12,7 @@ router.get('/', (req, res, next) => {
     return comments.map((comment, i) => {
       idxMap[comment.id] = i;
       comment.dataValues.replies = [];
+      comment.dataValues.replying = false;
       return comment;
     });
   })

@@ -8,9 +8,9 @@ const redisStore = require('connect-redis')(session);
 
 const auth = require('./requestHandlers/auth.js');
 const vote = require('./requestHandlers/vote.js');
+
 const postUrlComment = require('./requestHandlers/postUrlComment.js');
 const comments = require('./requestHandlers/comments.js');
-
 
 const client = redis.createClient();
 
@@ -32,6 +32,8 @@ app.use('/auth/', auth);
 app.use('/urlvote', vote);
 app.use('/urlcomment', postUrlComment);
 app.use('/urlcomments', comments);
+
+app.get('/allActivity', handler.getAllActivity);
 
 app.get('/urldata', handler.getUrlData);
 

@@ -98,6 +98,13 @@ handler.getUrlStats = (req, res) => {
   });
 };
 
+handler.getAllActivity = (req, res) => {
+  db.Url.findAll({'limit':15})
+  .then(activity => {
+    res.status(200).json(activity);
+  })
+}
+
 handler.getUserActivity = (req, res) => {
   let username = req.query.username;
   db.User.findOne( {'where': {'username': username}} )
