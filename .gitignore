@@ -18,3 +18,4 @@ ec2-user@52.36.33.73
 .floo
 .flooignore
 dump.rdb
+server/requestHandlers/auth-config.js

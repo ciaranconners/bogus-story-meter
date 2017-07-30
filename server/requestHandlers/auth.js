@@ -1,16 +1,18 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 const uuidv4 = require('uuid/v4');
+
 const db = require('../db/index.js');
+const config = require('./auth-config.js');
 
 const router = express.Router();
 
 const smtpTrans = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
-    user: "bogusstorymeter@gmail.com",
-    pass: "thetruthisoutthere"
+    user: config.gmailUser,
+    pass: config.gmailPass
   }
 });
 
