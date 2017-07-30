@@ -10,7 +10,7 @@ const smtpTrans = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
     user: "bogusstorymeter@gmail.com",
-    pass: "thetruthisoutthere"
+    pass: "abc"
   }
 });
 
