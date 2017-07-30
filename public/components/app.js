@@ -32,7 +32,7 @@ angular.module('app')
         this.userActivity.map(function(activity) {
           var d = new Date(activity.updatedAt);
           activity.updatedAt = d.toDateString();
-        })
+        });
       });
     }
   });

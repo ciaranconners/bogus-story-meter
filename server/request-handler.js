@@ -1,11 +1,7 @@
 const db = require('./db/index.js');
+const utils = require('./utils.js');
 
 const handler = {};
-
-var calculateRating = (upvoteCount, downvoteCount) => {
-  rating = Math.round((upvoteCount / (upvoteCount + downvoteCount)) * 100);
-  return isNaN(rating) ? null : rating;
-};
 
 /*eslint-disable indent*/
 handler.getUrlData = (req, res) => {
@@ -27,7 +23,7 @@ handler.getUrlData = (req, res) => {
       } else {
         return db.UrlVote.findOne( {where: {'userId': userEntry.id, 'urlId': urlEntry.id}} )
         .then((voteEntry) => {
-          rating = calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
+          rating = utils.calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
           if (voteEntry) {
             res.json( {
               'rating': rating,
@@ -51,7 +47,6 @@ handler.getUrlData = (req, res) => {
 
 // the following function will generate a new stat page url or retrieve one if it exists in the DB
 handler.generateRetrieveStatsPageUrl = (req, res) => {
-  console.log('stat page url request received');
   let currentUrl = req.query.currentUrl;
   db.Url.findCreateFind({
       where: {
@@ -71,15 +66,13 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
 };
 
 // this function should check if there's a session first, otherwise you get type errors when the user is set to null
-
 handler.getUrlStats = (req, res) => {
   let urlId = req.query.urlId;
   let urlData = {username: req.session.username};
   db.Url.findOne({where: {id: urlId}})
   .then(urlEntry => {
     urlData.url = urlEntry.url;
-    urlData.rating = calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
-  // res.send(urlData);
+    urlData.rating = utils.calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
   })
   .then(() => {
     return db.User.findOne({where: {username: urlData.username}});
@@ -89,7 +82,6 @@ handler.getUrlStats = (req, res) => {
   })
   .then(vote => {
     vote ? urlData.vote = vote.type : urlData.vote = null;
-    // urlData.vote = vote.type || null;
     res.send(urlData);
   })
   .catch(err => {
@@ -99,11 +91,11 @@ handler.getUrlStats = (req, res) => {
 };
 
 handler.getAllActivity = (req, res) => {
-  db.Url.findAll({'limit':15})
+  db.Url.findAll({'limit': 15})
   .then(activity => {
     res.status(200).json(activity);
-  })
-}
+  });
+};
 
 handler.getUserActivity = (req, res) => {
   let username = req.query.username;

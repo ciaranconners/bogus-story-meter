@@ -1,15 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const handler = require('./request-handler.js');
 const redis = require('redis');
 const session = require('express-session');
 const redisStore = require('connect-redis')(session);
 
+const handler = require('./request-handler.js');
 const auth = require('./requestHandlers/auth.js');
 const vote = require('./requestHandlers/vote.js');
-const comment = require('./requestHandlers/postUrlComment.js');
-const comments = require('./requestHandlers/getUrlComments.js');
+const postUrlComment = require('./requestHandlers/postUrlComment.js');
+const getUrlComments = require('./requestHandlers/getUrlComments.js');
 
 const client = redis.createClient();
 
@@ -29,8 +29,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/auth/', auth);
 app.use('/urlvote', vote);
-app.use('/urlcomment', comment);
-app.use('/urlcomments', comments);
+app.use('/urlcomment', postUrlComment);
+app.use('/urlcomments', getUrlComments);
 
 app.get('/allActivity', handler.getAllActivity);
 

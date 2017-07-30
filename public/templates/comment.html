@@ -8,7 +8,7 @@
     </div>
     <div class="reply-btn">
       <button
-        ng-show="!$ctrl.replying"
+        ng-show="!$ctrl.comment.replying"
         class="reply reply-btn btn btn-default pull-right"
         ng-click="$ctrl.toggleReplying()">
         Reply
@@ -22,7 +22,7 @@
   </div>
   <div class="text-center">
     <textarea
-      ng-show="$ctrl.replying"
+      ng-show="$ctrl.comment.replying"
       class="reply-ta"
       placeholder="Leave a reply"
       ng-model="$ctrl.replyText"
@@ -30,9 +30,9 @@
     </textarea>
     <div>
       <button
-        ng-show="$ctrl.replying"
+        ng-show="$ctrl.comment.replying"
         class="reply-submit btn btn-default pull-right"
-        ng-click="$ctrl.postComment($ctrl.replyText, $ctrl.comment.id); $ctrl.toggleReplying(); $ctrl.getUrlComments();">
+        ng-click="$ctrl.postComment($ctrl.replyText, $ctrl.comment.id); $ctrl.toggleReplying();">
         Submit
       </button>
     </div>
