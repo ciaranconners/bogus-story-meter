@@ -54,19 +54,6 @@ var User = db.define('User', {
   }
 });
 
-// var AuthUser = db.define('AuthUser', {
-//   username: {
-//     type: Sequelize.STRING,
-//     unique: true
-//   },
-//   firstLast: {
-//     type: Sequelize.STRING
-//   },
-//   image: {
-//     type: Sequelize.STRING
-//   }
-// });
-
 var Category = db.define('Category', {
   name: {
     type: Sequelize.STRING,
@@ -93,6 +80,7 @@ var Url = db.define('Url', {
     type: Sequelize.INTEGER,
     defaultValue: 0
   },
+  title: Sequelize.STRING,
   downvoteCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
@@ -170,8 +158,5 @@ User.sync()
   .then(() => {
     CommentVote.sync();
   });
-  // .then(() => {
-  //   AuthUser.sync();
-  // });
 
 module.exports = db.models;

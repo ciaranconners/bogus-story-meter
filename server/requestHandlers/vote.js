@@ -10,6 +10,8 @@ router.post('/', (req, res, next) => {
   let type = req.body.type;
   let username = req.body.username || req.session.username;
   let typeCount = `${type}Count`;
+  let title = req.body.title;
+  let categories = req.body.categories
 
   if (urlId !== null) {
     db.Url.findOne({where: {id: urlId}})
@@ -34,7 +36,7 @@ router.post('/', (req, res, next) => {
       res.sendStatus(400);
     });
   } else if (urlId === null) {
-    db.Url.findCreateFind({where: {'url': url}})
+    db.Url.findCreateFind({where: {'url': url, 'title': title}})
     .spread(url => {
       return db.Url.increment(typeCount, {where: {id: url.id}})
       .then(() => {
