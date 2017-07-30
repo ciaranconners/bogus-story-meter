@@ -1,5 +1,5 @@
 angular.module('app')
-  .controller('LoginCtrl', function($http, $location) {
+  .controller('LoginCtrl', function($http, $window) {
 
     const that = this;
 
@@ -14,7 +14,7 @@ angular.module('app')
         }).then(function(response) {
           if (response.status === 200) {
             alert('check your email to finish registering with Bogus Story Meter; in the meantime, checkout our home page');
-            $location.path('/home');
+            $window.location.href = '/home';
           }
         }, function(err) {
             if (err.status === 401) {
@@ -46,7 +46,7 @@ angular.module('app')
           password: pw
         }).then(function(response) {
           if (response.status === 200) {
-            $location.path('/profile');
+            $window.location.href = '/profile';
           }
         }, function(err) {
           if (err.status === 400) {
