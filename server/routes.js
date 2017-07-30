@@ -8,8 +8,9 @@ const redisStore = require('connect-redis')(session);
 
 const auth = require('./requestHandlers/auth.js');
 const vote = require('./requestHandlers/vote.js');
-const comment = require('./requestHandlers/postUrlComment.js');
-const comments = require('./requestHandlers/getUrlComments.js');
+
+const postUrlComment = require('./requestHandlers/postUrlComment.js');
+const comments = require('./requestHandlers/comments.js');
 
 const client = redis.createClient();
 
@@ -29,7 +30,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/auth/', auth);
 app.use('/urlvote', vote);
-app.use('/urlcomment', comment);
+app.use('/urlcomment', postUrlComment);
 app.use('/urlcomments', comments);
 
 app.get('/allActivity', handler.getAllActivity);
