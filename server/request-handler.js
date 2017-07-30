@@ -3,11 +3,6 @@ const utils = require('./utils.js');
 
 const handler = {};
 
-const calculateRating = (upvoteCount, downvoteCount) => {
-  rating = Math.round((upvoteCount / (upvoteCount + downvoteCount)) * 100);
-  return isNaN(rating) ? null : rating;
-};
-
 /*eslint-disable indent*/
 handler.getUrlData = (req, res) => {
   let url = req.query.currentUrl;
@@ -28,7 +23,7 @@ handler.getUrlData = (req, res) => {
       } else {
         return db.UrlVote.findOne( {where: {'userId': userEntry.id, 'urlId': urlEntry.id}} )
         .then((voteEntry) => {
-          rating = calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
+          rating = utils.calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
           if (voteEntry) {
             res.json( {
               'rating': rating,
@@ -77,7 +72,7 @@ handler.getUrlStats = (req, res) => {
   db.Url.findOne({where: {id: urlId}})
   .then(urlEntry => {
     urlData.url = urlEntry.url;
-    urlData.rating = calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
+    urlData.rating = utils.calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
   })
   .then(() => {
     return db.User.findOne({where: {username: urlData.username}});
