@@ -1,5 +1,7 @@
 angular.module('app')
-  .controller('LoginCtrl', function($http, $location) {
+  .controller('LoginCtrl', function($http, $window) {
+
+    const that = this;
 
     this.signup = function() {
       un = this.accName;
@@ -11,16 +13,22 @@ angular.module('app')
           password: pw
         }).then(function(response) {
           if (response.status === 200) {
-            $location.path('/profile');
+            alert('check your email to finish registering with Bogus Story Meter; in the meantime, checkout our home page');
+            $window.location.href = '/home';
           }
         }, function(err) {
-            if (err.status === 400) {
+            if (err.status === 401) {
+              that.accName = '';
+              that.accPw = '';
+              that.accVerifyPw = '';
               alert(err.data);
-              this.accName = '';
-              this.accPw = '';
-              this.accVerifyPw = '';
+            } else if (err.status === 500) {
+              that.accName = '';
+              that.accPw = '';
+              that.accVerifyPw = '';
+              alert('there was an error, please try signing up again');
             }
-          console.error(err);
+            console.error(err);
         });
       } else {
         alert('your passwords do not match; please try again');
@@ -38,12 +46,12 @@ angular.module('app')
           password: pw
         }).then(function(response) {
           if (response.status === 200) {
-            $location.path('/profile');
+            $window.location.href = '/profile';
           }
         }, function(err) {
           if (err.status === 400) {
-            this.loginName = '';
-            this.loginPw = '';
+            that.loginName = '';
+            that.loginPw = '';
             alert(err.data);
             console.error(err);
           }

@@ -36,6 +36,13 @@ var User = db.define('User', {
   neutralCount: {
     type: Sequelize.INTEGER,
     defaultValue: 0
+  },
+  token: {
+    type: Sequelize.STRING
+  },
+  verified: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
   }
 }, {
   classMethods: {

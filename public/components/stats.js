@@ -52,6 +52,7 @@ angular.module('app') /*eslint-disable indent*/
     this.replyText = '';
     request.post('/urlcomment', data, errMsg, res => {
       getUrlComments();
+      console.log('posted the comment');
     });
   };
 

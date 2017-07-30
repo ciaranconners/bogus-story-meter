@@ -19,7 +19,7 @@ angular.module('app')
   };
 
   request.get('/auth/getStatus', null, null, errMsg, (authResponse) => {
-    console.log(authResponse)
+    console.log(authResponse);
     if (authResponse.username) {
       that.email = authResponse.username;
       that.fullname = authResponse.fullname;
@@ -31,7 +31,7 @@ angular.module('app')
         this.userActivity.map(function(activity) {
           var d = new Date(activity.updatedAt);
           activity.updatedAt = d.toDateString();
-        })
+        });
       });
     }
   });
