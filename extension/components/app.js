@@ -2,7 +2,7 @@ angular.module('app', [])
 
   .controller('AppCtrl', function($scope, request) {
 
-    var that = this;
+    let that = this;
 
     this.rating = null;
     this.urlId = null;
@@ -14,7 +14,7 @@ angular.module('app', [])
     this.categories = null;
     this.title = null;
 
-    chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+    chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
     // Use the token.
       console.log('new token: ', token, new Date());
       if (token) {
@@ -29,11 +29,11 @@ angular.module('app', [])
         //   this.profilePicture = profileInfo.data.picture;
         // });
       }
-    }.bind(this));
+    });
 
     chrome.runtime.sendMessage({msg: 'Give me data on this tab'});
 
-    chrome.extension.onMessage.addListener(function(urlObj) {
+    chrome.extension.onMessage.addListener((urlObj) => {
       console.log('from background ', urlObj);
       that.rating = urlObj.rating;
       that.urlId = urlObj.urlId;
@@ -68,7 +68,7 @@ angular.module('app', [])
       if (this.url === null) {
         return;
       }
-      var data = {
+      let data = {
         urlId: this.urlId,
         url: this.url,
         username: this.currentUser,
@@ -105,11 +105,11 @@ angular.module('app', [])
       }
     };
 
-    this.handleSubmitComment = function(comment) {
+    this.handleSubmitComment = (comment) => {
       if (this.url === null) {
         return;
       }
-      var data = {
+      let data = {
         url: this.url,
         urlId: this.urlId,
         username: this.currentUser,

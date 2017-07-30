@@ -110,7 +110,7 @@ handler.getUserActivity = (req, res) => {
       return db.Comment.findAll( {'where': {'userId': userEntry.id}} )
       .then((userComments) => {
 
-        var userVotesPromises = userVotes.map((row) => {
+        let userVotesPromises = userVotes.map((row) => {
           return db.Url.findOne( {'where': {'id': row.urlId}} )
           .then((urlEntry) => {
             row.dataValues.url = urlEntry.url;
@@ -119,7 +119,7 @@ handler.getUserActivity = (req, res) => {
           });
         });
 
-        var userCommentsPromises = userComments.map((row) => {
+        let userCommentsPromises = userComments.map((row) => {
           return db.Url.findOne( {'where': {'id': row.urlId}} )
           .then((urlEntry) => {
             row.dataValues.url = urlEntry.url;

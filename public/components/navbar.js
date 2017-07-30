@@ -2,7 +2,7 @@ angular.module('app')
 .controller('NavCtrl', function($http, $window, request) {
   this.isLoggedIn;
 
-  this.logout = function() {
+  this.logout = () => {
     $http.get('http://localhost:8080/auth/logout')
     .then(function(success) {
       console.log('user logged out successfully');

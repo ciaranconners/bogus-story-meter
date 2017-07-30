@@ -3,7 +3,7 @@ angular.module('app')
 
     const that = this;
 
-    this.signup = function() {
+    this.signup = () => {
       un = this.accName;
       pw = this.accPw;
       vpw = this.accVerifyPw;
@@ -11,12 +11,12 @@ angular.module('app')
         $http.post('http://localhost:8080/auth/signup', {
           username: un,
           password: pw
-        }).then(function(response) {
+        }).then((response) => {
           if (response.status === 200) {
             alert('check your email to finish registering with Bogus Story Meter; in the meantime, checkout our home page');
             $window.location.href = '/home';
           }
-        }, function(err) {
+        }, (err) => {
             if (err.status === 401) {
               that.accName = '';
               that.accPw = '';
@@ -38,17 +38,17 @@ angular.module('app')
       }
     };
 
-    this.login = function() {
+    this.login = () => {
       un = this.loginName;
       pw = this.loginPw;
       $http.post('http://localhost:8080/auth/login', {
           username: un,
           password: pw
-        }).then(function(response) {
+        }).then((response) => {
           if (response.status === 200) {
             $window.location.href = '/profile';
           }
-        }, function(err) {
+        }, (err) => {
           if (err.status === 400) {
             that.loginName = '';
             that.loginPw = '';
