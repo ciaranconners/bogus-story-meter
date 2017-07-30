@@ -1,23 +1,14 @@
 <div class="form-container parent">
 	<form class="form">
 	  <div class="form-group">
-	    <input type="text" class="form-control" placeholder="Search your activity" name="search" ng-keyup="$ctrl.updateSearchText(searchText)" ng-model="searchText"/>
+	    <input type="text" class="form-control" placeholder="Search your activity" name="search" ng-keyup="$ctrl.updateSearchAttributes(startDate, endDate, searchText)" ng-model="searchText"/>
 	  </div>
-	</form>	  
-
-	<div class="datepicker-container">
-		<div class="input-group date date-input" data-provide="datepicker">
-	    <input type="text" class="form-control">
-	    <div class="input-group-addon">
-	      <span class="glyphicon glyphicon-th"></span>
-	    </div>
-		</div>	  
-		<div class="input-group date date-input" data-provide="datepicker">
-	    <input type="text" class="form-control">
-	    <div class="input-group-addon">
-	      <span class="glyphicon glyphicon-th"></span>
-	    </div>
-		</div>	 
-	</div>	
+	</form>
+	<div>	  
+		<label>Start Date</label>
+		<md-datepicker ng-model="startDate" ng-change="$ctrl.updateSearchAttributes(startDate, endDate, searchText)"></md-datepicker>
+		<label>End Date</label>
+		<md-datepicker ng-model="endDate" ng-change="$ctrl.updateSearchAttributes(startDate, endDate, searchText)"></md-datepicker>
+	</div>
 
 </div>

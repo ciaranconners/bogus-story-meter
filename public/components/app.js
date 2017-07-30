@@ -9,6 +9,9 @@ angular.module('app')
   this.email = '';
   this.id = '';
   this.searchText;
+  this.disableFilter = true;
+  this.startDate;
+  this.endDate;
 
   let errMsg = 'Could not retrieve user data ';
 
@@ -21,11 +24,32 @@ angular.module('app')
     return 0;
   };
 
-  this.updateSearchText = function(searchText) {
+  var convertRawDate = function(rawDate) {
+    var day = rawDate.getDate();
+    var month = rawDate.getMonth() + 1;
+    var year = rawDate.getFullYear();
+
+    return month + '/' + day + '/' + year;
+  };
+
+  var convertToLongDate = function(date) {
+    return new Date(date);
+  };
+
+  this.updateSearchAttributes = function(startDate, endDate, searchText) {  
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.disableFilter = false;
     this.searchText = searchText;
   }.bind(this);
 
-  let populateUserActivty = function(dbResponse) {
+  this.myFilter = function(item) {
+    return this.startDate && this.endDate ?
+      (item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate)
+      : item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.includes(this.searchText);
+  }.bind(this);
+
+  var populateUserActivty = function(dbResponse) {
     this.userActivity = [];      
     this.userVotes = dbResponse.userVotes;
     this.userComments = dbResponse.userComments;
@@ -34,12 +58,11 @@ angular.module('app')
     allUserActivity.map(function(activity) {
       let filteredObj = {};  
       let d = new Date(activity.updatedAt);
-      activity.updatedAt = d.toDateString();
 
+      filteredObj.updatedAt = convertToLongDate(convertRawDate(d));      
       filteredObj.url = activity.url;
-      filteredObj.updatedAt = activity.updatedAt;
-      if (activity.text !== undefined) { filteredObj.text = activity.text; }           
-      if (activity.type) { filteredObj.type = activity.type === 'upvote' ? 'true' : 'false'; }
+      activity.text !== undefined ? filteredObj.text = activity.text : filteredObj.text = '';        
+      activity.type ? (filteredObj.type = activity.type === 'upvote' ? 'true' : 'false') : filteredObj.type = '';
 
       this.userActivity.push(filteredObj);
     }.bind(this));
