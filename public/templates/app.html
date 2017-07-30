@@ -9,11 +9,11 @@
 			</div>
 		</div>
 		<div class="col-sm-8">
-			<search-form></search-form>
+			<search-form say-hi="app.updateSearch"></search-form>
 			<h3>Your recent activity:</h3>
-			<ul class="profileList" ng-repeat="activity in app.userActivity">
+			<ul class="profileList" ng-repeat="activity in app.userActivity | filter:app.searchText">
 				<li class="profileTime">{{ activity.updatedAt.slice(0,16).split('T').join(' ') }}</li>
-			  <li ng-show="activity.type">You rated the page: <i><a href={{activity.url}}>{{activity.url}}</a></i> as <b><a class="{{activity.type}}" href="/stats/redirect/{{activity.urlId}}">{{activity.type === 'upvote'}}</a></b></li>
+			  <li ng-show="activity.type">You rated the page: <i><a href={{activity.url}}>{{activity.url}}</a></i> as <b><a class="{{activity.type}}" href="/stats/redirect/{{activity.urlId}}">{{activity.type}}</a></b></li>
 			  <li ng-show="activity.text">You commented on the page: <i><a href={{activity.url}}>{{activity.url}}</a></i>
 			    <ul class="profileList" ng-show="activity.text">
 			      <li><a class="profileComment" href="/stats/redirect/{{activity.urlId}}">{{activity.text}}</a></li>

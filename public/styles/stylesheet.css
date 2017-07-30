@@ -133,11 +133,11 @@ p, .stats-text, .comment-text {
   margin-top: 10px;
 }
 
-.upvote, .truthy {
+.upvote, .truthy, .true {
   color: green;
 }
 
-.downvote, .falsy {
+.downvote, .falsy, .false {
   color: red;
 }
 
