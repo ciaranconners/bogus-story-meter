@@ -122,6 +122,7 @@ router.post('/login', function(req, res, next) {
             res.status(400).json('that password doesn\'t match our records; please try again');
           }
           req.session.username = req.body.username;
+          console.log('session created');
           res.status(200).json('all set');
         });
       } else {
@@ -161,7 +162,7 @@ router.get('/getStatus', (req, res) => {
         });
       });
   } else {
-    console.log('no session');
+    // THIS SHOULD CHANGE TO A STATUS CODE 401:
     res.sendStatus(200);
   }
 });
