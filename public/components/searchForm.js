@@ -1,8 +1,5 @@
 angular.module('app')
 
 .component('searchForm', {
-  templateUrl: '../templates/searchForm.html',
-  bindings: {
-  	updateSearchAttributes: '<'
-  }
+  templateUrl: '../templates/searchForm.html'
 });

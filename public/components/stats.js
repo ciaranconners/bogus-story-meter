@@ -50,8 +50,8 @@ angular.module('app') /*eslint-disable indent*/
     let data = {urlId: this.urlId, comment: text, commentId: commentId};
     this.commentText = '';
     this.replyText = '';
-    request.post('/urlcomment', data, errMsg, res => {
-      getUrlComments(); // get comments after posting or refactor to socket.io
+    request.post('/urlcomment', data, errMsg, (res) => {
+      getUrlComments();
     });
   };
 
