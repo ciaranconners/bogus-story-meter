@@ -54,6 +54,7 @@ p, .stats-text, .comment-text {
 	height: 180px;
 	object-fit: cover;
 	margin: auto;
+  border-radius: 7%;
 }
 
 .username {
@@ -133,11 +134,11 @@ p, .stats-text, .comment-text {
   margin-top: 10px;
 }
 
-.upvote, .truthy {
+.upvote, .truthy, .true {
   color: green;
 }
 
-.downvote, .falsy {
+.downvote, .falsy, .false {
   color: red;
 }
 
@@ -175,4 +176,13 @@ table{
   border-top: 0px;
   word-wrap:break-word;
   vertical-align: middle;
+}
+
+.datepicker-container {
+  display: table;
+}
+
+.date-input {
+  display: table-cell;
+  margin: 100px;
 }
