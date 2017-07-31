@@ -25,7 +25,7 @@ function getUserData() {
       }
     });
   });
-};
+}
 
 const updateIcon = (rating) => {
   const CBA = chrome.browserAction;
