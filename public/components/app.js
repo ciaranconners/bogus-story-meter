@@ -68,6 +68,10 @@ angular.module('app')
     }.bind(this));
   }.bind(this);
 
+  this.updateSearch = function(searchText) {
+    this.searchText = searchText;
+  }.bind(this);
+
   request.get('/auth/getStatus', null, null, errMsg, (authResponse) => {
     // console.log(authResponse)
     if (authResponse.username) {
