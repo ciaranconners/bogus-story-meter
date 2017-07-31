@@ -70,5 +70,4 @@ angular.module('app') /*eslint-disable indent*/
     .then(res => callback(res.data))
     .catch(err => console.error(errMsg, err));
   };
-
 });
