@@ -122,7 +122,7 @@ router.post('/login', (req, res, next) => {
             res.status(400).json('that password doesn\'t match our records; please try again');
           }
           req.session.username = req.body.username;
-          console.log('session created');
+          console.log('\x1b[33m%s\x1b[0m', 'session created');
           res.status(200).json('all set');
         });
       } else {
@@ -141,7 +141,7 @@ router.get('/logout', (req, res, next) => {
       console.log(err);
       res.sendStatus(500);
     } else {
-      console.log('session destroyed');
+      console.log('\x1b[33m%s\x1b[0m', 'session destroyed');
       res.sendStatus(200);
     }
   });

@@ -44,6 +44,7 @@ angular.module('app', [])
       that.profilePicture = urlObj.profilepicture;
 
       request.getCategory(that.url, 'could not retrieve data from Watson', (getCategoryRes) => {
+        console.log(getCategoryRes);
         that.title = getCategoryRes.metadata.title;
         that.categories = getCategoryRes.categories;
         console.log(that.categories);
