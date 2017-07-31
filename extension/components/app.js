@@ -43,12 +43,12 @@ angular.module('app', [])
       that.name = urlObj.name;
       that.profilePicture = urlObj.profilepicture;
 
-      request.getCategory(that.url, 'could not retrieve data from Watson', (getCategoryRes) => {
-        console.log(getCategoryRes);
-        that.title = getCategoryRes.metadata.title;
-        that.categories = getCategoryRes.categories;
-        console.log(that.categories);
-      });
+      // request.getCategory(that.url, 'could not retrieve data from Watson', (getCategoryRes) => {
+      //   console.log(getCategoryRes);
+      //   that.title = getCategoryRes.metadata.title;
+      //   that.categories = getCategoryRes.categories;
+      //   console.log(that.categories);
+      // });
 
       if (that.rating === 0) {
         that.rated = true;

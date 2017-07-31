@@ -1,4 +1,4 @@
-angular.module('app', ['ngRoute'])
+angular.module('app', ['ngRoute', 'ngMaterial'])
 
 .config(['$locationProvider', '$routeProvider',
   function config($locationProvider, $routeProvider) {
