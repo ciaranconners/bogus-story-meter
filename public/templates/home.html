@@ -1,5 +1,5 @@
 <div ng-controller="HomeCtrl as home" class="container">
-  <search-form></search-form>
+  <!--<search-form></search-form>-->
   <h3>Trending pages:</h3>
 <!--   <ul class="home-activity" ng-repeat="activity in home.activity">
     <li class="activity">
@@ -9,7 +9,7 @@
   </ul> -->
   <table class="table table-hover">
     <tr class="home-activity row" ng-repeat="activity in home.activity">
-      <td class="col-md-11"><a href="{{activity.url}}"><i>{{activity.title}}</i></a></td>
+      <td class="col-md-11"><a href="{{activity.url}}"><i>{{activity.title || activity.url}}</i></a></td>
       <td class="col-md-1 activity-rating"><b><a href="/stats/redirect/{{activity.id}}" class="pull-right {{activity.range}}">{{activity.rating}}</a></b></td>
     </tr>
   </table>

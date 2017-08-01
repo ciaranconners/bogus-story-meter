@@ -1,7 +1,16 @@
 <div class="form-container parent">
 	<form class="form">
 	  <div class="form-group">
-	    <input type="text" class="form-control" placeholder="Search your activity" name="search"/>
+	    <input type="text" class="form-control" placeholder="Search your activity" name="search" ng-change="$ctrl.updateSearchAttributes(startDate, endDate, searchText)" ng-model="searchText"/>
 	  </div>
 	</form>
+	<div>
+		<div class="datepicker-container">	  
+			<label>Start Date</label>
+			<md-datepicker class="datepicker" ng-model="startDate" ng-change="$ctrl.updateSearchAttributes(startDate, endDate, searchText)"></md-datepicker>
+			<label class="datepicker-container">End Date</label>
+			<md-datepicker class="datepicker" ng-model="endDate" ng-change="$ctrl.updateSearchAttributes(startDate, endDate, searchText)"></md-datepicker>
+		</div>
+	</div>
+
 </div>
