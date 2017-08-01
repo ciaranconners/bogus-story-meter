@@ -15,11 +15,6 @@ const nlu = new NaturalLanguageUnderstandingV1({
   version_date: NaturalLanguageUnderstandingV1.VERSION_DATE_2017_02_27,
 });
 
-const client = new elasticsearch.Client({
-  host: 'localhost:9200',
-  log: 'error'
-});
-
 const getFromWatson = (url, callback) => {
   nlu.analyze({
   'url': url,

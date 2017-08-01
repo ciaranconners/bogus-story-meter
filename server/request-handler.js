@@ -74,6 +74,7 @@ handler.getUrlStats = (req, res) => {
   db.Url.findOne({where: {id: urlId}})
   .then(urlEntry => {
     urlData.url = urlEntry.url;
+    urlData.title = urlEntry.title;
     urlData.rating = utils.calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
   })
   .then(() => {
@@ -81,8 +82,8 @@ handler.getUrlStats = (req, res) => {
   })
   .then(user => {
     if (user !== null) {
-    return db.UrlVote.findOne({where: {userId: user.id, urlId: urlId}});
-  }
+      return db.UrlVote.findOne({where: {userId: user.id, urlId: urlId}});
+    }
   })
   .then(vote => {
     vote ? urlData.vote = vote.type : urlData.vote = null;
