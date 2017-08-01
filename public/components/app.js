@@ -14,7 +14,7 @@ angular.module('app')
   this.disableFilter = true;
   this.startDate;
   this.endDate;
-  this.warningLabel;
+  this.warningLabel = 'end date can\'t be before start date';
   this.dateToday = new Date();
 
   let errMsg = 'Could not retrieve user data ';
@@ -38,10 +38,6 @@ angular.module('app')
 
   let convertToLongDate = (date) => {
     return new Date(date);
-  };
-
-  let populateWarningLabel = (startDate, endDate) => {
-    if (startDate > endDate) { this.warningLabel = 'end date can\'t be before start date'; }
   };
 
   this.updateSearchAttributes = function(startDate, endDate, searchText) {
