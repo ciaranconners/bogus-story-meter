@@ -2,6 +2,8 @@
 angular.module('app')
 .controller('AppCtrl', function(request, $http, $rootScope, $window) {
 
+  window.scrollTo(0, 0);
+
   let that = this;
 
   this.fullname = '';
