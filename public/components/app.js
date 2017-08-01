@@ -15,6 +15,7 @@ angular.module('app')
   this.startDate;
   this.endDate;
   this.warningLabel;
+  this.dateToday = new Date();
 
   let errMsg = 'Could not retrieve user data ';
 
@@ -40,21 +41,15 @@ angular.module('app')
   };
 
   let populateWarningLabel = (startDate, endDate) => {
-    if (startDate > convertToLongDate(convertRawDate(new Date()))) {
-      this.warningLabel = 'cannot have a future start date';
-    } else if (startDate > endDate) {
-      this.warningLabel = 'end date can\'t be before start date';
-    } else {
-      this.warningLabel = '';
-    }
-  }
+    if (startDate > endDate) { this.warningLabel = 'end date can\'t be before start date'; }
+  };
 
   this.updateSearchAttributes = function(startDate, endDate, searchText) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.searchText = searchText;
     this.searchText || this.startDate ? this.disableFilter = false : this.disableFilter = true;
-    populateWarningLabel(startDate, endDate);
+    populateWarningLabel(this.startDate, this.endDate);
   }.bind(this);
 
   this.myFilter = function(item) {

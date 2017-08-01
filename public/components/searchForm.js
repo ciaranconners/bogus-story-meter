@@ -4,6 +4,7 @@ angular.module('app')
   templateUrl: '../templates/searchForm.html',
   bindings: {
   	updateSearchAttributes: '<',
-  	warningLabel: '<'
+  	warningLabel: '<',
+  	dateToday: '<'
   }
 });
