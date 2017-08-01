@@ -25,7 +25,7 @@ function getUserData() {
       }
     });
   });
-};
+}
 
 const updateIcon = (rating) => {
   const CBA = chrome.browserAction;
@@ -91,7 +91,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
           console.error(err);
         },
         success: function(data) {
-          console.log('updated data', data)
+          console.log('updated data', data);
           lastUrl = url;
           updateIcon(data.rating);
           tabUrl = url;

@@ -2,6 +2,50 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/index.js');
 
+const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
+const elasticsearch = require('elasticsearch');
+const watsonConfig = require('./watson-config.js');
+
+const username = watsonConfig.username;
+const password = watsonConfig.password;
+
+const nlu = new NaturalLanguageUnderstandingV1({
+  username: username,
+  password: password,
+  version_date: NaturalLanguageUnderstandingV1.VERSION_DATE_2017_02_27,
+});
+
+const client = new elasticsearch.Client({
+  host: 'localhost:9200',
+  log: 'error'
+});
+
+const getFromWatson = (url, callback) => {
+  nlu.analyze({
+  'url': url,
+  'features': {
+    'categories' : {},
+    'metadata': {}
+  },
+  'return_analyzed_text': true
+}, (err, response) => {
+    callback(err, response);
+ });
+};
+
+// body => {title: 'title', text: 'text', categories: 'categories'}
+
+const saveToElasticsearch = (index, type, id, body, callback) => {
+  client.index({
+    index: index,
+    type: type,
+    id: id,
+    body: body
+  }, (error, response) => {
+      callback(err, response);
+  });
+};
+
 router.post('/', (req, res, next) => {
   console.log('session username: ', req.session.username);
   let url = req.body.url;
@@ -23,19 +67,53 @@ router.post('/', (req, res, next) => {
   } else if (urlId === null) {
     db.Url.findCreateFind({where: {'url': url}})
     .spread(url => {
-      return db.User.findCreateFind({where: {username: username}})
-      .spread((user) => {
-        db.Comment.create({text: comment, commentId: null, urlId: url.id, userId: user.id});
-        res.status(201).json(url.id);
+      getFromWatson(url.url, (err, data) => {
+  if (err) {
+    console.error(err);
+  } else {
+    let title = data.metadata.title;
+    categories = [];
+    for (let x of data.categories) {
+      categories.push(x.label.slice(1));
+    }
+    let category = categories.join(' ');
+    db.Category.findCreateFind({
+        where: {
+          name: category
+        }
+      })
+      .spread((category) => {
+        return db.User.findCreateFind({
+            where: {
+              username: username
+            }
+          })
+          .spread((user) => {
+            db.Comment.create({
+              text: comment,
+              commentId: null,
+              urlId: url.id,
+              userId: user.id
+            });
+            res.status(201).json(url.id);
+               url.update({categoryId: category.id, title: title})
+                            .catch((err) => {
+                              console.error(err);
+                            });
+          })
+          .catch(err => {
+            res.sendStatus(400);
+          });
       })
       .catch(err => {
         res.sendStatus(400);
       });
-    })
-    .catch(err => {
-      res.sendStatus(400);
+  }
+});
     });
   }
 });
 
 module.exports = router;
+
+

@@ -58,8 +58,7 @@ let Category = db.define('Category', {
   name: {
     type: Sequelize.STRING,
     unique: true
-  },
-  categoryId: Sequelize.INTEGER
+  }
 }, {
   classMethods: {
     associate: (models) => {
