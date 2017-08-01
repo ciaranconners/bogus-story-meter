@@ -1,6 +1,8 @@
 angular.module('app')
 .controller('HomeCtrl', function(request) {
 
+  window.scrollTo(0, 0);
+
   let errMsg = 'Could not retrieve user data ';
 
   let date_sort_desc = (obj1, obj2) => {
