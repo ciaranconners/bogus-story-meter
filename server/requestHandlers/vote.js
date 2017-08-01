@@ -85,6 +85,27 @@ router.post('/', (req, res, next) => {
       getFromWatson(url.url, (err, data) => {
         if (err) {
           console.error(err);
+          return db.Url.increment(typeCount, {where: {id: url.id}})
+                .then(() => {
+                  return db.User.findCreateFind({where: {username: username}})
+                    .spread(user => {
+                      db.UrlVote.create({type: type, userId: user.id, urlId: url.id})
+                        .then(() => {
+                          db.User.increment(typeCount, {where: {id: user.id}});
+                          res.status(201).json(url.id);
+                          url.update({categoryId: category.id, title: title})
+                            .catch((err) => {
+                              console.error(err);
+                            });
+                        }).catch(err => {
+                          res.sendStatus(400);
+                        });
+                    }).catch(err => {
+                      res.sendStatus(400);
+                    });
+                }).catch(err => {
+                res.sendStatus(400);
+              });
         } else {
           let title = data.metadata.title;
           categories = [];

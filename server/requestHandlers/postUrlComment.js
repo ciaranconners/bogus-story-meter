@@ -70,6 +70,24 @@ router.post('/', (req, res, next) => {
       getFromWatson(url.url, (err, data) => {
   if (err) {
     console.error(err);
+           return db.User.findCreateFind({
+            where: {
+              username: username
+            }
+          })
+          .spread((user) => {
+            db.Comment.create({
+              text: comment,
+              commentId: null,
+              urlId: url.id,
+              userId: user.id
+            });
+            res.status(201).json(url.id);
+            url.update({categoryId: category.id, title: title})
+              .catch((err) => {
+                console.error(err);
+            });
+          });
   } else {
     let title = data.metadata.title;
     categories = [];
@@ -96,10 +114,10 @@ router.post('/', (req, res, next) => {
               userId: user.id
             });
             res.status(201).json(url.id);
-               url.update({categoryId: category.id, title: title})
-                            .catch((err) => {
-                              console.error(err);
-                            });
+            url.update({categoryId: category.id, title: title})
+              .catch((err) => {
+                console.error(err);
+            });
           })
           .catch(err => {
             res.sendStatus(400);
