@@ -1,7 +1,7 @@
 angular.module('app')
-.controller('HomeCtrl', function(request) {
+.controller('HomeCtrl', function($window, request) {
 
-  window.scrollTo(0, 0);
+  $window.scrollTo(0, 0);
 
   let errMsg = 'Could not retrieve user data ';
 

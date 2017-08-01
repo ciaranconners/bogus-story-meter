@@ -1,8 +1,8 @@
 angular.module('app') /*eslint-disable indent*/
 
-.controller('StatCtrl', function(request, $location, $scope) {
+.controller('StatCtrl', function($window, request, $location, $scope) {
 
-  window.scrollTo(0, 0);
+  $window.scrollTo(0, 0);
 
   this.url;
   this.username;
