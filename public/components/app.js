@@ -13,7 +13,6 @@ angular.module('app')
   this.startDate;
   this.endDate;
 
-
   let errMsg = 'Could not retrieve user data ';
 
   let date_sort_desc = (obj1, obj2) => {
@@ -57,30 +56,18 @@ angular.module('app')
     } else if (this.startDate) {
       return item.updatedAt >= this.startDate;
     }
-
   }.bind(this);
 
   let populateUserActivty = function(dbResponse) {
-    this.userActivity = [];
     this.userVotes = dbResponse.userVotes;
     this.userComments = dbResponse.userComments;
-
-    let allUserActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
-    allUserActivity.map(function(activity) {
-      let filteredObj = {};
+    this.userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
+    this.userActivity.map(function(activity) {
       let d = new Date(activity.updatedAt);
 
-      //console.log(activity.updatedAt);
-      //console.log(activity.updatedAt = d.toDateString());
-
-      filteredObj.updatedAt = convertToLongDate(convertRawDate(d));
-      //filteredObj.updatedAt = d.toDateString();
-      filteredObj.url = activity.url;
-      activity.text !== undefined ? filteredObj.text = activity.text : filteredObj.text = '';
-      activity.type ? (filteredObj.type = activity.type === 'upvote' ? 'true' : 'false') : filteredObj.type = '';
-      filteredObj.urlId = activity.urlId;
-
-      this.userActivity.push(filteredObj);
+      activity.updatedAt = convertToLongDate(convertRawDate(d));
+      if (activity.text === undefined) { activity.text = ''; }
+      activity.type ? (activity.type = activity.type === 'upvote' ? 'true' : 'false') : activity.type = ''; 
     }.bind(this));
   }.bind(this);
 
