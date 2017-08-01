@@ -11,8 +11,8 @@ angular.module('app', [])
     this.url = null;
     this.fullName = null;
     this.profilePicture = null;
-    this.categories = null;
-    this.title = null;
+    this.upvotebtn = '';
+    this.downvotebtn = '';
 
     chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
     // Use the token.
@@ -42,6 +42,9 @@ angular.module('app', [])
       that.uservote = urlObj.uservote;
       that.name = urlObj.name;
       that.profilePicture = urlObj.profilepicture;
+      if (that.uservote) {
+        that[that.uservote+'btn'] = 'pressed';
+      }
 
       // request.getCategory(that.url, 'could not retrieve data from Watson', (getCategoryRes) => {
       //   console.log(getCategoryRes);
@@ -58,8 +61,6 @@ angular.module('app', [])
       $scope.$apply();
     });
 
-
-
     this.handleProfile = () => {
       chrome.tabs.create({url: `${window.serverUri}/profile` });
       window.close();
@@ -73,9 +74,9 @@ angular.module('app', [])
         urlId: this.urlId,
         url: this.url,
         username: this.currentUser,
-        type: vote,
-        title: this.title,
-        categories: this.categories
+        type: vote
+        // title: this.title,
+        // categories: this.categories
       };
       let errMsg = 'Could not submit vote: ';
 
@@ -88,6 +89,7 @@ angular.module('app', [])
           request.get(`/urlvote/${that.urlId}`, null, null, errMsg, (getResponse) => {
             that.rating = getResponse;
             that.uservote = vote;
+            that[vote+'btn'] = 'pressed';
             chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'urlId': that.urlId});
           });
         });
@@ -95,14 +97,23 @@ angular.module('app', [])
         request.put('/urlvote', data, errMsg, (postResponse) => {
           that.urlId = postResponse;
           request.get(`/urlvote/${that.urlId}`, null, null, errMsg, (getResponse) => {
+            that[that.uservote+'btn'] = '';
+            that[vote+'btn'] = 'pressed';
             that.rating = getResponse;
             that.uservote = vote;
             chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'urlId': that.urlId});
           });
         });
-
-      } else if (this.uservote === vote) {
-        return; // don't let user send same rating twice for same URL
+      } else if (this.uservote === vote) { // cancel vote
+        request.delete('/urlvote', data, errMsg, (deleteResponse) => {
+          that.urlId = deleteResponse;
+          request.get(`/urlvote/${that.urlId}`, null, null, errMsg, (getResponse) => {
+            that.rating = getResponse;
+            that.uservote = null;
+            that[vote+'btn'] = '';
+            chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'urlId': that.urlId});
+          });
+        });
       }
     };
 

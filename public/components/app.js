@@ -37,47 +37,48 @@ angular.module('app')
     return new Date(date);
   };
 
-  this.updateSearchAttributes = function(startDate, endDate, searchText) {  
+  this.updateSearchAttributes = function(startDate, endDate, searchText) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.searchText = searchText;
-    this.searchText || this.startDate ? this.disableFilter = false : this.disableFilter = true; 
+    this.searchText || this.startDate ? this.disableFilter = false : this.disableFilter = true;
     console.log('this.searchText', this.searchText);
   }.bind(this);
 
   this.myFilter = function(item) {
-    if (this.searchText && this.startDate && this.endDate) { 
-      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate); 
+    if (this.searchText && this.startDate && this.endDate) {
+      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate);
     } else if (this.searchText && this.startDate) {
-      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.includes(this.searchText)) && (item.updatedAt >= this.startDate); 
+      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.includes(this.searchText)) && (item.updatedAt >= this.startDate);
     } else if (this.searchText) {
       return item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.includes(this.searchText);
-    } else if (this.startDate && this.endDate) {  
+    } else if (this.startDate && this.endDate) {
       return item.updatedAt >= this.startDate && item.updatedAt <= this.endDate;
     } else if (this.startDate) {
       return item.updatedAt >= this.startDate;
-    } 
+    }
 
   }.bind(this);
 
   let populateUserActivty = function(dbResponse) {
-    this.userActivity = [];      
+    this.userActivity = [];
     this.userVotes = dbResponse.userVotes;
     this.userComments = dbResponse.userComments;
 
     let allUserActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
     allUserActivity.map(function(activity) {
-      let filteredObj = {};  
+      let filteredObj = {};
       let d = new Date(activity.updatedAt);
 
       //console.log(activity.updatedAt);
       //console.log(activity.updatedAt = d.toDateString());
 
-      filteredObj.updatedAt = convertToLongDate(convertRawDate(d));   
-      //filteredObj.updatedAt = d.toDateString();  
+      filteredObj.updatedAt = convertToLongDate(convertRawDate(d));
+      //filteredObj.updatedAt = d.toDateString();
       filteredObj.url = activity.url;
-      activity.text !== undefined ? filteredObj.text = activity.text : filteredObj.text = '';        
+      activity.text !== undefined ? filteredObj.text = activity.text : filteredObj.text = '';
       activity.type ? (filteredObj.type = activity.type === 'upvote' ? 'true' : 'false') : filteredObj.type = '';
+      filteredObj.urlId = activity.urlId;
 
       this.userActivity.push(filteredObj);
     }.bind(this));

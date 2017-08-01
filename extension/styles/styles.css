@@ -41,3 +41,11 @@ textarea {
   margin-left: 0;
   margin-top: 10px;
 }
+
+.pressed {
+  opacity: 0.6;
+}
+
+.dd-button:focus {
+  outline: none;
+}

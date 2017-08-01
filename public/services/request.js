@@ -38,6 +38,17 @@ angular.module('app')/*eslint-disable indent*/
     .catch(error => console.error(errMsg, error));
   };
 
+  this.delete = (endpoint, params, errMsg, callback) => {
+    $http({
+      method: 'DELETE',
+      url: window.serverUri + endpoint,
+      params: params
+    })
+    .then(res => callback(res.data))
+    .catch(err => console.error(errMsg, err));
+  };
+
+
   // this.post = (postEndpoint, getEndpoint, data = {}, params = {}, errMsg, postCallback, getCallback) => {
   //  $http({
   //    method: 'POST',

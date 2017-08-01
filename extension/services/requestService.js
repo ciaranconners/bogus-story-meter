@@ -42,6 +42,16 @@ angular.module('app') /*eslint-disable indent*/
     });
   };
 
+  this.delete = (endpoint, params, errMsg, callback) => {
+    $http({
+      method: 'DELETE',
+      url: window.serverUri + endpoint,
+      params: params
+    })
+    .then(res => callback(res.data))
+    .catch(err => console.error(errMsg, err));
+  };
+
   this.getCategory = (url, errMsg, callback) => {
     $http({
       method: 'GET',
