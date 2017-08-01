@@ -181,3 +181,7 @@ table{
   word-wrap:break-word;
   vertical-align: middle;
 }
+
+.warning-label {
+  color:red;
+}

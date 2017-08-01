@@ -14,6 +14,7 @@ angular.module('app')
   this.disableFilter = true;
   this.startDate;
   this.endDate;
+  this.warningLabel;
 
   let errMsg = 'Could not retrieve user data ';
 
@@ -26,7 +27,7 @@ angular.module('app')
     return 0;
   };
 
-  let convertRawDate = function(rawDate) {
+  let convertRawDate = (rawDate) => {
     let day = rawDate.getDate();
     let month = rawDate.getMonth() + 1;
     let year = rawDate.getFullYear();
@@ -34,16 +35,26 @@ angular.module('app')
     return month + '/' + day + '/' + year;
   };
 
-  let convertToLongDate = function(date) {
+  let convertToLongDate = (date) => {
     return new Date(date);
   };
+
+  let populateWarningLabel = (startDate, endDate) => {
+    if (startDate > convertToLongDate(convertRawDate(new Date()))) {
+      this.warningLabel = 'cannot have a future start date';
+    } else if (startDate > endDate) {
+      this.warningLabel = 'end date can\'t be before start date';
+    } else {
+      this.warningLabel = '';
+    }
+  }
 
   this.updateSearchAttributes = function(startDate, endDate, searchText) {
     this.startDate = startDate;
     this.endDate = endDate;
     this.searchText = searchText;
     this.searchText || this.startDate ? this.disableFilter = false : this.disableFilter = true;
-    console.log('this.searchText', this.searchText);
+    populateWarningLabel(startDate, endDate);
   }.bind(this);
 
   this.myFilter = function(item) {
@@ -71,10 +82,6 @@ angular.module('app')
       if (activity.text === undefined) { activity.text = ''; }
       activity.type ? (activity.type = activity.type === 'upvote' ? 'true' : 'false') : activity.type = ''; 
     }.bind(this));
-  }.bind(this);
-
-  this.updateSearch = function(searchText) {
-    this.searchText = searchText;
   }.bind(this);
 
   request.get('/auth/getStatus', null, null, errMsg, (authResponse) => {

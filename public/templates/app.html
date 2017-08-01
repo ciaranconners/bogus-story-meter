@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<div class="col-sm-8">
-			<search-form update-search-attributes="app.updateSearchAttributes"></search-form>
+			<search-form warning-label="app.warningLabel" update-search-attributes="app.updateSearchAttributes"></search-form>
 			<h3>Your recent activity:</h3>
 			<ul class="profileList" ng-repeat="activity in app.userActivity | filter: (!app.disableFilter || '') && app.myFilter">
 				<li class="profileTime">{{ activity.updatedAt.toDateString() }}</li>
