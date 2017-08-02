@@ -79,7 +79,6 @@ angular.module('app')
   }.bind(this);
 
   request.get('/auth/getStatus', null, null, errMsg, (authResponse) => {
-    // console.log(authResponse)
     if (authResponse.username) {
       that.email = authResponse.username;
       that.fullname = authResponse.fullname;
