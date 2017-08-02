@@ -41,9 +41,14 @@ angular.module('app')
   };
 
   this.updateSearchAttributes = function(startDate, endDate, searchText) {
+    console.log('this.startDate', startDate);
+    console.log('this.endDate', endDate);
+    console.log('this.searchText', searchText);
+
     this.startDate = startDate;
     this.endDate = endDate;
-    this.searchText = searchText.toLowerCase();
+    this.searchText = searchText ? searchText.toLowerCase() : '';
+    console.log('this.searchText after', this.searchText);
     this.searchText || this.startDate ? this.disableFilter = false : this.disableFilter = true;
   }.bind(this);
 
