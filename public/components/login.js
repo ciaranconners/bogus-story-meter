@@ -1,9 +1,38 @@
 angular.module('app')
-  .controller('LoginCtrl', function($http, $window) {
+  .controller('LoginCtrl', function($http, $window, $mdDialog) {
 
     const that = this;
 
     this.requestActive = false;
+
+  //   this.showAlert = function(title, text) {
+  //   $mdDialog.show(
+  //     $mdDialog.alert()
+  //       .parent(angular.element(document.querySelector('#popupContainer')))
+  //       .clickOutsideToClose(true)
+  //       .title(title)
+  //       .textContent(text)
+  //       .ok('Got it!')
+  //   );
+  // };
+
+  this.showAlert = (title, text) => {
+    alert = $mdDialog.alert({
+      title: title,
+      textContent: text,
+      ok: 'Got it!',
+      clickOutsideToClose: true,
+      hasBackdrop: false
+    });
+
+    $mdDialog
+      .show( alert )
+      .finally(function() {
+        alert = undefined;
+      });
+  };
+
+
 
     this.signup = () => {
       un = this.accName;
@@ -17,31 +46,34 @@ angular.module('app')
         }).then((response) => {
           that.requestActive = false;
           if (response.status === 200) {
-            alert('check your email to finish registering with Bogus Story Meter; in the meantime, checkout our home page');
-            $window.location.href = '/home';
+            that.showAlert('Nice!', 'Now check your email to finish registering with Bogus Story Meter');
+            that.accName = '';
+            that. accPw = '';
+            that.accVerifyPw = '';
           }
         }, (err) => {
             that.requestActive = false;
             if (err.status === 401) {
+              that.showAlert('Oops!', err.data);
               that.accName = '';
               that.accPw = '';
               that.accVerifyPw = '';
-              alert(err.data);
             } else if (err.status === 500) {
+              that.showAlert('Oh no!', 'There was an error, please try signing up again.');
               that.accName = '';
               that.accPw = '';
               that.accVerifyPw = '';
-              alert('there was an error, please try signing up again');
             }
-            console.error(err);
         });
       } else {
-        alert('your passwords do not match; please try again');
+        that.showAlert('Oops!', 'Your passwords do not match. Please try again.');
         this.accName = '';
         this.accPw = '';
         this.accVerifyPw = '';
       }
     };
+
+    // in terms of cleanup, differentiate between user not found and password incorrect for the alert message
 
     this.login = () => {
       un = this.loginName;
@@ -55,10 +87,9 @@ angular.module('app')
           }
         }, (err) => {
           if (err.status === 400) {
+            that.showAlert('Oops!', 'Your credentials don\'t match our records. Please try again.');
             that.loginName = '';
             that.loginPw = '';
-            alert(err.data);
-            console.error(err);
           }
         });
     };
