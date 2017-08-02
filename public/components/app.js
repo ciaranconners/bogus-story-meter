@@ -41,20 +41,24 @@ angular.module('app')
   };
 
   this.updateSearchAttributes = function(startDate, endDate, searchText) {
+    console.log('this.startDate', startDate);
+    console.log('this.endDate', endDate);
+    console.log('this.searchText', searchText);
+
     this.startDate = startDate;
     this.endDate = endDate;
-    this.searchText = searchText;
+    this.searchText = searchText ? searchText.toLowerCase() : '';
+    console.log('this.searchText after', this.searchText);
     this.searchText || this.startDate ? this.disableFilter = false : this.disableFilter = true;
-    populateWarningLabel(this.startDate, this.endDate);
   }.bind(this);
 
   this.myFilter = function(item) {
     if (this.searchText && this.startDate && this.endDate) {
-      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate);
+      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.toLowerCase().includes(this.searchText) || item.title.toLowerCase().includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate);
     } else if (this.searchText && this.startDate) {
-      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.includes(this.searchText)) && (item.updatedAt >= this.startDate);
+      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.toLowerCase().includes(this.searchText) || item.title.toLowerCase().includes(this.searchText)) && (item.updatedAt >= this.startDate);
     } else if (this.searchText) {
-      return item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.includes(this.searchText);
+      return item.type.includes(this.searchText) || item.text.includes(this.searchText) || item.url.toLowerCase().includes(this.searchText) || item.title.toLowerCase().includes(this.searchText);
     } else if (this.startDate && this.endDate) {
       return item.updatedAt >= this.startDate && item.updatedAt <= this.endDate;
     } else if (this.startDate) {
@@ -71,6 +75,7 @@ angular.module('app')
 
       activity.updatedAt = convertToLongDate(convertRawDate(d));
       if (activity.text === undefined) { activity.text = ''; }
+      if (activity.title === null) { activity.title = ''; }
       activity.type ? (activity.type = activity.type === 'upvote' ? 'true' : 'false') : activity.type = ''; 
     }.bind(this));
   }.bind(this);

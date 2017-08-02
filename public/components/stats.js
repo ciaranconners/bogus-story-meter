@@ -5,6 +5,7 @@ angular.module('app') /*eslint-disable indent*/
   $window.scrollTo(0, 0);
 
   this.url;
+  this.title;
   this.username;
   this.rating;
   this.comments;
@@ -23,7 +24,9 @@ angular.module('app') /*eslint-disable indent*/
     let errMsg = 'couldn\'t get URL stats';
     let params = {urlId: this.urlId};
     request.get('/urlstats', null, params, errMsg, (res) => {
+      console.log('res: ', res)
       this.url = res.url;
+      this.title = res.title;
       this.username = res.username;
       this.rating = res.rating;
       this.rating || this.rating === 0 ? this.rated = true : this.rated = false;
