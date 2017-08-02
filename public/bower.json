@@ -1,0 +1,17 @@
+{
+  "name": "Bogus Story Meter",
+  "main": "index.js",
+  "homepage": "https://github.com/johnmrox/bogus-story-meter",
+  "authors": [
+    "johnmrox <johnmrox@gmail.com>"
+  ],
+  "description": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

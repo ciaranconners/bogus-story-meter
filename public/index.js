@@ -1,4 +1,4 @@
-angular.module('app', ['ngRoute', 'ngMaterial'])
+angular.module('app', ['ngRoute', 'ngMaterial', 'infinite-scroll'])
 
 .config(['$locationProvider', '$routeProvider',
   function config($locationProvider, $routeProvider) {
