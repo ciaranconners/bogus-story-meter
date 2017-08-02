@@ -52,14 +52,14 @@ angular.module('app') /*eslint-disable indent*/
     .catch(err => console.error(errMsg, err));
   };
 
-  this.getCategory = (url, errMsg, callback) => {
+  this.getText = (url, errMsg, callback) => {
     $http({
       method: 'GET',
       url: 'https://watson-api-explorer.mybluemix.net/natural-language-understanding/api/v1/analyze?version=2017-02-27',
       params: {
         'url': url,
-        'features': 'categories,metadata',
-        'return_analyzed_text': false,
+        'features': 'metadata',
+        'return_analyzed_text': true,
         'clean': true,
         'fallback_to_raw': true,
         'concepts.limit': 8,
@@ -80,4 +80,20 @@ angular.module('app') /*eslint-disable indent*/
     .then(res => callback(res.data))
     .catch(err => console.error(errMsg, err));
   };
+
+  this.getTone = (text, errMsg, callback) => {
+    $http({
+      method: 'GET',
+      url: 'https://watson-api-explorer.mybluemix.net/tone-analyzer/api/v3/tone',
+      params: {
+        'text': text,
+        'tones': 'emotion,language, social',
+        'sentences': false,
+        'version': '2017-02-27'
+      }
+    })
+    .then(res => callback(res.data))
+    .catch(err => console.error(errMsg, err));
+  };
+
 });
