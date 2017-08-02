@@ -1,12 +1,12 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const db = require("../db/index.js");
-const utils = require("../utils.js");
+const db = require('../db/index.js');
+const utils = require('../utils.js');
 
-const NaturalLanguageUnderstandingV1 = require("watson-developer-cloud/natural-language-understanding/v1.js");
-const elasticsearch = require("elasticsearch");
-const watsonConfig = require("./watson-config.js");
+const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
+const elasticsearch = require('elasticsearch');
+const watsonConfig = require('./watson-config.js');
 
 const username = watsonConfig.username;
 const password = watsonConfig.password;
@@ -18,8 +18,8 @@ const nlu = new NaturalLanguageUnderstandingV1({
 });
 
 const client = new elasticsearch.Client({
-  host: "localhost:9200",
-  log: "error"
+  host: 'localhost:9200',
+  log: 'error'
 });
 
 const getFromWatson = (url, callback) => {
@@ -40,21 +40,28 @@ const getFromWatson = (url, callback) => {
 
 // body => {title: 'title', text: 'text', categories: 'categories'}
 
-const saveToElasticsearch = (index, type, id, body, callback) => {
+const saveToElasticsearch = (id, body) => {
   client.index(
     {
-      index: index,
-      type: type,
+      index: 'watson-pages',
+      type: 'page',
       id: id,
-      body: body
+      body: body,
+      refresh: true
     },
-    (error, response) => {
-      callback(err, response);
+    (err, response) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('success: ', response);
+      }
     }
   );
 };
 
-router.post("/", (req, res, next) => {
+// position watson calls at end
+
+router.post('/', (req, res, next) => {
   let url = req.body.url;
   let urlId = req.body.urlId;
   let type = req.body.type;
@@ -63,16 +70,16 @@ router.post("/", (req, res, next) => {
 
   if (urlId !== null) {
     db.Url
-      .findOne({ where: { id: urlId } })
+      .findOne({where: {id: urlId}})
       .then(url => {
         return db.User
-          .findCreateFind({ where: { username: username } })
+          .findCreateFind({where: {username: username}})
           .spread(user => {
             db.UrlVote
-              .create({ type: type, userId: user.id, urlId: url.id })
+              .create({type: type, userId: user.id, urlId: url.id})
               .then(() => {
-                db.User.increment(typeCount, { where: { id: user.id } });
-                db.Url.increment(typeCount, { where: { id: url.id } });
+                db.User.increment(typeCount, {where: {id: user.id}});
+                db.Url.increment(typeCount, {where: {id: url.id}});
                 res.status(201).json(url.id);
               })
               .catch(err => {
@@ -87,30 +94,55 @@ router.post("/", (req, res, next) => {
         res.sendStatus(400);
       });
   } else if (urlId === null) {
-    db.Url.findCreateFind({ where: { url: url } }).spread(url => {
-      getFromWatson(url.url, (err, data) => {
-        if (err) {
-          console.error(err);
-          return db.Url
-            .increment(typeCount, { where: { id: url.id } })
-            .then(() => {
-              return db.User
-                .findCreateFind({ where: { username: username } })
-                .spread(user => {
-                  db.UrlVote
-                    .create({ type: type, userId: user.id, urlId: url.id })
-                    .then(() => {
-                      db.User.increment(typeCount, { where: { id: user.id } });
-                      res.status(201).json(url.id);
-                      url
-                        .update({ categoryId: category.id, title: title })
-                        .catch(err => {
-                          console.error(err);
-                        });
-                    })
-                    .catch(err => {
-                      res.sendStatus(400);
-                    });
+    db.Url.findCreateFind({where: {url: url}}).spread(url => {
+      return db.Url
+        .increment(typeCount, {where: {id: url.id}})
+        .then(() => {
+          return db.User
+            .findCreateFind({where: {username: username}})
+            .spread(user => {
+              db.UrlVote
+                .create({type: type, userId: user.id, urlId: url.id})
+                .then(() => {
+                  db.User.increment(typeCount, {
+                    where: {id: user.id}
+                  });
+                  res.status(201).json(url.id);
+                  getFromWatson(url.url, (err, data) => {
+                    let title = data.metadata.title;
+                    let text = data.analyzed_text;
+                    categories = [];
+                    for (let x of data.categories) {
+                      categories.push(x.label.slice(1));
+                    }
+                    let category = categories.join(' ');
+                    db.Category
+                      .findCreateFind({
+                        where: {
+                          name: category
+                        }
+                      })
+                      .spread(category => {
+                        url.update({categoryId: category.id, title: title});
+                      })
+                      .catch(err => {
+                        console.error(err);
+                      });
+                  });
+                  // code below pertains to as of yet unimplemented elasticsearch functionality
+                  // url
+                  // .update({ categoryId: category.id, title: title })
+                  // .then(() => {
+                  //   let body = {
+                  //     url: url.url,
+                  //     title: title,
+                  //     text: text
+                  //   };
+                  //   saveToElasticsearch(url.id, body);
+                  // })
+                  // .catch(err => {
+                  //   console.error(err);
+                  // });
                 })
                 .catch(err => {
                   res.sendStatus(400);
@@ -119,87 +151,46 @@ router.post("/", (req, res, next) => {
             .catch(err => {
               res.sendStatus(400);
             });
-        } else {
-          let title = data.metadata.title;
-          categories = [];
-          for (let x of data.categories) {
-            categories.push(x.label.slice(1));
-          }
-          let category = categories.join(" ");
-          db.Category
-            .findCreateFind({ where: { name: category } })
-            .spread(category => {
-              return db.Url
-                .increment(typeCount, { where: { id: url.id } })
-                .then(() => {
-                  return db.User
-                    .findCreateFind({ where: { username: username } })
-                    .spread(user => {
-                      db.UrlVote
-                        .create({ type: type, userId: user.id, urlId: url.id })
-                        .then(() => {
-                          db.User.increment(typeCount, {
-                            where: { id: user.id }
-                          });
-                          res.status(201).json(url.id);
-                          url
-                            .update({ categoryId: category.id, title: title })
-                            .catch(err => {
-                              console.error(err);
-                            });
-                        })
-                        .catch(err => {
-                          res.sendStatus(400);
-                        });
-                    })
-                    .catch(err => {
-                      res.sendStatus(400);
-                    });
-                })
-                .catch(err => {
-                  res.sendStatus(400);
-                });
-            });
-        }
-      });
+        })
+        .catch(err => {
+          res.sendStatus(400);
+        });
     });
   }
 });
 
-router.put("/", (req, res, next) => {
+router.put('/', (req, res, next) => {
   let url = req.body.url;
   let urlId = req.body.urlId;
   let type = req.body.type;
   let username = req.body.username || req.session.username;
   let typeCount = `${type}Count`;
-  db.Url.findOne({ where: { id: urlId } }).then(urlEntry => {
-    return db.User
-      .findOne({ where: { username: username } })
-      .then(userEntry => {
-        return db.UrlVote
-          .findOne({ where: { userId: userEntry.id, urlId: urlEntry.id } })
-          .then(voteEntry => {
-            let oldTypeCount = `${voteEntry.type}Count`;
-            let oldType = voteEntry.type;
-            userEntry.decrement(oldTypeCount);
-            urlEntry.decrement(oldTypeCount);
-            userEntry.increment(typeCount);
-            urlEntry.increment(typeCount).then(() => {
-              db.UrlVote.update(
-                { type: type },
-                { where: { userId: userEntry.id, urlId: urlEntry.id } }
-              );
-              res.status(201).json(urlEntry.id);
-            });
+  db.Url.findOne({where: {id: urlId}}).then(urlEntry => {
+    return db.User.findOne({where: {username: username}}).then(userEntry => {
+      return db.UrlVote
+        .findOne({where: {userId: userEntry.id, urlId: urlEntry.id}})
+        .then(voteEntry => {
+          let oldTypeCount = `${voteEntry.type}Count`;
+          let oldType = voteEntry.type;
+          userEntry.decrement(oldTypeCount);
+          urlEntry.decrement(oldTypeCount);
+          userEntry.increment(typeCount);
+          urlEntry.increment(typeCount).then(() => {
+            db.UrlVote.update(
+              {type: type},
+              {where: {userId: userEntry.id, urlId: urlEntry.id}}
+            );
+            res.status(201).json(urlEntry.id);
           });
-      });
+        });
+    });
   });
 });
 
-router.get("/:urlId", (req, res, next) => {
+router.get('/:urlId', (req, res, next) => {
   let urlId = req.params.urlId;
   db.Url
-    .findOne({ where: { id: urlId } })
+    .findOne({where: {id: urlId}})
     .then(urlEntry => {
       let rating = utils.calculateRating(
         urlEntry.upvoteCount,
@@ -208,31 +199,57 @@ router.get("/:urlId", (req, res, next) => {
       res.json(rating);
     })
     .catch(err => {
-      console.error("error getting URL votes: ", err);
+      console.error('error getting URL votes: ', err);
       res.sendStatus(500);
     });
 });
 
-router.delete("/", (req, res, next) => {
+router.delete('/', (req, res, next) => {
   let urlId = req.query.urlId;
   let type = req.query.type;
   let username = req.query.username;
   let typeCount = `${type}Count`;
 
-  db.Url.findOne({ where: { id: urlId } }).then(urlEntry => {
-    return db.User
-      .findOne({ where: { username: username } })
-      .then(userEntry => {
-        return db.UrlVote
-          .findOne({ where: { userId: userEntry.id, urlId: urlEntry.id } })
-          .then(voteEntry => {
-            userEntry.decrement(typeCount);
-            urlEntry.decrement(typeCount);
-            voteEntry.destroy();
-            res.status(201).json(urlEntry.id);
-          });
-      });
+  db.Url.findOne({where: {id: urlId}}).then(urlEntry => {
+    return db.User.findOne({where: {username: username}}).then(userEntry => {
+      return db.UrlVote
+        .findOne({where: {userId: userEntry.id, urlId: urlEntry.id}})
+        .then(voteEntry => {
+          userEntry.decrement(typeCount);
+          urlEntry.decrement(typeCount);
+          voteEntry.destroy();
+          res.status(201).json(urlEntry.id);
+        });
+    });
   });
 });
 
 module.exports = router;
+
+// let body = {
+//   size: 20,
+//   from: 0,
+//   query: {
+//     match: {
+//       text: {
+//         query: 'stalin',
+//         minimum_should_match: 3,
+//         fuzziness: 2
+//       }
+//     }
+//   }
+// };
+// client.search(
+//   {
+//     index: 'watson-pages',
+//     type: 'page',
+//     body: body
+//   },
+//   (err, response) => {
+//     if (err) {
+//       console.error(err);
+//     } else {
+//       console.log(response.hits.hits);
+//     }
+//   }
+// );
