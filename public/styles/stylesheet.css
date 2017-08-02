@@ -58,7 +58,7 @@ p, .stats-text, .comment-text {
 	height: 180px;
 	object-fit: cover;
 	margin: auto;
-  border-radius: 7%;  
+  border-radius: 7%;
 }
 
 .username {
@@ -184,4 +184,29 @@ table{
 
 .warning-label {
   color:red;
+}
+
+.signup-spinner {
+  display: inline-block;
+  margin-top: 50px;
+}
+
+.signup {
+  display: inline-flex;
+}
+
+.login {
+  display: inline-flex;
+}
+
+.login-btn {
+  margin-top: 10px
+}
+
+.signup-btn {
+  margin-top: 10px;
+}
+
+.loginContainer {
+  padding-top: 65px;
 }

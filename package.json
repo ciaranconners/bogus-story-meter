@@ -20,7 +20,8 @@
   "homepage": "https://github.com/TeamSSP/bogus-story-meter#readme",
   "devDependencies": {
     "chai": "4.1.0",
-    "mocha": "3.4.2"
+    "mocha": "3.4.2",
+    "prettier": "^1.5.3"
   },
   "dependencies": {
     "bcrypt": "^1.0.2",
