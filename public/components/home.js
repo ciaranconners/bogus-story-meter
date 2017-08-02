@@ -1,6 +1,9 @@
 angular.module('app')
 .controller('HomeCtrl', function($window, request) {
 
+  this.activity = [];
+  this.activities = [];
+
   $window.scrollTo(0, 0);
 
   let errMsg = 'Could not retrieve user data ';
@@ -13,10 +16,21 @@ angular.module('app')
     return 0;
   };
 
-  request.get('/allActivity', null, null, errMsg, (getResponse) => {
-    this.activity = getResponse.sort(date_sort_desc);
-    this.activity.forEach((activity) => {
-      activity.rating = Math.floor(activity.upvoteCount/(activity.upvoteCount+activity.downvoteCount))*100;
+  this.populateActivities = function() {
+    var last = this.activity.length - 1;
+
+    for (var i = 1; i < 6; i++) {
+      if (i + last + 1 <= this.activities.length) {
+        this.activities[last + 1];
+        this.activity.push(this.activities[last + i]);
+      }
+    }
+  }.bind(this);
+
+  request.get('/allActivity', null, null, errMsg, function(getResponse) {
+    this.activities = getResponse.sort(date_sort_desc);
+    this.activities.forEach(function(activity, index) {
+      activity.rating = Math.floor(activity.upvoteCount / (activity.upvoteCount + activity.downvoteCount)) * 100;
       if (isNaN(activity.rating)) {
         activity.range = 'nr';
         activity.rating = 'N/R';
@@ -29,9 +43,11 @@ angular.module('app')
         activity.range = 'falsy';
         activity.rating = activity.rating + '%';
       }
-    });
-    console.log(this.activity);
-  });
+      if (index < 15) {
+        this.activity.push(activity);
+      }
+    }.bind(this));
+  }.bind(this));
 
 })
 .component('home', {
