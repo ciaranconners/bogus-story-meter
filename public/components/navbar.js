@@ -6,7 +6,7 @@ angular.module('app')
     $http.get('http://localhost:8080/auth/logout')
     .then(function(success) {
       console.log('user logged out successfully');
-      $window.location.href = '/home';
+      $window.location.href = '/login';
     }, function(err) {
       console.error(err);
     });

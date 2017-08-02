@@ -1,10 +1,10 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const db = require("../db/index.js");
+const db = require('../db/index.js');
 
-const NaturalLanguageUnderstandingV1 = require("watson-developer-cloud/natural-language-understanding/v1.js");
-const elasticsearch = require("elasticsearch");
-const watsonConfig = require("./watson-config.js");
+const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
+const elasticsearch = require('elasticsearch');
+const watsonConfig = require('./watson-config.js');
 
 const username = watsonConfig.username;
 const password = watsonConfig.password;
@@ -16,8 +16,8 @@ const nlu = new NaturalLanguageUnderstandingV1({
 });
 
 const client = new elasticsearch.Client({
-  host: "localhost:9200",
-  log: "error"
+  host: 'localhost:9200',
+  log: 'error'
 });
 
 const getFromWatson = (url, callback) => {
@@ -38,22 +38,29 @@ const getFromWatson = (url, callback) => {
 
 // body => {title: 'title', text: 'text', categories: 'categories'}
 
-const saveToElasticsearch = (index, type, id, body, callback) => {
+const saveToElasticsearch = (id, body) => {
   client.index(
     {
-      index: index,
-      type: type,
+      index: 'watson-pages',
+      type: 'page',
       id: id,
-      body: body
+      body: body,
+      refresh: true
     },
-    (error, response) => {
-      callback(err, response);
+    (err, response) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('success: ', response);
+      }
     }
   );
 };
 
-router.post("/", (req, res, next) => {
-  console.log("session username: ", req.session.username);
+// position watson call at end
+
+router.post('/', (req, res, next) => {
+  console.log('session username: ', req.session.username);
   let url = req.body.url;
   let urlId = req.body.urlId;
   let username = req.body.username || req.session.username;
@@ -61,7 +68,7 @@ router.post("/", (req, res, next) => {
   let commentId = req.body.commentId || null;
   if (urlId !== null) {
     db.User
-      .findCreateFind({ where: { username: username } })
+      .findCreateFind({where: {username: username}})
       .spread(user => {
         return db.Comment.create({
           text: comment,
@@ -77,74 +84,65 @@ router.post("/", (req, res, next) => {
         res.sendStatus(400);
       });
   } else if (urlId === null) {
-    db.Url.findCreateFind({ where: { url: url } }).spread(url => {
-      getFromWatson(url.url, (err, data) => {
-        if (err) {
-          console.error(err);
-          return db.User
-            .findCreateFind({
-              where: {
-                username: username
+    db.Url
+      .findCreateFind({where: {url: url}})
+      .spread(url => {
+        return db.User
+          .findCreateFind({
+            where: {
+              username: username
+            }
+          })
+          .spread(user => {
+            db.Comment.create({
+              text: comment,
+              commentId: null,
+              urlId: url.id,
+              userId: user.id
+            });
+            res.status(201).json(url.id);
+            getFromWatson(url.url, (err, data) => {
+              let title = data.metadata.title;
+              let text = data.analyzed_text;
+              categories = [];
+              for (let x of data.categories) {
+                categories.push(x.label.slice(1));
               }
-            })
-            .spread(user => {
-              db.Comment.create({
-                text: comment,
-                commentId: null,
-                urlId: url.id,
-                userId: user.id
-              });
-              res.status(201).json(url.id);
-              url
-                .update({ categoryId: category.id, title: title })
+              let category = categories.join(' ');
+              db.Category
+                .findCreateFind({
+                  where: {
+                    name: category
+                  }
+                })
+                .spread(category => {
+                  url.update({categoryId: category.id, title: title});
+                })
                 .catch(err => {
                   console.error(err);
                 });
             });
-        } else {
-          let title = data.metadata.title;
-          categories = [];
-          for (let x of data.categories) {
-            categories.push(x.label.slice(1));
-          }
-          let category = categories.join(" ");
-          db.Category
-            .findCreateFind({
-              where: {
-                name: category
-              }
-            })
-            .spread(category => {
-              return db.User
-                .findCreateFind({
-                  where: {
-                    username: username
-                  }
-                })
-                .spread(user => {
-                  db.Comment.create({
-                    text: comment,
-                    commentId: null,
-                    urlId: url.id,
-                    userId: user.id
-                  });
-                  res.status(201).json(url.id);
-                  url
-                    .update({ categoryId: category.id, title: title })
-                    .catch(err => {
-                      console.error(err);
-                    });
-                })
-                .catch(err => {
-                  res.sendStatus(400);
-                });
-            })
-            .catch(err => {
-              res.sendStatus(400);
-            });
-        }
+            // code below pertains to as of yet unimplemented elasticsearch functionality
+            // url
+            //   .update({categoryId: category.id, title: title})
+            //   .then(() => {
+            //     let body = {
+            //       title: title,
+            //       text: text
+            //     };
+            //     saveToElasticsearch(url.id, body);
+            //   })
+            //   .catch(err => {
+            //     console.error(err);
+            //   });
+          })
+          .catch(err => {
+            res.sendStatus(400);
+          });
+      })
+      .catch(err => {
+        res.sendStatus(400);
       });
-    });
   }
 });
 
