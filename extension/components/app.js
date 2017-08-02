@@ -45,14 +45,6 @@ angular.module('app', [])
       if (that.uservote) {
         that[that.uservote+'btn'] = 'pressed';
       }
-
-      request.getText(that.url, 'could not retrieve text from Watson', (response) => {
-        that.text = response.analyzed_text;
-        request.getTone(that.text, 'could not retrieve tone analysis from Watson', (toneRes) => {
-          console.log('tone response ', toneRes)
-        })
-      });
-
       if (that.rating === 0) {
         that.rated = true;
       } else {
