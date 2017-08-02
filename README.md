@@ -44,6 +44,10 @@ $ msql --version
 ```sh
 $ redis-server -v
 ```
+> Sass 3.5.1 or later
+```sh
+$ sass -v
+```
 
 ### Installing Dependencies
 
@@ -79,10 +83,14 @@ $ npm run start-dev
 ```sh
 $ npm test
 ```
+> to transpile .scss files to css
+```sh
+npm run sass-watch
+```
 > go to chrome://extensions in the browser
 
-> click load unpacked extension...  
-> select bogus-story-meter/extension directory  
+> click load unpacked extension...
+> select bogus-story-meter/extension directory
 > webapp is available at http://localhost:8080
 
 ### Roadmap
