@@ -20,3 +20,4 @@ ec2-user@52.36.33.73
 dump.rdb
 server/requestHandlers/auth-config.js
 server/requestHandlers/watson-config.js
+.sass-cache
