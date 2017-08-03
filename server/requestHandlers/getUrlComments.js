@@ -6,7 +6,7 @@ router.get('/', (req, res, next) => {
   let urlId = req.query.urlId;
   let idxMap = {};
   let temp;
-  db.Comment.findAll({where: {urlId: urlId}})
+  db.Comment.findAll({where: {urlId: urlId}/*, order: [['voteCount', 'DESC'], 'createdAt']*/})
   .then(comments => {
     temp = comments;
     return comments.map((comment, i) => {
@@ -19,7 +19,9 @@ router.get('/', (req, res, next) => {
   .mapSeries(comment => {
     return db.User.findOne({where: {id: comment.userId}})
     .then(user => {
-      comment.dataValues.username = user.username;
+      comment.dataValues.username = user.fullname || user.username;
+      comment.dataValues.profilePic = user.profilepicture || 'https://ssl.gstatic.com/accounts/ui/avatar_2x.png';
+      comment.dataValues.voteCount = comment.upvoteCount - comment.downvoteCount;
       if (comment.commentId) {
         // push reply comments to replies array in parent comments
         temp[idxMap[comment.commentId]].dataValues.replies.push(comment);
