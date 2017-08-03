@@ -1,7 +1,9 @@
 angular.module('app')
-.controller('HomeCtrl', function($window, request) {
+.controller('HomeCtrl', function($window, request, socket) {
 
   $window.scrollTo(0, 0);
+
+  this.activity = [];
 
   let errMsg = 'Could not retrieve user data ';
 
@@ -12,6 +14,15 @@ angular.module('app')
     if (date1 < date2) return 1;
     return 0;
   };
+
+  socket.on('connection', function(socket, args) {
+    // this.activity.push(newUrl);
+    if (args) {
+      console.log(args);
+    } else if (socket) {
+      console.log(socket);
+    }
+  });
 
   request.get('/allActivity', null, null, errMsg, (getResponse) => {
     this.activity = getResponse.sort(date_sort_desc);
@@ -31,6 +42,10 @@ angular.module('app')
       }
     });
     console.log(this.activity);
+  });
+
+  socket.on('newActivity', function(socket) {
+    console.log(socket);
   });
 
 })

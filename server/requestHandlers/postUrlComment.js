@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/index.js');
+const routes = require('../routes.js');
+
+const io =routes.io;
 
 const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
 const elasticsearch = require('elasticsearch');
@@ -36,9 +39,8 @@ const getFromWatson = (url, callback) => {
   );
 };
 
-// body => {title: 'title', text: 'text', categories: 'categories'}
-
 const saveToElasticsearch = (id, body) => {
+  // body => {title: 'title', text: 'text', categories: 'categories'}
   client.index(
     {
       index: 'watson-pages',
@@ -60,7 +62,6 @@ const saveToElasticsearch = (id, body) => {
 // position watson call at end
 
 router.post('/', (req, res, next) => {
-  console.log('session username: ', req.session.username);
   let url = req.body.url;
   let urlId = req.body.urlId;
   let username = req.body.username || req.session.username;
@@ -100,6 +101,9 @@ router.post('/', (req, res, next) => {
               urlId: url.id,
               userId: user.id
             });
+            // console.log('ioSockets: ', socket.io);
+            // io.sockets[socketId].emit('newActivity', 'new comment made');
+            io.to(socketId).emit('yo');
             res.status(201).json(url.id);
             getFromWatson(url.url, (err, data) => {
               let title = data.metadata.title;
