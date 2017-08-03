@@ -86,6 +86,9 @@ router.post('/', (req, res, next) => {
                   });
                   res.status(201).json(url.id);
                   getFromWatson(url.url, (err, data) => {
+                    if (err) {
+                      console.error(err);
+                    }
                     let title = data.metadata.title;
                     let text = data.analyzed_text;
                     categories = [];
