@@ -24,7 +24,6 @@ angular.module('app') /*eslint-disable indent*/
     let errMsg = 'couldn\'t get URL stats';
     let params = {urlId: this.urlId};
     request.get('/urlstats', null, params, errMsg, (res) => {
-      console.log('res: ', res)
       this.url = res.url;
       this.title = res.title;
       this.username = res.username;

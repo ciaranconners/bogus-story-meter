@@ -139,7 +139,7 @@ router.post("/login", (req, res, next) => {
         bcrypt.compare(password, user.password, (err, result) => {
           if (err || result === false) {
             res
-              .status(400)
+              .status(401)
               .json(
                 "that password doesn't match our records; please try again"
               );
@@ -151,7 +151,7 @@ router.post("/login", (req, res, next) => {
         });
       } else {
         res
-          .status(400)
+          .status(401)
           .json(
             "user not found; try again; if you've already signed up make sure to complete your registration by clicking on the link we emailed you"
           );
@@ -191,8 +191,7 @@ router.get("/getStatus", (req, res) => {
         });
       });
   } else {
-    // THIS SHOULD CHANGE TO A STATUS CODE 401:
-    res.sendStatus(200);
+    res.sendStatus(401);
   }
 });
 

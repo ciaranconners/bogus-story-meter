@@ -16,7 +16,6 @@ angular.module('app', [])
 
     chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
     // Use the token.
-      console.log('new token: ', token, new Date());
       if (token) {
         // this.loggedIn = true;
         $scope.$apply();
@@ -34,7 +33,6 @@ angular.module('app', [])
     chrome.runtime.sendMessage({msg: 'Give me data on this tab'});
 
     chrome.extension.onMessage.addListener((urlObj) => {
-      console.log('from background ', urlObj);
       that.rating = urlObj.rating;
       that.urlId = urlObj.urlId;
       that.url = urlObj.tabUrl;
@@ -70,11 +68,9 @@ angular.module('app', [])
         // title: this.title,
         // categories: this.categories
       };
+
       let errMsg = 'Could not submit vote: ';
 
-      console.log('inside handlevote - data ', data);
-
-      // if user hasnt voted before, new vote:
       if (this.uservote === null) {
         request.post('/urlvote', data, errMsg, (postResponse) => {
           that.urlId = postResponse;
@@ -124,7 +120,6 @@ angular.module('app', [])
           that.urlId = resData;
           chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'urlId': that.urlId});
         }
-        console.log('that.urlId after comment response ', that.urlId);
       });
       this.comment = '';
     };
