@@ -70,7 +70,7 @@ angular.module('app')
             $window.location.href = '/profile';
           }
         }, (err) => {
-          if (err.status === 400) {
+          if (err.status === 401) {
             that.showAlert('Oops!', 'Your credentials don\'t match our records. Please try again.');
             that.loginName = '';
             that.loginPw = '';
