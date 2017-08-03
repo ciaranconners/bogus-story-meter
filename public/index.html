@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <title>Bogus Stories</title>
   <!-- jquery -->
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>  
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <!-- angular, originally using v 1.6.4 for the routes, switched to match our Angular CDN-->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.js"></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-route.js"></script>
@@ -22,8 +22,12 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.4/angular-material.min.js"></script>
   <!-- Infinite Scroll-->
   <script type="text/javascript" src="/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+  <!-- Moment.js & angular-moment -->
+  <script src="https://cdn.jsdelivr.net/momentjs/2.18.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.1/angular-moment.min.js"></script>
 
   <link rel="stylesheet" type="text/css" href="/styles/stylesheet.css">
+  <link rel="stylesheet" type="text/css" href="/styles/commentVote.css">
   <base href="/">
 </head>
 
@@ -34,11 +38,12 @@
   <script src="/components/stats.js"></script>
   <script src="/components/app.js"></script>
   <script src="/services/request.js"></script>
+  <script src="/services/sort.js"></script>
   <script src="/components/navbar.js"></script>
   <script src="/components/searchForm.js"></script>
   <script src="/components/recentActivity.js"></script>
   <script src="/components/home.js"></script>
-  <script src="/components/searchFormHome.js"></script>  
+  <script src="/components/searchFormHome.js"></script>
   <script src="/components/login.js"></script>
   <script src="/components/comment.js"></script>
   <script src="/components/reply.js"></script>

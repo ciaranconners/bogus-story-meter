@@ -10,6 +10,7 @@ const auth = require('./requestHandlers/auth.js');
 const vote = require('./requestHandlers/vote.js');
 const postUrlComment = require('./requestHandlers/postUrlComment.js');
 const getUrlComments = require('./requestHandlers/getUrlComments.js');
+const commentVote = require('./requestHandlers/commentVote.js');
 
 const client = redis.createClient();
 
@@ -31,6 +32,7 @@ app.use('/auth/', auth);
 app.use('/urlvote', vote);
 app.use('/urlcomment', postUrlComment);
 app.use('/urlcomments', getUrlComments);
+app.use('/commentvote', commentVote);
 
 app.get('/allActivity', handler.getAllActivity);
 

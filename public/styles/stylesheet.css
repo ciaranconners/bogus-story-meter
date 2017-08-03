@@ -57,6 +57,25 @@ p, .stats-text, .comment-text {
   border-radius: 7%;
 }
 
+.comment-pic {
+  width: 5rem;
+  height: 5rem;
+/*  align-items: right;*/
+  /*text-align: right;*/
+/*  float: left;*/
+}
+
+.stats-pic {
+/*  width: 72px;
+  height: 72px;*/
+  width: 100%;
+  height: auto;
+  /*object-fit: cover;*/
+  /*margin: auto;*/
+  border-radius: 50%;
+  border-style: solid 1px;
+}
+
 .username {
   padding-top: 15px;
   position: relative;
@@ -71,14 +90,14 @@ p, .stats-text, .comment-text {
 }
 
 .comment-ta {
-  min-width: 700px;
-  min-height: 60px;
-  padding-bottom: 50px;
-  margin-bottom: 60px;
+  min-width: 780px;
+  min-height: 80px;
+  padding-bottom: 42px;
+  margin-bottom: 18px;
 }
 
 .reply-ta {
-  min-width: 700px;
+  min-width: 670px;
   min-height: 15px;
 }
 
@@ -92,16 +111,24 @@ p, .stats-text, .comment-text {
 
 .reply-btn {
   margin-top: 0;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(-42%, -164%);
 }
 
 .comment-submit {
-  display: inline;
-  margin-top: 64px;
+/*  display: inline;
+  margin-top: 64px;*/
+  display: block;
+  margin-bottom: 18px;
 }
 
 .reply-submit {
-  display: inline;
-  margin-top: 24px;
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  transform: translateX(-18%);
 }
 
 .stats-button {
@@ -116,6 +143,7 @@ p, .stats-text, .comment-text {
 .dd-login {
   margin: auto;
 }
+
 .dd-stats-link {
   margin-top: 15px;
   /*margin-left: 37px;*/
@@ -156,8 +184,8 @@ p, .stats-text, .comment-text {
   color: darkgrey;
 }
 
-.comment {
-  padding-bottom: 18px;
+.no-parent {
+  padding-top: 18px;
 }
 
 .form-control {
@@ -168,8 +196,8 @@ p, .stats-text, .comment-text {
   color: grey;
 }
 
-table{
-    table-layout: fixed;
+table {
+  table-layout: fixed;
 }
 
 .table>tbody>tr>td {
@@ -205,4 +233,12 @@ table{
 
 .loginContainer {
   padding-top: 65px;
+}
+
+.panel-heading {
+  text-align: left;
+}
+
+.panel-body {
+  text-align: left;
 }

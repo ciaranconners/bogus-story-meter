@@ -7,10 +7,6 @@ dist/
 .DS_Store
 .env
 package-lock.json
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
 keys.txt
 settings.config
 server/db/db-config.js
@@ -20,3 +16,4 @@ ec2-user@52.36.33.73
 dump.rdb
 server/requestHandlers/auth-config.js
 server/requestHandlers/watson-config.js
+.sass-cache

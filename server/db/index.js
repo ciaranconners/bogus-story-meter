@@ -101,7 +101,15 @@ const Comment = db.define('Comment', {
   text: Sequelize.TEXT('medium'),
   commentId: Sequelize.INTEGER,
   urlId: Sequelize.INTEGER,
-  userId: Sequelize.INTEGER
+  userId: Sequelize.INTEGER,
+  upvoteCount: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  downvoteCount: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  }
 }, {
   classMethods: {
     associate: (models) => {

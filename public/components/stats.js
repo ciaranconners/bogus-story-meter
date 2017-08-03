@@ -1,6 +1,6 @@
 angular.module('app') /*eslint-disable indent*/
 
-.controller('StatCtrl', function($window, request, $location, $scope) {
+.controller('StatCtrl', function($window, request, sort, $location, $scope) {
 
   $window.scrollTo(0, 0);
 
@@ -39,6 +39,7 @@ angular.module('app') /*eslint-disable indent*/
     let params = {urlId: this.urlId};
     request.get('/urlcomments', null, params, errMsg, (res) => {
       this.comments = res.comments.filter(comment => comment /* filters out null comments */);
+      sort.sortComments(this.comments);
     });
   };
 
