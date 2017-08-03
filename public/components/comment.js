@@ -20,6 +20,7 @@ angular.module('app') /*eslint-disable indent*/
   };
 
 })
+
 .component('comment', {
   controller: 'commentCtrl',
   templateUrl: '../templates/comment.html',

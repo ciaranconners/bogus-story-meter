@@ -1,4 +1,5 @@
 angular.module('app')
+
 .controller('AppCtrl', function(request, $http, $rootScope, $window) {
 
   $window.scrollTo(0, 0);
@@ -47,8 +48,16 @@ angular.module('app')
   }.bind(this);
 
   this.filterResults = function(item) {
+    console.log('in filterResults');
+    console.log('this.searchText: ', this.searchText);
+    console.log('item.text: ', item.text);
+    console.log('item.type: ', item.type);
+
     let lowerCaseTitle = item.title.toLowerCase();
     let lowerCaseUrl = item.url.toLowerCase();
+
+    console.log('lowerCaseTitle: ', lowerCaseTitle);
+    console.log('lowerCaseUrl: ', lowerCaseUrl);
 
     if (this.searchText && this.startDate && this.endDate) {
       return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate);
@@ -88,6 +97,7 @@ angular.module('app')
     }
   });
 })
+
 .component('app', {
   templateUrl: './templates/app.html'
 });

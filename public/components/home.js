@@ -1,4 +1,5 @@
 angular.module('app')
+
 .controller('HomeCtrl', function($window, request) {
 
   this.activity = [];
@@ -98,6 +99,7 @@ angular.module('app')
   }.bind(this));
 
 })
+
 .component('home', {
   templateUrl: '../templates/home.html'
 });

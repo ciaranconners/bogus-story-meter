@@ -1,4 +1,5 @@
 angular.module('app')
+
 .controller('NavCtrl', function($http, $window, request) {
 
   let that = this;
@@ -39,6 +40,7 @@ angular.module('app')
     }
   });
 })
+
 .component('navbar', {
   templateUrl: '../templates/navbar.html',
   controller: 'NavCtrl'
