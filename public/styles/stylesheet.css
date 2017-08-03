@@ -29,7 +29,7 @@ p, .stats-text, .comment-text {
 }
 
 .top-offset {
-	padding-top: 20px;
+	padding-top: 70px;
 }
 
 .sign-in {
@@ -38,10 +38,6 @@ p, .stats-text, .comment-text {
 
 .img-parent {
 	text-align: center;
-}
-
-.profile-info {
-  margin-top: 20px;
 }
 
 .profile-pic {
