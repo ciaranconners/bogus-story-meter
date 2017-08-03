@@ -40,7 +40,7 @@ angular.module('app')
     this.searchText || this.startDate ? this.disableFilter = false : this.disableFilter = true;
   }.bind(this);
 
-  this.myFilter = function(item) {
+  this.filterResults = function(item) {
     let lowerCaseTitle = item.title.toLowerCase();
     let lowerCaseUrl = item.url.toLowerCase();
 
