@@ -38,29 +38,6 @@ const getFromWatson = (url, callback) => {
   );
 };
 
-// body => {title: 'title', text: 'text', categories: 'categories'}
-
-const saveToElasticsearch = (id, body) => {
-  client.index(
-    {
-      index: 'watson-pages',
-      type: 'page',
-      id: id,
-      body: body,
-      refresh: true
-    },
-    (err, response) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log('success: ', response);
-      }
-    }
-  );
-};
-
-// position watson calls at end
-
 router.post('/', (req, res, next) => {
   let url = req.body.url;
   let urlId = req.body.urlId;
@@ -129,20 +106,6 @@ router.post('/', (req, res, next) => {
                         console.error(err);
                       });
                   });
-                  // code below pertains to as of yet unimplemented elasticsearch functionality
-                  // url
-                  // .update({ categoryId: category.id, title: title })
-                  // .then(() => {
-                  //   let body = {
-                  //     url: url.url,
-                  //     title: title,
-                  //     text: text
-                  //   };
-                  //   saveToElasticsearch(url.id, body);
-                  // })
-                  // .catch(err => {
-                  //   console.error(err);
-                  // });
                 })
                 .catch(err => {
                   res.sendStatus(400);
@@ -225,31 +188,3 @@ router.delete('/', (req, res, next) => {
 });
 
 module.exports = router;
-
-// let body = {
-//   size: 20,
-//   from: 0,
-//   query: {
-//     match: {
-//       text: {
-//         query: 'stalin',
-//         minimum_should_match: 3,
-//         fuzziness: 2
-//       }
-//     }
-//   }
-// };
-// client.search(
-//   {
-//     index: 'watson-pages',
-//     type: 'page',
-//     body: body
-//   },
-//   (err, response) => {
-//     if (err) {
-//       console.error(err);
-//     } else {
-//       console.log(response.hits.hits);
-//     }
-//   }
-// );

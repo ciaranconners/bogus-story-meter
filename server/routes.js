@@ -15,12 +15,14 @@ const client = redis.createClient();
 
 const app = express();
 
-app.use(session({
-  secret: 'nosuchagency',
-  store: new redisStore({ host: 'redis', port: 6379, client: client}),
-  saveUninitialized: false,
-  resave: false
-}));
+app.use(
+  session({
+    secret: 'nosuchagency',
+    store: new redisStore({host: 'redis', port: 6379, client: client}),
+    saveUninitialized: false,
+    resave: false
+  })
+);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
