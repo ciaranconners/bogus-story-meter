@@ -1,5 +1,4 @@
-angular.module('app', ['ngRoute', 'ngMaterial', 'infinite-scroll'])
-
+angular.module('app', ['ngRoute', 'angularMoment', 'ngMaterial', 'infinite-scroll']) /*eslint-disable indent*/
 .config(['$locationProvider', '$routeProvider',
   function config($locationProvider, $routeProvider) {
     $locationProvider.html5Mode(true);

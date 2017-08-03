@@ -1,12 +1,27 @@
 <div class="container">
   <div class="row">
-    <div class="col-xs-3">
-      {{$ctrl.reply.username}}
-    </div>
-    <div class="col-xs-6">
-      {{$ctrl.reply.text}}
-    </div>
-    <div class="col-xs-3">
+    <div class="col-xs-1"></div>
+      <div class="col-xs-1">
+        <div class="comment-pic">
+          <img class="stats-pic" ng-src={{$ctrl.reply.profilePic}}>
+        </div>
+      </div>
+    <div class="col-xs-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>{{$ctrl.reply.username}}</strong>
+          <span class="text-muted">
+            replied
+            <em
+              title="{{ $ctrl.time | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"
+              am-time-ago="$ctrl.time">
+            </em>
+          </span>
+        </div>
+        <div class="panel-body">
+          {{$ctrl.reply.text}}
+        </div>
     </div>
   </div>
+  <div class="col-xs-2"></div>
 </div>

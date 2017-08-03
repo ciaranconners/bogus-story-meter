@@ -35,16 +35,29 @@
     </div>
 
     <div class="text-center">
-      <textarea class="comment-ta stats-text" placeholder="Leave a comment" ng-model="stat.commentText" id="commentField"></textarea>
-      <button
-        class="comment-submit btn btn-default pull-right stats-text"
-        ng-click="stat.postComment(stat.commentText)">
-        Submit
-      </button>
+      <textarea
+        class="comment-ta stats-text"
+        placeholder=" Leave a comment"
+        ng-model="stat.commentText">
+      </textarea>
     </div>
-
-    <div class="comment no-parent text-center" ng-repeat="comment in stat.comments track by comment.id">
-      <comment comment="comment" post-comment="stat.postComment" reply-text="stat.replyText"/>
+    <div class="container row">
+      <div class="col-xs-7"></div>
+      <div class="col-xs-3">
+        <button
+          class="comment-submit btn btn-default pull-right stats-text"
+          ng-click="stat.postComment(stat.commentText)">
+          Submit
+        </button>
+      </div>
+      <div class="col-xs-2"></div>
+    </div>
+    <div class="container comment no-parent text-center" ng-repeat="comment in stat.comments track by comment.id">
+      <comment
+      comment="comment"
+      comments="stat.comments"
+      post-comment="stat.postComment"
+      reply-text="stat.replyText"/>
     </div>
 
   </div>

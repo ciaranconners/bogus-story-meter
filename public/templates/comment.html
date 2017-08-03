@@ -1,40 +1,78 @@
 <div class="container comment-text">
   <div class="row">
-    <div class="col-xs-3">
-      {{$ctrl.comment.username}}
+    <div class="col-sm-1"></div>
+    <div class="col-sm-1 d-flex justify-content-end">
+      <div class="comment-pic pull-right">
+        <img class="stats-pic text-right" ng-src={{$ctrl.comment.profilePic}}>
+      </div>
+      <div class="vote circle">
+        <div
+          class="increment up"
+          ng-click="$ctrl.handleCommentVote($ctrl.comment.id, 'upvote', $ctrl.comments);"
+          ng-class="$ctrl.voteType === 'upvote' ? 'voted bump' : ''">
+        </div>
+        <div class="increment down"
+          ng-click="$ctrl.handleCommentVote($ctrl.comment.id, 'downvote', $ctrl.comments);"
+          ng-class="$ctrl.voteType === 'downvote' ? 'voted bump' : ''">
+        </div>
+        <div class="count">{{$ctrl.comment.voteCount}}</div>
+      </div>
     </div>
-    <div class="col-xs-6">
-      {{$ctrl.comment.text}}
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>{{$ctrl.comment.username}}</strong>
+            <span class="text-muted">
+              commented
+              <em
+                title="{{ $ctrl.time | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}"
+                am-time-ago="$ctrl.time">
+              </em>
+            </span>
+          <div class="reply-btn pull-right">
+            <button
+              ng-show="!$ctrl.comment.replying"
+              class="reply reply-btn btn btn-default"
+              ng-click="$ctrl.toggleReplying()">
+              Reply
+            </button>
+          </div>
+        </div>
+        <div class="panel-body">
+          {{$ctrl.comment.text}}
+        </div>
+      </div>
     </div>
-    <div class="reply-btn">
-      <button
-        ng-show="!$ctrl.comment.replying"
-        class="reply reply-btn btn btn-default pull-right"
-        ng-click="$ctrl.toggleReplying()">
-        Reply
-      </button>
+    <div class="col-sm-2"></div>
+    </div>
+  </div>
+  <div class="container row text-center">
+    <div class="col-xs-3"></div>
+    <textarea
+      ng-show="$ctrl.comment.replying"
+      class="reply-ta col-xs-6"
+      placeholder="Leave a reply"
+      ng-model="$ctrl.replyText">
+    </textarea>
+    <div class="col-xs-3"></div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-7"></div>
+      <div class="col-xs-3">
+        <button
+          ng-show="$ctrl.comment.replying"
+          class="reply-submit btn btn-default pull-right"
+          ng-click="$ctrl.postComment($ctrl.replyText, $ctrl.comment.id); $ctrl.toggleReplying();">
+          Submit
+        </button>
+      </div>
+      <div class="col-xs-2"></div>
     </div>
   </div>
   <div
-    class="comment reply"
+    class="container comment reply"
     ng-repeat="reply in $ctrl.comment.replies track by reply.id">
     <reply reply="reply" />
-  </div>
-  <div class="text-center">
-    <textarea
-      ng-show="$ctrl.comment.replying"
-      class="reply-ta"
-      placeholder="Leave a reply"
-      ng-model="$ctrl.replyText"
-      >
-    </textarea>
-    <div>
-      <button
-        ng-show="$ctrl.comment.replying"
-        class="reply-submit btn btn-default pull-right"
-        ng-click="$ctrl.postComment($ctrl.replyText, $ctrl.comment.id); $ctrl.toggleReplying();">
-        Submit
-      </button>
-    </div>
   </div>
 </div>
