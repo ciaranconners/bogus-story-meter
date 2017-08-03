@@ -242,3 +242,47 @@ table {
 .panel-body {
   text-align: left;
 }
+
+.description {
+  font-size: 11pt;
+}
+
+.meet-the-team {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.crop {
+ height: 350px;
+ width: 190px;
+ overflow: hidden;
+ font-size: 90%;
+ display: inline-block;
+ vertical-align: top;
+ margin-top: 2em;
+ margin-right: 2em;
+ margin-left: 2em;
+ margin-bottom: .25em;
+}
+.crop img {
+ height: auto;
+ width: 200px;
+}
+
+.team-member {
+  margin-top: 1em;
+  font-size: 11pt;
+}
+
+.role {
+  font-size: 9pt;
+}
+
+.get-extension {
+  padding-top: 0;
+  font-size: 11pt;
+}
+
+.webstore-link {
+  font-size: 12pt;
+}
