@@ -5,7 +5,6 @@ const db = require('../db/index.js');
 const utils = require('../utils.js');
 
 const NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
-const elasticsearch = require('elasticsearch');
 const watsonConfig = require('./watson-config.js');
 
 const username = watsonConfig.username;
@@ -15,11 +14,6 @@ const nlu = new NaturalLanguageUnderstandingV1({
   username: username,
   password: password,
   version_date: NaturalLanguageUnderstandingV1.VERSION_DATE_2017_02_27
-});
-
-const client = new elasticsearch.Client({
-  host: 'localhost:9200',
-  log: 'error'
 });
 
 const getFromWatson = (url, callback) => {
