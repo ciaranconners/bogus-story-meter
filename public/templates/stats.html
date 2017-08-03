@@ -52,7 +52,7 @@
       <div class="col-xs-3">
         <button
           class="comment-submit btn btn-default pull-right stats-text"
-          ng-click="stat.postComment(stat.commentText)">
+          ng-click="stat.commentText.length ? stat.postComment(stat.commentText) : null">
           Submit
         </button>
       </div>

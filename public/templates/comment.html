@@ -69,7 +69,9 @@
         <button
           ng-show="$ctrl.comment.replying"
           class="reply-submit btn btn-default pull-right"
-          ng-click="$ctrl.postComment($ctrl.replyText, $ctrl.comment.id); $ctrl.toggleReplying();">
+          ng-click="
+          $ctrl.replyText.length ? $ctrl.postComment($ctrl.replyText, $ctrl.comment.id) : null;
+          $ctrl.replyText.length ? $ctrl.toggleReplying() : null;">
           Submit
         </button>
       </div>
