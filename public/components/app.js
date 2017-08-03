@@ -1,4 +1,3 @@
-// YOU CAN ONLY GET TO THIS PAGE IF YOU ARE LOGGED IN - WILL SEND A REQUEST TO SERVER TO VERIFY AUTH WITH GOOGLE
 angular.module('app')
 .controller('AppCtrl', function(request, $http, $rootScope, $window) {
 
@@ -74,7 +73,7 @@ angular.module('app')
       activity.updatedAt = convertToLongDate(convertRawDate(d));
       if (activity.text === undefined) { activity.text = ''; }
       if (activity.title === null) { activity.title = ''; }
-      activity.type ? (activity.type = activity.type === 'upvote' ? 'true' : 'false') : activity.type = ''; 
+      activity.type ? (activity.type = activity.type === 'upvote' ? 'true' : 'false') : activity.type = '';
     }.bind(this));
   }.bind(this);
 

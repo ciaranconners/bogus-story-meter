@@ -4,35 +4,21 @@ angular.module('app')
     const that = this;
 
     this.requestActive = false;
-
-  //   this.showAlert = function(title, text) {
-  //   $mdDialog.show(
-  //     $mdDialog.alert()
-  //       .parent(angular.element(document.querySelector('#popupContainer')))
-  //       .clickOutsideToClose(true)
-  //       .title(title)
-  //       .textContent(text)
-  //       .ok('Got it!')
-  //   );
-  // };
-
-  this.showAlert = (title, text) => {
-    alert = $mdDialog.alert({
-      title: title,
-      textContent: text,
-      ok: 'Got it!',
-      clickOutsideToClose: true,
-      hasBackdrop: false
-    });
-
-    $mdDialog
-      .show( alert )
-      .finally(function() {
-        alert = undefined;
+    this.showAlert = (title, text) => {
+      alert = $mdDialog.alert({
+        title: title,
+        textContent: text,
+        ok: 'Got it!',
+        clickOutsideToClose: true,
+        hasBackdrop: false
       });
-  };
 
-
+      $mdDialog
+        .show( alert )
+        .finally(function() {
+          alert = undefined;
+      });
+    };
 
     this.signup = () => {
       un = this.accName;
@@ -72,8 +58,6 @@ angular.module('app')
         this.accVerifyPw = '';
       }
     };
-
-    // in terms of cleanup, differentiate between user not found and password incorrect for the alert message
 
     this.login = () => {
       un = this.loginName;
