@@ -24,6 +24,9 @@ angular
         .when('/login', {
           templateUrl: './templates/login.html'
         })
+        .when('/about', {
+          templateUrl: './templates/about.html'
+        })
         .otherwise({
           redirectTo: '/home'
       });

@@ -90,7 +90,7 @@ const Url = db.define('Url', {
   }
 }, {
   classMethods: {
-    associate: (models) => { //john: used to say model
+    associate: (models) => {
       Url.belongsTo(models.Category);
       Url.hasMany(models.Comment);
     }
@@ -135,7 +135,6 @@ const CommentVote = db.define('CommentVote', {
   }
 });
 
-//todo: make sure unique composite works
 const UrlVote = db.define('UrlVote', {
   type: Sequelize.STRING,
   userId: {type: Sequelize.INTEGER, unique: 'userUrlId'},
