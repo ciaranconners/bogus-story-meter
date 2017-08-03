@@ -1,5 +1,5 @@
-const db = require("./db/index.js");
-const utils = require("./utils.js");
+const db = require('./db/index.js');
+const utils = require('./utils.js');
 
 const handler = {};
 
@@ -19,7 +19,7 @@ handler.getUrlData = (req, res) => {
     })
     .spread(userEntry => {
       if (userEntry !== null) {
-        return db.Url.findOne({ where: { url: url } }).then(urlEntry => {
+        return db.Url.findOne({where: {url: url}}).then(urlEntry => {
           if (urlEntry === null) {
             res.json({
               rating: null,
@@ -29,7 +29,7 @@ handler.getUrlData = (req, res) => {
             });
           } else {
             return db.UrlVote
-              .findOne({ where: { userId: userEntry.id, urlId: urlEntry.id } })
+              .findOne({where: {userId: userEntry.id, urlId: urlEntry.id}})
               .then(voteEntry => {
                 rating = utils.calculateRating(
                   urlEntry.upvoteCount,
@@ -68,8 +68,8 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
     })
     .spread(url => {
       let stpUrl =
-        "http://localhost:8080" + "/stats/redirect/" + url.id.toString();
-      console.log("new stat page URL created, transmitting: ", stpUrl);
+        'http://localhost:8080' + '/stats/redirect/' + url.id.toString();
+      console.log('new stat page URL created, transmitting: ', stpUrl);
       res.status(200).json(stpUrl);
     })
     .catch(err => {
@@ -82,28 +82,32 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
 handler.getUrlStats = (req, res) => {
   let urlId = req.query.urlId;
   let urlData = {username: req.session.username};
-  db.Url.findOne({where: {id: urlId}})
-  .then(urlEntry => {
-    urlData.url = urlEntry.url;
-    urlData.title = urlEntry.title;
-    urlData.rating = utils.calculateRating(urlEntry.upvoteCount, urlEntry.downvoteCount);
-  })
-  .then(() => {
-    return db.User.findOne({where: {username: urlData.username}});
-  })
-  .then(user => {
-    if (user !== null) {
-      return db.UrlVote.findOne({where: {userId: user.id, urlId: urlId}});
-    }
-  })
-  .then(vote => {
-    vote ? urlData.vote = vote.type : urlData.vote = null;
-    res.send(urlData);
-  })
-  .catch(err => {
-    console.error(err);
-    res.sendStatus(500);
-  });
+  db.Url
+    .findOne({where: {id: urlId}})
+    .then(urlEntry => {
+      urlData.url = urlEntry.url;
+      urlData.title = urlEntry.title;
+      urlData.rating = utils.calculateRating(
+        urlEntry.upvoteCount,
+        urlEntry.downvoteCount
+      );
+    })
+    .then(() => {
+      return db.User.findOne({where: {username: urlData.username}});
+    })
+    .then(user => {
+      if (user !== null) {
+        return db.UrlVote.findOne({where: {userId: user.id, urlId: urlId}});
+      }
+    })
+    .then(vote => {
+      vote ? (urlData.vote = vote.type) : (urlData.vote = null);
+      res.send(urlData);
+    })
+    .catch(err => {
+      console.error(err);
+      res.sendStatus(500);
+    });
 };
 
 handler.getAllActivity = (req, res) => {
@@ -114,31 +118,27 @@ handler.getAllActivity = (req, res) => {
 
 handler.getUserActivity = (req, res) => {
   let username = req.query.username;
-  db.User.findOne({ where: { username: username } }).then(userEntry => {
+  db.User.findOne({where: {username: username}}).then(userEntry => {
     return db.UrlVote
-      .findAll({ where: { userId: userEntry.id } })
+      .findAll({where: {userId: userEntry.id}})
       .then(userVotes => {
         return db.Comment
-          .findAll({ where: { userId: userEntry.id } })
+          .findAll({where: {userId: userEntry.id}})
           .then(userComments => {
             let userVotesPromises = userVotes.map(row => {
-              return db.Url
-                .findOne({ where: { id: row.urlId } })
-                .then(urlEntry => {
-                  row.dataValues.url = urlEntry.url;
-                  row.dataValues.title = urlEntry.title;
-                  return row;
-                });
+              return db.Url.findOne({where: {id: row.urlId}}).then(urlEntry => {
+                row.dataValues.url = urlEntry.url;
+                row.dataValues.title = urlEntry.title;
+                return row;
+              });
             });
 
             let userCommentsPromises = userComments.map(row => {
-              return db.Url
-                .findOne({ where: { id: row.urlId } })
-                .then(urlEntry => {
-                  row.dataValues.url = urlEntry.url;
-                  row.dataValues.title = urlEntry.title;
-                  return row;
-                });
+              return db.Url.findOne({where: {id: row.urlId}}).then(urlEntry => {
+                row.dataValues.url = urlEntry.url;
+                row.dataValues.title = urlEntry.title;
+                return row;
+              });
             });
             Promise.all(userVotesPromises).then(userVotesNew => {
               Promise.all(userCommentsPromises).then(userCommentsNew => {
