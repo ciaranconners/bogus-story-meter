@@ -143,10 +143,11 @@ router.post("/login", (req, res, next) => {
               .json(
                 "that password doesn't match our records; please try again"
               );
+          } else {
+            req.session.username = req.body.username;
+            console.log("\x1b[33m%s\x1b[0m", "session created");
+            res.status(200).json("all set");
           }
-          req.session.username = req.body.username;
-          console.log("\x1b[33m%s\x1b[0m", "session created");
-          res.status(200).json("all set");
         });
       } else {
         res
