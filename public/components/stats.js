@@ -1,7 +1,6 @@
 angular.module('app') /*eslint-disable indent*/
 
 .controller('StatCtrl', function($window, request, sort, $location, $scope) {
-
   $window.scrollTo(0, 0);
 
   this.url;
@@ -11,7 +10,6 @@ angular.module('app') /*eslint-disable indent*/
   this.comments;
   this.urlId;
   this.rated;
-  this.userVote = null;
   this.commentText = '';
   this.replyText = '';
 
@@ -61,7 +59,7 @@ angular.module('app') /*eslint-disable indent*/
     });
   };
 
-  this.handleVote = vote => {
+  this.handleVote = (vote) => {
     if (this.url === null) {
       return;
     }
@@ -73,7 +71,7 @@ angular.module('app') /*eslint-disable indent*/
     };
     let errMsg = 'Could not submit vote: ';
     // if user hasnt voted before, new vote:
-    if (this.userVote === null) {
+    if (!this.userVote) {
       request.post('/urlvote', data, errMsg, (res) => {
         this.urlId = res;
         request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
@@ -92,7 +90,14 @@ angular.module('app') /*eslint-disable indent*/
         });
       });
     } else if (this.userVote === vote) {
-      return; // don't let user send same rating twice for same URL
+      request.delete('/urlvote', data, errMsg, (res) => {
+        this.urlId = res;
+        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
+          this.rating = res;
+          this.rated = this.rating || this.rating === 0 ? true : false;
+          this.userVote = null;
+        });
+      });
     }
   };
 

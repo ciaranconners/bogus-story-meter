@@ -140,6 +140,10 @@ p, .stats-text, .comment-text {
   width: 130px;
 }
 
+.pressed {
+  opacity: 0.6;
+}
+
 .dd-login {
   margin: auto;
 }
