@@ -3,6 +3,11 @@ angular.module('app')
 
   this.activity = [];
   this.activities = [];
+  this.disableFilter = true;
+  this.startDate;
+  this.endDate;
+  this.warningLabel = 'end date can\'t be before start date';
+  this.dateToday = new Date();
 
   $window.scrollTo(0, 0);
 
@@ -15,6 +20,42 @@ angular.module('app')
     if (date1 < date2) return 1;
     return 0;
   };
+
+  let convertRawDate = (rawDate) => {
+    let day = rawDate.getDate();
+    let month = rawDate.getMonth() + 1;
+    let year = rawDate.getFullYear();
+
+    return month + '/' + day + '/' + year;
+  };
+
+  let convertToLongDate = (date) => {
+    return new Date(date);
+  };
+
+  this.updateSearchAttributes = function(startDate, endDate, searchText) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.searchText = searchText ? searchText.toLowerCase() : '';
+    this.searchText || this.startDate ? this.disableFilter = false : this.disableFilter = true;
+  }.bind(this);
+
+  this.myFilter = function(item) {
+    let lowerCaseTitle = item.title.toLowerCase();
+    let lowerCaseUrl = item.url.toLowerCase();
+
+    if (this.searchText && this.startDate && this.endDate) {
+      return (lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate);
+    } else if (this.searchText && this.startDate) {
+      return (lowerCaseUrl.includes(this.searchText) || ilowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate);
+    } else if (this.searchText) {     
+      return lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText);     
+    } else if (this.startDate && this.endDate) {
+      return item.updatedAt >= this.startDate && item.updatedAt <= this.endDate;
+    } else if (this.startDate) {     
+      return item.updatedAt >= this.startDate;
+    }
+  }.bind(this);
 
   this.populateActivities = function() {
     var last = this.activity.length - 1;
@@ -30,6 +71,10 @@ angular.module('app')
   request.get('/allActivity', null, null, errMsg, function(getResponse) {
     this.activities = getResponse.sort(date_sort_desc);
     this.activities.forEach(function(activity, index) {
+      let d = new Date(activity.updatedAt);
+
+      activity.updatedAt = convertToLongDate(convertRawDate(d));
+       
       activity.rating = Math.floor(activity.upvoteCount / (activity.upvoteCount + activity.downvoteCount)) * 100;
       if (isNaN(activity.rating)) {
         activity.range = 'nr';
@@ -43,6 +88,9 @@ angular.module('app')
         activity.range = 'falsy';
         activity.rating = activity.rating + '%';
       }
+
+      if (activity.title === null) { activity.title = ''; }
+
       if (index < 15) {
         this.activity.push(activity);
       }

@@ -1,16 +1,16 @@
 <div ng-controller="HomeCtrl as home" class="container top-offset">
-  <!--<search-form></search-form>-->
+  <search-form-home date-today="home.dateToday" warning-label="home.warningLabel" update-search-attributes="home.updateSearchAttributes"></search-form-home>
   <h3>Trending pages:</h3>
-<!--   <ul class="home-activity" ng-repeat="activity in home.activity">
-    <li class="activity">
-      <a href="{{activity.url"><i>{{activity.url}}</i></a>
-      <b><a href="/stats/redirect/{{activity.id}}" class="pull-right {{activity.range}}">{{activity.rating}}</a></b>
-    </li>
-  </ul> -->
-  <table class="table table-hover" infinite-scroll="home.populateActivities()">
+  <table ng-show="home.disableFilter" class="table table-hover" infinite-scroll="home.populateActivities()">
     <tr class="home-activity row" ng-repeat="activity in home.activity">
       <td class="col-md-11"><a href="{{activity.url}}" target="_blank"><i>{{activity.title || activity.url}}</i></a></td>
       <td class="col-md-1 activity-rating"><b><a href="/stats/redirect/{{activity.id}}" class="pull-right {{activity.range}}">{{activity.rating}}</a></b></td>
     </tr>
   </table>
+  <table ng-show="!home.disableFilter" class="table table-hover">
+    <tr class="home-activity row" ng-repeat="searchActivity in home.activities | filter: home.myFilter">
+      <td class="col-md-11"><a href="{{searchActivity.url}}" target="_blank"><i>{{searchActivity.title || searchActivity.url}}</i></a></td>
+      <td class="col-md-1 activity-rating"><b><a href="/stats/redirect/{{searchActivity.id}}" class="pull-right {{searchActivity.range}}">{{searchActivity.rating}}</a></b></td>
+    </tr>
+  </table>  
 </div>
