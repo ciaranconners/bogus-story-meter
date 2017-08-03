@@ -14,24 +14,6 @@ const getUrlComments = require('./requestHandlers/getUrlComments.js');
 const client = redis.createClient();
 
 const app = express();
-exports.app = app;
-
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
-exports.io = io;
-
-server.listen(3000);
-
-let socketId = 0;
-exports.socketId =socketId;
-
-io.on('connection', function(socket){
-  socketId = socket.id;
-  socket.emit('newActivity', {'hello':'ciaran-here'});
-  socket.on('disconnect', function() {
-    console.log('socket disconnect event registered');
-  });
-});
 
 app.use(session({
   secret: 'nosuchagency',
@@ -81,3 +63,5 @@ app.get('/login', (req, res, next) => {
 app.get('/stats/redirect/*', (req, res, next) => {
   res.sendFile('./index.html', {root: path.join(__dirname, '../public')});
 });
+
+module.exports = app;
