@@ -70,4 +70,8 @@ app.get('/about', (req, res, next) => {
   res.sendFile('./index.html', {root: path.join(__dirname, '../public')});
 });
 
+app.get('/*', (req, res, next) => {
+  res.sendFile('./404.html', {root: path.join(__dirname, './404')});
+});
+
 module.exports = app;
