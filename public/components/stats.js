@@ -40,6 +40,12 @@ angular.module('app') /*eslint-disable indent*/
     });
   };
 
+  this.checkAuth = () => {
+    request.get('/auth/getStatus', null, null, (authResponse) => {
+      this.authenticated = authResponse.statusCode === 200 ? true : false;
+    });
+  };
+
   $scope.$on('$routeChangeSuccess', () => {
     getUrlId();
     getUrlStats();
@@ -48,6 +54,7 @@ angular.module('app') /*eslint-disable indent*/
 
   // posts both comments and replies
   this.postComment = (text, commentId = null) => {
+    this.checkAuth();
     let data = {urlId: this.urlId, comment: text, commentId: commentId};
     this.commentText = '';
     this.replyText = '';
@@ -57,6 +64,7 @@ angular.module('app') /*eslint-disable indent*/
   };
 
   this.handleVote = (vote) => {
+    this.checkAuth();
     if (this.url === null) {
       return;
     }

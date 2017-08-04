@@ -42,6 +42,8 @@ angular.module('app') /*eslint-disable indent*/
     postComment: '<',
     toggleReplying: '<',
     replyText: '<',
-    handleCommentVote: '<'
+    handleCommentVote: '<',
+    checkAuth: '<',
+    authenticated: '<'
   }
 });
