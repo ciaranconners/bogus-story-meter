@@ -11,6 +11,10 @@ li, .table{
   /*font-size: 1em;*/
 }
 
+.about {
+  margin: 70px 50px 0 50px;
+}
+
 .navbar-brand {
   font-size: 18pt;
 }
@@ -264,6 +268,7 @@ table {
  margin-left: 2em;
  margin-bottom: .25em;
 }
+
 .crop img {
  height: auto;
  width: 200px;
