@@ -1,33 +1,33 @@
 <div class="container loginContainer" ng-controller="LoginCtrl as login">
   <div class="row">
 
-  <div class="signup">
-    <form class="accCreationForm col-xs-12 col-md-6">
-      <h4>Sign Up to See What We've Tracked for You Through the B.S.M. Extension</h4>
-      <input id="accName" type="text" placeholder="extension email" ng-model="login.accName"/>
-      <br />
-      <input id="accPw" type="password" placeholder="password" ng-model="login.accPw"/>
-      <br />
-      <input id="accVerifyPw" type="password" placeholder="verify password" ng-model="login.accVerifyPw"/>
-      <br />
-      <button ng-click="login.signup()" class="btn btn-primary signup-btn">Sign Up</button>
-    </form>
-    <span class="signup-spinner" ng-hide="!login.requestActive">
+    <div class="signup">
+      <form class="accCreationForm col-xs-12 col-md-6">
+        <h4>Sign Up to See What We've Tracked for You Through the B.S.M. Extension</h4>
+        <input id="accName" type="text" placeholder="extension email" ng-model="login.accName" />
+        <br />
+        <input id="accPw" type="password" placeholder="password" ng-model="login.accPw" />
+        <br />
+        <input id="accVerifyPw" type="password" placeholder="verify password" ng-model="login.accVerifyPw" />
+        <br />
+        <button ng-click="login.signup()" class="btn btn-primary signup-btn">Sign Up</button>
+      </form>
+      <span class="signup-spinner" ng-hide="!login.requestActive">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </span>
-  </div>
+    </div>
 
 
 
     <div class="login">
-    <form class="loginForm col-xs-12 col-md-6">
-      <h4>Log In to Access Your Account</h4>
-      <input id="loginName" type="text" placeholder="extension email" ng-model="login.loginName"/>
-      <br />
-      <input id="loginPw" type="password" placeholder="password" ng-model="login.loginPw"/>
-      <br />
-      <button class="btn btn-primary login-btn" ng-click="login.login()">Log In</button>
-    </form>
+      <form class="loginForm col-xs-12 col-md-6">
+        <h4>Log In to Access Your Account</h4>
+        <input id="loginName" type="text" placeholder="extension email" ng-model="login.loginName" />
+        <br />
+        <input id="loginPw" type="password" placeholder="password" ng-model="login.loginPw" />
+        <br />
+        <button class="btn btn-primary login-btn" ng-click="login.login()">Log In</button>
+      </form>
     </div>
 
   </div>
