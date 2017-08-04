@@ -1,4 +1,5 @@
 angular.module('app')
+
 .controller('AppCtrl', function(request, $http, $rootScope, $window) {
 
   $window.scrollTo(0, 0);
@@ -46,14 +47,22 @@ angular.module('app')
     this.searchText || this.startDate ? this.disableFilter = false : this.disableFilter = true;
   }.bind(this);
 
-  this.myFilter = function(item) {
+  this.filterResults = function(item) {
+    console.log('in filterResults');
+    console.log('this.searchText: ', this.searchText);
+    console.log('item.text: ', item.text);
+    console.log('item.type: ', item.type);
+
     let lowerCaseTitle = item.title.toLowerCase();
     let lowerCaseUrl = item.url.toLowerCase();
+
+    console.log('lowerCaseTitle: ', lowerCaseTitle);
+    console.log('lowerCaseUrl: ', lowerCaseUrl);
 
     if (this.searchText && this.startDate && this.endDate) {
       return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate);
     } else if (this.searchText && this.startDate) {
-      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || lowerCaseUrl.includes(this.searchText) || ilowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate);
+      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate);
     } else if (this.searchText) {
       return item.type.includes(this.searchText) || item.text.includes(this.searchText) || lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText);
     } else if (this.startDate && this.endDate) {
@@ -63,7 +72,7 @@ angular.module('app')
     }
   }.bind(this);
 
-  let populateUserActivty = function(dbResponse) {
+  let populateUserActivity = function(dbResponse) {
     this.userVotes = dbResponse.userVotes;
     this.userComments = dbResponse.userComments;
     this.userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
@@ -83,11 +92,12 @@ angular.module('app')
       that.fullname = authResponse.fullname;
       that.imageUrl = authResponse.profilepicture;
       request.get('/useractivity', null, {'username': this.email}, errMsg, (getResponse) => {
-        populateUserActivty(getResponse);
+        populateUserActivity(getResponse);
       });
     }
   });
 })
+
 .component('app', {
   templateUrl: './templates/app.html'
 });

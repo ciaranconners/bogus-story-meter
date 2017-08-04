@@ -8,7 +8,7 @@
     </tr>
   </table>
   <table ng-show="!home.disableFilter" class="table table-hover">
-    <tr class="home-activity row" ng-repeat="searchActivity in home.activities | filter: home.myFilter">
+    <tr class="home-activity row" ng-repeat="searchActivity in home.activities | filter: home.filterResults">
       <td class="col-md-11"><a href="{{searchActivity.url}}" target="_blank"><i>{{searchActivity.title || searchActivity.url}}</i></a></td>
       <td class="col-md-1 activity-rating"><b><a href="/stats/redirect/{{searchActivity.id}}" class="pull-right {{searchActivity.range}}">{{searchActivity.rating}}</a></b></td>
     </tr>

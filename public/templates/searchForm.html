@@ -8,8 +8,8 @@
 
 <div class="datepicker-container">
 	<label>Start Date</label>
-	<md-datepicker class="datepicker" md-max-date="$ctrl.dateToday" ng-model="startDate" ng-change="$ctrl.updateSearchAttributes(startDate, endDate, searchText)"></md-datepicker>
+	<md-datepicker md-placeholder="mm/dd/yyyy" class="datepicker" md-max-date="$ctrl.dateToday" ng-model="startDate" ng-change="$ctrl.updateSearchAttributes(startDate, endDate, searchText)"></md-datepicker>
 	<label>End Date</label>
-	<md-datepicker class="datepicker" md-max-date="$ctrl.dateToday" ng-model="endDate" ng-change="$ctrl.updateSearchAttributes(startDate, endDate, searchText)"></md-datepicker>
+	<md-datepicker md-placeholder="mm/dd/yyyy" class="datepicker" md-max-date="$ctrl.dateToday" ng-model="endDate" ng-change="$ctrl.updateSearchAttributes(startDate, endDate, searchText)"></md-datepicker>
 	<label class="warning-label" ng-if="endDate && startDate > endDate">{{$ctrl.warningLabel}}</label>
 </div>

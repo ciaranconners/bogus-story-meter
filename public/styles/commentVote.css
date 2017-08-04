@@ -12,10 +12,17 @@
   .down { border-radius: 0 0 50% 50%; }
   .count { border-radius: 100%/50%; }
 }*/
+.rel {
+  position: absolute;
+  transform: translate(-180%, -44%); }
+
+.inline {
+  display: inline; }
+
 .circle .up {
-  border-radius: 5rem 5rem 0 0; }
+  border-radius: 4rem 4rem 0 0; }
 .circle .down {
-  border-radius: 0 0 5rem 5rem; }
+  border-radius: 0 0 4rem 4rem; }
 .circle .count {
   border-radius: 50%; }
 
@@ -24,8 +31,8 @@
   flex-direction: column;
   font-family: "Noto Sans";
   position: relative;
-  width: 5rem;
-  height: 5rem;
+  width: 4rem;
+  height: 4rem;
   margin: 1rem; }
 
 .increment {
@@ -51,12 +58,12 @@
   position: absolute;
   top: 0;
   border-radius: 5%;
-  margin: 1.25rem;
+  margin: 1rem;
   background: #FFF;
-  width: 2.5rem;
-  font-size: 1.25rem;
+  width: 2rem;
+  font-size: 1.4rem;
   font-weight: bold;
-  line-height: 2.5rem;
+  line-height: 2rem;
   text-align: center;
   box-shadow: 0 0 0 0.5rem #FFF;
   pointer-events: none; }

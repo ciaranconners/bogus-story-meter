@@ -17,16 +17,7 @@ angular.module('app', [])
     chrome.identity.getAuthToken({ 'interactive': true }, (token) => {
     // Use the token.
       if (token) {
-        // this.loggedIn = true;
         $scope.$apply();
-
-        // let errMsg = 'could not get profile information';
-
-        // request.getGoogleProfile(token, null, null, errMsg, profileInfo => {
-        //   console.log(profileInfo);
-        //   this.fullName = profileInfo.data.name;
-        //   this.profilePicture = profileInfo.data.picture;
-        // });
       }
     });
 
@@ -65,8 +56,6 @@ angular.module('app', [])
         url: this.url,
         username: this.currentUser,
         type: vote
-        // title: this.title,
-        // categories: this.categories
       };
 
       let errMsg = 'Could not submit vote: ';
@@ -106,9 +95,10 @@ angular.module('app', [])
     };
 
     this.handleSubmitComment = (comment) => {
-      if (this.url === null) {
+      if (this.url === null || !comment.length) {
         return;
       }
+
       let data = {
         url: this.url,
         urlId: this.urlId,
@@ -116,7 +106,7 @@ angular.module('app', [])
         comment: comment
       };
       request.post('/urlcomment', data, 'Could not submit comment: ', (resData) => {
-        if(resData) {
+        if (resData) {
           that.urlId = resData;
           chrome.runtime.sendMessage({'rating': that.rating, 'uservote': that.uservote, 'urlId': that.urlId});
         }

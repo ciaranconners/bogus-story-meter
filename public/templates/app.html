@@ -1,23 +1,24 @@
 <div ng-controller="AppCtrl as app" class="container top-offset">
-  <div class="row profile-info">
-    <div class="col-sm-4">
-      <div class="img-parent">
-        <img class="profile-pic" ng-src={{app.imageUrl}} alt="profile picture">
-        <h1 class="username">{{app.fullname}}</h1>
-      </div>
-    </div>
-    <div class="col-sm-8">
-      <search-form date-today="app.dateToday" warning-label="app.warningLabel" update-search-attributes="app.updateSearchAttributes"></search-form>
-      <h3>Your recent activity:</h3>
-      <ul class="profileList" ng-repeat="activity in app.userActivity | filter: (!app.disableFilter || '') && app.myFilter">
-        <li class="profileTime">{{ activity.updatedAt.toDateString() }}</li>
-        <li ng-show="activity.type">You rated the page: <i><a href={{activity.url}} target="_blank">{{activity.title || activity.url}}</a></i> as <b><a ng-class="activity.type" href="/stats/redirect/{{activity.urlId}}">{{activity.type}}</a></b></li>
-        <li ng-show="activity.text">You commented on the page: <i><a href={{activity.url}} target="_blank">{{activity.title || activity.url}}</a></i>
-          <ul class="profileList" ng-show="activity.text">
-            <li><a class="profileComment" href="/stats/redirect/{{activity.urlId}}">{{activity.text}}</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
+	<div class="row profile-info">
+		<div class="col-sm-4">
+			<div class="img-parent">
+				<img  class="profile-pic" ng-src={{app.imageUrl}} alt="profile picture">
+				<h1 class="username">{{app.fullname}}</h1>
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<search-form date-today="app.dateToday" warning-label="app.warningLabel" update-search-attributes="app.updateSearchAttributes"></search-form>
+			<h3>Your recent activity:</h3>
+			<ul class="profileList" ng-repeat="activity in app.userActivity | filter: (!app.disableFilter || '') && app.filterResults">
+				<li class="profileTime">{{ activity.updatedAt.toDateString() }}</li>
+			  <li ng-show="activity.type">You rated the page: <i><a href={{activity.url}} target="_blank">{{activity.title || activity.url}}</a></i> as <b><a ng-class="activity.type" href="/stats/redirect/{{activity.urlId}}">{{activity.type}}</a></b></li>
+			  <li ng-show="activity.text">You commented on the page: <i><a href={{activity.url}} target="_blank">{{activity.title || activity.url}}</a></i>
+			    <ul class="profileList" ng-show="activity.text">
+			      <li><a class="profileComment" href="/stats/redirect/{{activity.urlId}}">{{activity.text}}</a></li>
+			    </ul>
+			  </li>
+			</ul>
+
+		</div>
+	</div>
 </div>

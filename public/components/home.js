@@ -1,4 +1,5 @@
 angular.module('app')
+
 .controller('HomeCtrl', function($window, request) {
 
   this.activity = [];
@@ -40,14 +41,14 @@ angular.module('app')
     this.searchText || this.startDate ? this.disableFilter = false : this.disableFilter = true;
   }.bind(this);
 
-  this.myFilter = function(item) {
+  this.filterResults = function(item) {
     let lowerCaseTitle = item.title.toLowerCase();
     let lowerCaseUrl = item.url.toLowerCase();
 
     if (this.searchText && this.startDate && this.endDate) {
       return (lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate);
     } else if (this.searchText && this.startDate) {
-      return (lowerCaseUrl.includes(this.searchText) || ilowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate);
+      return (lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate);
     } else if (this.searchText) {     
       return lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText);     
     } else if (this.startDate && this.endDate) {
@@ -98,6 +99,7 @@ angular.module('app')
   }.bind(this));
 
 })
+
 .component('home', {
   templateUrl: '../templates/home.html'
 });
