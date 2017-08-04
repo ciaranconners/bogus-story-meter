@@ -25,11 +25,11 @@
             <div
               class="increment up"
               ng-click="$ctrl.handleCommentVote($ctrl.comment.id, 'upvote', $ctrl.comments);"
-              ng-class="$ctrl.voteType === 'upvote' ? 'voted bump' : ''">
+              ng-class="$ctrl.comment.voteType === 'upvote' ? 'voted bump' : ''">
             </div>
             <div class="increment down"
               ng-click="$ctrl.handleCommentVote($ctrl.comment.id, 'downvote', $ctrl.comments);"
-              ng-class="$ctrl.voteType === 'downvote' ? 'voted bump' : ''">
+              ng-class="$ctrl.comment.voteType === 'downvote' ? 'voted bump' : ''">
             </div>
             <div class="count">{{$ctrl.comment.voteCount}}</div>
           </div>
