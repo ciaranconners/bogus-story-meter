@@ -2,7 +2,6 @@ angular.module('app') /*eslint-disable indent*/
 
 .controller('commentCtrl', function(request, sort) {
 
-  this.voteType;
   this.time = new Date(this.comment.createdAt);
 
   this.toggleReplying = function() {
@@ -11,12 +10,25 @@ angular.module('app') /*eslint-disable indent*/
 
   this.handleCommentVote = (commentId, voteType, comments) => {
     let data = {commentId: commentId, voteType: voteType};
-    let errMsg = `You cannot ${voteType} a comment more than once`;
-    request.post('/commentvote', data, errMsg, res => {
-      this.comment.voteCount = res;
-      this.voteType = voteType;
-      sort.sortComments(comments);
-    });
+    if (!this.comment.voteType) {
+      request.post('/commentvote', data, (res) => {
+        this.comment.voteCount = res;
+        this.comment.voteType = voteType;
+        sort.sortComments(comments);
+      });
+    } else if (this.comment.voteType !== voteType) {
+      request.put('/commentvote', data, (res) => {
+        this.comment.voteCount = res;
+        this.comment.voteType = voteType;
+        sort.sortComments(comments);
+      });
+    } else if (this.comment.voteType === voteType) {
+      request.delete('/commentvote', data, (res) => {
+        this.comment.voteCount = res;
+        this.comment.voteType = null;
+        sort.sortComments(comments);
+      });
+    }
   };
 
 })
@@ -30,6 +42,8 @@ angular.module('app') /*eslint-disable indent*/
     postComment: '<',
     toggleReplying: '<',
     replyText: '<',
-    handleCommentVote: '<'
+    handleCommentVote: '<',
+    checkAuth: '<',
+    authenticated: '<'
   }
 });

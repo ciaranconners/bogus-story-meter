@@ -30,7 +30,7 @@ angular.module('app')
     });
   };
 
-  request.get('/auth/getStatus', null, null, 'error!', (authResponse) => {
+  request.get('/auth/getStatus', null, null, (authResponse) => {
     if (authResponse.username) {
       this.isLoggedIn = true;
     } else {

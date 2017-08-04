@@ -3,10 +3,11 @@ const router = express.Router();
 const db = require('../db/index.js');
 
 router.get('/', (req, res, next) => {
+  let currUser = req.session.username;
   let urlId = req.query.urlId;
   let idxMap = {};
   let temp;
-  db.Comment.findAll({where: {urlId: urlId}/*, order: [['voteCount', 'DESC'], 'createdAt']*/})
+  db.Comment.findAll({where: {urlId: urlId}})
   .then(comments => {
     temp = comments;
     return comments.map((comment, i) => {
@@ -17,15 +18,23 @@ router.get('/', (req, res, next) => {
     });
   })
   .mapSeries(comment => {
-    return db.User.findOne({where: {id: comment.userId}})
-    .then(user => {
-      comment.dataValues.username = user.fullname || user.username;
-      comment.dataValues.profilePic = user.profilepicture || 'https://ssl.gstatic.com/accounts/ui/avatar_2x.png';
-      comment.dataValues.voteCount = comment.upvoteCount - comment.downvoteCount;
-      if (comment.commentId) {
-        // push reply comments to replies array in parent comments
-        temp[idxMap[comment.commentId]].dataValues.replies.push(comment);
-      } else { return comment; }
+    return Promise.all([
+      db.User.findOne({where: {id: comment.userId}}),
+      db.User.findOne({where: {username: currUser}}),
+    ])
+    .then(([commUser, currUser]) => {
+      // add current user's vote type on individual comments to persist on the front end
+      return db.CommentVote.findOne({where: {userId: currUser.id, commentId: comment.id}})
+      .then(vote => {
+        vote ? comment.dataValues.voteType = vote.type : null;
+        comment.dataValues.username = commUser.fullname || commUser.username;
+        comment.dataValues.profilePic = commUser.profilepicture || 'https://ssl.gstatic.com/accounts/ui/avatar_2x.png';
+        comment.dataValues.voteCount = comment.upvoteCount - comment.downvoteCount;
+        if (comment.commentId) {
+          // push reply comments to replies array in parent comments
+          temp[idxMap[comment.commentId]].dataValues.replies.push(comment);
+        } else { return comment; }
+      });
     });
   })
   .then(comments => {

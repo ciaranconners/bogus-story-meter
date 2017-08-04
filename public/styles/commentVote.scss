@@ -2,26 +2,12 @@
 
 $size : 4rem;
 $border-width : .5rem;
-/*$radius : .5rem;*/
 $radius : 50%;
 $transition : .3s;
 
 $bg : #FFF;
-/*$green : #4BC35F;*/
 $green : #5cb85c;
-/*$red : #C15044;*/
 $red : #d9534f;
-
-/*.roundrect {
-  .up { border-radius: 2rem 2rem 0 0; }
-  .down { border-radius: 0 0 2rem 2rem; }
-  .count { border-radius: .5rem .5rem; }
-}
-.chev {
-  .up { border-radius: 50% 50% 0 0; }
-  .down { border-radius: 0 0 50% 50%; }
-  .count { border-radius: 100%/50%; }
-}*/
 
 .rel {
   position: absolute;
@@ -70,6 +56,10 @@ $red : #d9534f;
   }
 }
 
+.increment:focus {
+  outline: none;
+}
+
 .voted {
   opacity: 1;
 }
@@ -99,12 +89,3 @@ $red : #d9534f;
 @keyframes bump {
   30% { transform: scale(1.2); }
 }
-
-/** { box-sizing: border-box; }*/
-/*html, body { height: 100%; }*/
-/*body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: $bg;
-}*/

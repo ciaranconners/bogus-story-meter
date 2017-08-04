@@ -12,8 +12,6 @@ angular.module('app')
 
   $window.scrollTo(0, 0);
 
-  let errMsg = 'Could not retrieve user data ';
-
   let date_sort_desc = (obj1, obj2) => {
     let date1 = new Date(obj1.updatedAt);
     let date2 = new Date(obj2.updatedAt);
@@ -49,11 +47,11 @@ angular.module('app')
       return (lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate);
     } else if (this.searchText && this.startDate) {
       return (lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate);
-    } else if (this.searchText) {     
-      return lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText);     
+    } else if (this.searchText) {
+      return lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText);
     } else if (this.startDate && this.endDate) {
       return item.updatedAt >= this.startDate && item.updatedAt <= this.endDate;
-    } else if (this.startDate) {     
+    } else if (this.startDate) {
       return item.updatedAt >= this.startDate;
     }
   }.bind(this);
@@ -69,13 +67,13 @@ angular.module('app')
     }
   }.bind(this);
 
-  request.get('/allActivity', null, null, errMsg, function(getResponse) {
+  request.get('/allActivity', null, null, function(getResponse) {
     this.activities = getResponse.sort(date_sort_desc);
     this.activities.forEach(function(activity, index) {
       let d = new Date(activity.updatedAt);
 
       activity.updatedAt = convertToLongDate(convertRawDate(d));
-       
+
       activity.rating = Math.floor(activity.upvoteCount / (activity.upvoteCount + activity.downvoteCount)) * 100;
       if (isNaN(activity.rating)) {
         activity.range = 'nr';
