@@ -51,14 +51,27 @@ angular.module('app')
             that.accPw = '';
             that.accVerifyPw = '';
           }
-      });
-    } else {
-      that.showAlert('Oops!', 'Your passwords do not match. Please try again.');
-      this.accName = '';
-      this.accPw = '';
-      this.accVerifyPw = '';
-    }
-  };
+        }, (err) => {
+            that.requestActive = false;
+            if (err.status === 401) {
+              that.showAlert('Oops! User not found.', 'You have to use our extension before you can sign up for our site.');
+              that.accName = '';
+              that.accPw = '';
+              that.accVerifyPw = '';
+            } else if (err.status === 500) {
+              that.showAlert('Oh no!', 'There was an error, please try signing up again.');
+              that.accName = '';
+              that.accPw = '';
+              that.accVerifyPw = '';
+            }
+        });
+      } else {
+        that.showAlert('Oops!', 'Your passwords do not match. Please try again.');
+        this.accName = '';
+        this.accPw = '';
+        this.accVerifyPw = '';
+      }
+    };
 
   this.login = () => {
     un = this.loginName;

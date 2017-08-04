@@ -15,6 +15,8 @@ angular.module('app') /*eslint-disable indent*/
   this.commentText = '';
   this.replyText = '';
 
+  // this needs to check database and if id not found then indicate that
+
   const getUrlId = () => {
     let path = $location.url().split('/');
     this.urlId = path[path.length - 1];

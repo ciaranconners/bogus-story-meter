@@ -24,7 +24,6 @@ angular.module('app')
   this.logout = () => {
     $http.get('http://localhost:8080/auth/logout')
     .then(function(success) {
-      console.log('user logged out successfully');
       $window.location.href = '/login';
     }, function(err) {
       that.showAlert('Oops!', 'An error occured logging you out. Please try again');
@@ -32,7 +31,6 @@ angular.module('app')
   };
 
   request.get('/auth/getStatus', null, null, 'error!', (authResponse) => {
-    console.log(this.isLoggedIn);
     if (authResponse.username) {
       this.isLoggedIn = true;
     } else {
