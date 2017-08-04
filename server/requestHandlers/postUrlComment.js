@@ -75,26 +75,27 @@ router.post('/', (req, res, next) => {
             getFromWatson(url.url, (err, data) => {
               if (err) {
                 console.error(err);
+              } else {
+                let title = data.metadata.title;
+                let text = data.analyzed_text;
+                categories = [];
+                for (let x of data.categories) {
+                  categories.push(x.label.slice(1));
+                }
+                let category = categories.join(' ');
+                db.Category
+                  .findCreateFind({
+                    where: {
+                      name: category
+                    }
+                  })
+                  .spread(category => {
+                    url.update({categoryId: category.id, title: title});
+                  })
+                  .catch(err => {
+                    console.error(err);
+                  });
               }
-              let title = data.metadata.title;
-              let text = data.analyzed_text;
-              categories = [];
-              for (let x of data.categories) {
-                categories.push(x.label.slice(1));
-              }
-              let category = categories.join(' ');
-              db.Category
-                .findCreateFind({
-                  where: {
-                    name: category
-                  }
-                })
-                .spread(category => {
-                  url.update({categoryId: category.id, title: title});
-                })
-                .catch(err => {
-                  console.error(err);
-                });
             });
           })
           .catch(err => {
