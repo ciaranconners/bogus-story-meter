@@ -10,21 +10,20 @@ angular.module('app') /*eslint-disable indent*/
 
   this.handleCommentVote = (commentId, voteType, comments) => {
     let data = {commentId: commentId, voteType: voteType};
-    let errMsg = 'Sorry, there was a hiccup handling your comment vote';
     if (!this.comment.voteType) {
-      request.post('/commentvote', data, errMsg, (res) => {
+      request.post('/commentvote', data, (res) => {
         this.comment.voteCount = res;
         this.comment.voteType = voteType;
         sort.sortComments(comments);
       });
     } else if (this.comment.voteType !== voteType) {
-      request.put('/commentvote', data, errMsg, (res) => {
+      request.put('/commentvote', data, (res) => {
         this.comment.voteCount = res;
         this.comment.voteType = voteType;
         sort.sortComments(comments);
       });
     } else if (this.comment.voteType === voteType) {
-      request.delete('/commentvote', data, errMsg, (res) => {
+      request.delete('/commentvote', data, (res) => {
         this.comment.voteCount = res;
         this.comment.voteType = null;
         sort.sortComments(comments);

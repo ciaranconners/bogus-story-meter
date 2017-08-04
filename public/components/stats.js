@@ -21,9 +21,8 @@ angular.module('app') /*eslint-disable indent*/
   };
 
   const getUrlStats = () => {
-    let errMsg = 'couldn\'t get URL stats';
     let params = {urlId: this.urlId};
-    request.get('/urlstats', null, params, errMsg, (res) => {
+    request.get('/urlstats', null, params, (res) => {
       this.title = res.title;
       this.url = res.url;
       this.username = res.username;
@@ -34,9 +33,8 @@ angular.module('app') /*eslint-disable indent*/
   };
 
   const getUrlComments = () => {
-    let errMsg = 'couldn\'t get URL comments';
     let params = {urlId: this.urlId};
-    request.get('/urlcomments', null, params, errMsg, (res) => {
+    request.get('/urlcomments', null, params, (res) => {
       this.comments = res.comments.filter(comment => comment /* filters out null comments */);
       sort.sortComments(this.comments);
     });
@@ -50,11 +48,10 @@ angular.module('app') /*eslint-disable indent*/
 
   // posts both comments and replies
   this.postComment = (text, commentId = null) => {
-    let errMsg = 'failed to post comment';
     let data = {urlId: this.urlId, comment: text, commentId: commentId};
     this.commentText = '';
     this.replyText = '';
-    request.post('/urlcomment', data, errMsg, (res) => {
+    request.post('/urlcomment', data, (res) => {
       getUrlComments();
     });
   };
@@ -69,30 +66,29 @@ angular.module('app') /*eslint-disable indent*/
       username: this.username,
       type: vote
     };
-    let errMsg = 'Could not submit vote: ';
     // if user hasnt voted before, new vote:
     if (!this.userVote) {
-      request.post('/urlvote', data, errMsg, (res) => {
+      request.post('/urlvote', data, (res) => {
         this.urlId = res;
-        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
+        request.get(`/urlvote/${data.urlId}`, null, null, (res) => {
           this.rating = res;
           this.rated = true;
           this.userVote = vote;
         });
       });
     } else if (this.userVote !== vote) { // if user is changing vote
-      request.put('/urlvote', data, errMsg, (res) => {
+      request.put('/urlvote', data, (res) => {
         this.urlId = res;
-        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
+        request.get(`/urlvote/${data.urlId}`, null, null, (res) => {
           this.rating = res;
           this.rated = true;
           this.userVote = vote;
         });
       });
     } else if (this.userVote === vote) {
-      request.delete('/urlvote', data, errMsg, (res) => {
+      request.delete('/urlvote', data, (res) => {
         this.urlId = res;
-        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
+        request.get(`/urlvote/${data.urlId}`, null, null, (res) => {
           this.rating = res;
           this.rated = this.rating || this.rating === 0 ? true : false;
           this.userVote = null;
