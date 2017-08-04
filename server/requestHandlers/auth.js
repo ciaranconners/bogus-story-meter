@@ -176,25 +176,27 @@ router.get("/logout", (req, res, next) => {
 });
 
 router.get("/getStatus", (req, res) => {
-if (req.session) {
-  if (req.session.username) {
-    db.User
-      .findOne({
-        where: {
-          username: req.session.username
-        }
-      })
-      .then(userEntry => {
-        res.status(200).json({
-          username: req.session.username,
-          fullname: userEntry.fullname,
-          profilepicture: userEntry.profilepicture
+  if (req.session) {
+    if (req.session.username) {
+      db.User
+        .findOne({
+          where: {
+            username: req.session.username
+          }
+        })
+        .then(userEntry => {
+          res.status(200).json({
+            username: req.session.username,
+            fullname: userEntry.fullname,
+            profilepicture: userEntry.profilepicture
+          });
         });
-      });
+    } else {
+      res.sendStatus(401);
+    }
   } else {
     res.sendStatus(401);
   }
-}
 });
 
 module.exports = router;
