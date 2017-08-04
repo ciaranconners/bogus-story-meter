@@ -17,8 +17,6 @@ angular.module('app')
   this.warningLabel = 'end date can\'t be before start date';
   this.dateToday = new Date();
 
-  let errMsg = 'Could not retrieve user data ';
-
   let date_sort_desc = (obj1, obj2) => {
     let date1 = new Date(obj1.updatedAt);
     let date2 = new Date(obj2.updatedAt);
@@ -86,13 +84,13 @@ angular.module('app')
     }.bind(this));
   }.bind(this);
 
-  request.get('/auth/getStatus', null, null, errMsg, (authResponse) => {
+  request.get('/auth/getStatus', null, null, (authResponse) => {
     if (authResponse.username) {
       that.email = authResponse.username;
       that.fullname = authResponse.fullname;
       that.imageUrl = authResponse.profilepicture;
-      request.get('/useractivity', null, {'username': this.email}, errMsg, (getResponse) => {
-        populateUserActivity(getResponse);
+      request.get('/useractivity', null, {'username': this.email}, (getResponse) => {
+        populateUserActivty(getResponse);
       });
     }
   });

@@ -1,50 +1,41 @@
 angular.module('app')/*eslint-disable indent*/
 
 .service('request', function($http, $window) {
-  this.get = (endpoint, data = {}, params = {}, errMsg, callback) => {
+  this.get = (endpoint, data = {}, params = {}, callback) => {
     $http({
       method: 'GET',
       url: endpoint,
       params: params,
       data: data
     })
-    .then(response => {
-      callback(response.data);
-    })
-    .catch(error => console.error(errMsg, error));
+    .then(res => callback(res.data));
   };
 
-  this.post = (endpoint, data, errMsg, callback) => {
+  this.post = (endpoint, data = {}, callback) => {
     $http({
       method: 'POST',
       url: endpoint,
       data: data
     })
-    .then(response => {
-      callback(response.data);
-    })
-    .catch(error => console.error(errMsg, error));
+    .then(res => callback(res.data));
   };
 
-  this.put = (endpoint, data = {}, errMsg, callback) => {
+  this.put = (endpoint, data = {}, callback) => {
     $http({
       method: 'PUT',
       url: endpoint,
       data: data
     })
-    .then(response => {
-      callback(response.data);
-    })
-    .catch(error => console.error(errMsg, error));
+    .then(res => callback(res.data));
   };
 
-  this.delete = (endpoint, params, errMsg, callback) => {
+  this.delete = (endpoint, params, callback) => {
     $http({
       method: 'DELETE',
-      url: window.serverUri + endpoint,
+      url: endpoint,
       params: params
     })
-    .then(res => callback(res.data))
-    .catch(err => console.error(errMsg, err));
+    .then(res => callback(res.data));
   };
+
 });

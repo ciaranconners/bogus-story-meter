@@ -1,7 +1,6 @@
 angular.module('app') /*eslint-disable indent*/
 
 .controller('StatCtrl', function($window, request, sort, $location, $scope) {
-
   $window.scrollTo(0, 0);
 
   this.url;
@@ -11,7 +10,6 @@ angular.module('app') /*eslint-disable indent*/
   this.comments;
   this.urlId;
   this.rated;
-  this.userVote = null;
   this.commentText = '';
   this.replyText = '';
 
@@ -23,11 +21,10 @@ angular.module('app') /*eslint-disable indent*/
   };
 
   const getUrlStats = () => {
-    let errMsg = 'couldn\'t get URL stats';
     let params = {urlId: this.urlId};
-    request.get('/urlstats', null, params, errMsg, (res) => {
-      this.url = res.url;
+    request.get('/urlstats', null, params, (res) => {
       this.title = res.title;
+      this.url = res.url;
       this.username = res.username;
       this.rating = res.rating;
       this.rating || this.rating === 0 ? this.rated = true : this.rated = false;
@@ -36,11 +33,16 @@ angular.module('app') /*eslint-disable indent*/
   };
 
   const getUrlComments = () => {
-    let errMsg = 'couldn\'t get URL comments';
     let params = {urlId: this.urlId};
-    request.get('/urlcomments', null, params, errMsg, (res) => {
+    request.get('/urlcomments', null, params, (res) => {
       this.comments = res.comments.filter(comment => comment /* filters out null comments */);
       sort.sortComments(this.comments);
+    });
+  };
+
+  this.checkAuth = () => {
+    request.get('/auth/getStatus', null, null, (authResponse) => {
+      this.authenticated = authResponse.statusCode === 200 ? true : false;
     });
   };
 
@@ -52,16 +54,17 @@ angular.module('app') /*eslint-disable indent*/
 
   // posts both comments and replies
   this.postComment = (text, commentId = null) => {
-    let errMsg = 'failed to post comment';
+    this.checkAuth();
     let data = {urlId: this.urlId, comment: text, commentId: commentId};
     this.commentText = '';
     this.replyText = '';
-    request.post('/urlcomment', data, errMsg, (res) => {
+    request.post('/urlcomment', data, (res) => {
       getUrlComments();
     });
   };
 
-  this.handleVote = vote => {
+  this.handleVote = (vote) => {
+    this.checkAuth();
     if (this.url === null) {
       return;
     }
@@ -71,28 +74,34 @@ angular.module('app') /*eslint-disable indent*/
       username: this.username,
       type: vote
     };
-    let errMsg = 'Could not submit vote: ';
     // if user hasnt voted before, new vote:
-    if (this.userVote === null) {
-      request.post('/urlvote', data, errMsg, (res) => {
+    if (!this.userVote) {
+      request.post('/urlvote', data, (res) => {
         this.urlId = res;
-        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
+        request.get(`/urlvote/${data.urlId}`, null, null, (res) => {
           this.rating = res;
           this.rated = true;
           this.userVote = vote;
         });
       });
     } else if (this.userVote !== vote) { // if user is changing vote
-      request.put('/urlvote', data, errMsg, (res) => {
+      request.put('/urlvote', data, (res) => {
         this.urlId = res;
-        request.get(`/urlvote/${data.urlId}`, null, null, errMsg, (res) => {
+        request.get(`/urlvote/${data.urlId}`, null, null, (res) => {
           this.rating = res;
           this.rated = true;
           this.userVote = vote;
         });
       });
     } else if (this.userVote === vote) {
-      return; // don't let user send same rating twice for same URL
+      request.delete('/urlvote', data, (res) => {
+        this.urlId = res;
+        request.get(`/urlvote/${data.urlId}`, null, null, (res) => {
+          this.rating = res;
+          this.rated = this.rating || this.rating === 0 ? true : false;
+          this.userVote = null;
+        });
+      });
     }
   };
 

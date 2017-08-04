@@ -24,8 +24,18 @@
     <div class="row">
       <div class="col-xs-3"></div>
       <div class="dd-tfbtn text-center col-xs-6">
-        <button class="dd-truth btn btn-success stats-button" ng-click="stat.handleVote('upvote')" ng-disabled="stat.userVote === 'upvote'"><h3>True</h3></button>
-        <button class="dd-false btn btn-danger stats-button" ng-click="stat.handleVote('downvote')" ng-disabled="stat.userVote === 'downvote'"><h3>False</h3></button>
+        <button
+          class="dd-truth btn btn-success stats-button"
+          ng-click="stat.handleVote('upvote')"
+          ng-class="stat.userVote === 'upvote' ? 'pressed' : ''">
+          <h3>True</h3>
+        </button>
+        <button
+          class="dd-false btn btn-danger stats-button"
+          ng-click="stat.handleVote('downvote')"
+          ng-class="stat.userVote === 'downvote' ? 'pressed' : ''">
+          <h3>False</h3>
+        </button>
       </div>
       <div class="col-xs-3"></div>
     </div>
@@ -42,7 +52,7 @@
       <div class="col-xs-3">
         <button
           class="comment-submit btn btn-default pull-right stats-text"
-          ng-click="stat.postComment(stat.commentText)">
+          ng-click="stat.commentText.length ? stat.postComment(stat.commentText) : null">
           Submit
         </button>
       </div>
@@ -53,7 +63,9 @@
       comment="comment"
       comments="stat.comments"
       post-comment="stat.postComment"
-      reply-text="stat.replyText"/>
+      reply-text="stat.replyText"
+      check-auth="stat.checkAuth"
+      authenticated="stat.authenticated"/>
     </div>
 
   </div>
