@@ -62,7 +62,7 @@ angular.module('app')
     if (this.searchText && this.startDate && this.endDate) {
       return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate && item.updatedAt <= this.endDate);
     } else if (this.searchText && this.startDate) {
-      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || lowerCaseUrl.includes(this.searchText) || ilowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate);
+      return (item.type.includes(this.searchText) || item.text.includes(this.searchText) || lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText)) && (item.updatedAt >= this.startDate);
     } else if (this.searchText) {
       return item.type.includes(this.searchText) || item.text.includes(this.searchText) || lowerCaseUrl.includes(this.searchText) || lowerCaseTitle.includes(this.searchText);
     } else if (this.startDate && this.endDate) {

@@ -17,12 +17,8 @@
       <p class="text-center">of users believe the information presented on the above URL is accurate. What do you think?</p>
     </div>
 
-    <div ng-if="stat.rated && stat.userVote === 'upvote'" class="dd-heading rated-heading">
-      <p class="text-center">of users believe the information presented on the above URL is accurate, as well as agree with your previous 'true' rating.</p>
-    </div>
-
-    <div ng-if="stat.rated && stat.userVote === 'downvote'" class="dd-heading rated-heading">
-      <p class="text-center">of users believe the information presented on the above URL is accurate, as well as disagree with your previous 'false' rating.</p>
+    <div ng-if="stat.rated && stat.userVote" class="dd-heading rated-heading">
+      <p class="text-center">of users believe the information presented on the above URL is accurate.</p>
     </div>
 
     <div class="row">
