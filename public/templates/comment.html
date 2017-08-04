@@ -5,23 +5,13 @@
       <div class="comment-pic pull-right">
         <img class="stats-pic text-right" ng-src={{$ctrl.comment.profilePic}}>
       </div>
-      <div class="vote circle">
-        <div
-          class="increment up"
-          ng-click="$ctrl.handleCommentVote($ctrl.comment.id, 'upvote', $ctrl.comments);"
-          ng-class="$ctrl.voteType === 'upvote' ? 'voted bump' : ''">
-        </div>
-        <div class="increment down"
-          ng-click="$ctrl.handleCommentVote($ctrl.comment.id, 'downvote', $ctrl.comments);"
-          ng-class="$ctrl.voteType === 'downvote' ? 'voted bump' : ''">
-        </div>
-        <div class="count">{{$ctrl.comment.voteCount}}</div>
-      </div>
     </div>
     <div class="col-sm-8">
       <div class="panel panel-default">
+
         <div class="panel-heading">
-          <strong>{{$ctrl.comment.username}}</strong>
+          <div class="inline">
+            <strong>{{$ctrl.comment.username}}</strong>
             <span class="text-muted">
               commented
               <em
@@ -29,7 +19,22 @@
                 am-time-ago="$ctrl.time">
               </em>
             </span>
-          <div class="reply-btn pull-right">
+          </div>
+
+          <div class="vote circle inline rel pull-right">
+            <div
+              class="increment up"
+              ng-click="$ctrl.handleCommentVote($ctrl.comment.id, 'upvote', $ctrl.comments);"
+              ng-class="$ctrl.voteType === 'upvote' ? 'voted bump' : ''">
+            </div>
+            <div class="increment down"
+              ng-click="$ctrl.handleCommentVote($ctrl.comment.id, 'downvote', $ctrl.comments);"
+              ng-class="$ctrl.voteType === 'downvote' ? 'voted bump' : ''">
+            </div>
+            <div class="count">{{$ctrl.comment.voteCount}}</div>
+          </div>
+
+          <div class="reply-btn inline abs pull-right">
             <button
               ng-show="!$ctrl.comment.replying"
               class="reply reply-btn btn btn-default"
@@ -38,6 +43,7 @@
             </button>
           </div>
         </div>
+
         <div class="panel-body">
           {{$ctrl.comment.text}}
         </div>
@@ -78,3 +84,15 @@
 </div>
 
 
+<!-- <div class="vote circle">
+        <div
+          class="increment up"
+          ng-click="$ctrl.handleCommentVote($ctrl.comment.id, 'upvote', $ctrl.comments);"
+          ng-class="$ctrl.voteType === 'upvote' ? 'voted bump' : ''">
+        </div>
+        <div class="increment down"
+          ng-click="$ctrl.handleCommentVote($ctrl.comment.id, 'downvote', $ctrl.comments);"
+          ng-class="$ctrl.voteType === 'downvote' ? 'voted bump' : ''">
+        </div>
+        <div class="count">{{$ctrl.comment.voteCount}}</div>
+      </div> -->
