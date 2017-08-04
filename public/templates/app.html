@@ -14,7 +14,7 @@
 			  <li ng-show="activity.type">You rated the page: <i><a href={{activity.url}} target="_blank">{{activity.title || activity.url}}</a></i> as <b><a ng-class="activity.type" href="/stats/redirect/{{activity.urlId}}">{{activity.type}}</a></b></li>
 			  <li ng-show="activity.text">You commented on the page: <i><a href={{activity.url}} target="_blank">{{activity.title || activity.url}}</a></i>
 			    <ul class="profileList" ng-show="activity.text">
-			      <li><a class="profileComment" href="/stats/redirect/{{activity.urlId}}">{{activity.text}}</a></li>
+			      <li><a class="profileComment" href="/stats/redirect/{{activity.urlId}}"><b>{{activity.text}}</b></a></li>
 			    </ul>
 			  </li>
 			</ul>
