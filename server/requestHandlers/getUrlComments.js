@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../db/index.js');
 
 router.get('/', (req, res, next) => {
+  // if (req.session) {
   let currUser = req.session.username;
   let urlId = req.query.urlId;
   let idxMap = {};
@@ -44,6 +45,14 @@ router.get('/', (req, res, next) => {
     console.error(err);
     res.sendStatus(500);
   });
+  // } else {
+  //   let urlId = req.query.urlId;
+  //   db.Comment.findAll({where: {urlId: urlId}})
+  //     .then((comments) => {
+  //       console.log('COMMENT: ', comments);
+  //       res.status(200).json({comment: comments});
+  //     });
+  // }
 });
 
 module.exports = router;

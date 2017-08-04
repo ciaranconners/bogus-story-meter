@@ -80,6 +80,7 @@ handler.generateRetrieveStatsPageUrl = (req, res) => {
 
 // this function should check if there's a session first, otherwise you get type errors when the user is set to null
 handler.getUrlStats = (req, res) => {
+  if (req.session) {
   let urlId = req.query.urlId;
   let urlData = {username: req.session.username};
   db.Url
@@ -108,6 +109,21 @@ handler.getUrlStats = (req, res) => {
       console.error(err);
       res.sendStatus(500);
     });
+  } else {
+    let urlData = {};
+    let urlId = req.query.urlId;
+    db.Url.findOne({where: {id: urlId}})
+      .then((url) => {
+        urlData.url = url.url;
+        urlData.title = url.title;
+        urlData.rating = utils.calculateRating(url.upvoteCount, url.downvoteCount);
+        res.send(urlData);
+    })
+      .catch((err) => {
+        console.error(err);
+        res.sendStatus(500);
+      });
+  }
 };
 
 handler.getAllActivity = (req, res) => {
