@@ -40,7 +40,7 @@ angular.module('app')
         }, (err) => {
             that.requestActive = false;
             if (err.status === 401) {
-              that.showAlert('Oops!', err.data);
+              that.showAlert('Oops! User not found.', 'You have to use our extension before you can sign up for our site.');
               that.accName = '';
               that.accPw = '';
               that.accVerifyPw = '';
