@@ -90,7 +90,7 @@ angular.module('app')
       that.fullname = authResponse.fullname;
       that.imageUrl = authResponse.profilepicture;
       request.get('/useractivity', null, {'username': this.email}, (getResponse) => {
-        populateUserActivty(getResponse);
+        populateUserActivity(getResponse);
       });
     }
   });
