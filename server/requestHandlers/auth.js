@@ -176,6 +176,7 @@ router.get("/logout", (req, res, next) => {
 });
 
 router.get("/getStatus", (req, res) => {
+if (req.session) {
   if (req.session.username) {
     db.User
       .findOne({
@@ -193,6 +194,7 @@ router.get("/getStatus", (req, res) => {
   } else {
     res.sendStatus(401);
   }
+}
 });
 
 module.exports = router;
