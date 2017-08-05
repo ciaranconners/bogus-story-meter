@@ -52,7 +52,7 @@
       <div class="col-xs-3">
         <button
           class="comment-submit btn btn-default pull-right stats-text"
-          ng-click="stat.commentText.length ? stat.postComment(stat.commentText) : null">
+          ng-click="stat.commentText.length ? stat.postComment(stat.commentText) : stat.showAlert('Oops!', 'You have to write a comment to submit.')">
           Submit
         </button>
       </div>
@@ -60,6 +60,7 @@
     </div>
     <div class="container comment no-parent text-center" ng-repeat="comment in stat.comments track by comment.id">
       <comment
+      showAlert="stat.showAlert"
       comment="comment"
       comments="stat.comments"
       post-comment="stat.postComment"

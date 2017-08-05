@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static(path.join(__dirname, '../public')));
 
-app.use('/auth/', auth);
+app.use('/auth', auth);
 app.use('/urlvote', vote);
 app.use('/urlcomment', postUrlComment);
 app.use('/urlcomments', getUrlComments);

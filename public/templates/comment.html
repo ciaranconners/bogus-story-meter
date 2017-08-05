@@ -70,7 +70,7 @@
           ng-show="$ctrl.comment.replying"
           class="reply-submit btn btn-default pull-right"
           ng-click="
-          $ctrl.replyText.length ? $ctrl.postComment($ctrl.replyText, $ctrl.comment.id) : null;
+          $ctrl.replyText.length ? $ctrl.postComment($ctrl.replyText, $ctrl.comment.id) : $ctrl.showAlert('Oops', 'You have to enter some text in order to reply.');
           $ctrl.replyText.length ? $ctrl.toggleReplying() : null;">
           Submit
         </button>

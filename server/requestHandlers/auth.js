@@ -176,6 +176,7 @@ router.get("/logout", (req, res, next) => {
 });
 
 router.get("/getStatus", (req, res) => {
+  console.log(req.session.username);
   if (req.session) {
     if (req.session.username) {
       db.User
@@ -185,11 +186,14 @@ router.get("/getStatus", (req, res) => {
           }
         })
         .then(userEntry => {
-          res.status(200).json({
+          res.json({
             username: req.session.username,
             fullname: userEntry.fullname,
             profilepicture: userEntry.profilepicture
           });
+        })
+        .catch(err => {
+            console.error(err);
         });
     } else {
       res.sendStatus(401);

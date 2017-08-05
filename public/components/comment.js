@@ -44,6 +44,7 @@ angular.module('app') /*eslint-disable indent*/
     replyText: '<',
     handleCommentVote: '<',
     checkAuth: '<',
-    authenticated: '<'
+    authenticated: '<',
+    showAlert: '<'
   }
 });
