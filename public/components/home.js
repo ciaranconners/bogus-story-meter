@@ -74,7 +74,8 @@ angular.module('app')
 
       activity.updatedAt = convertToLongDate(convertRawDate(d));
 
-      activity.rating = Math.floor(activity.upvoteCount / (activity.upvoteCount + activity.downvoteCount)) * 100;
+      activity.rating = Math.floor((activity.upvoteCount / (activity.upvoteCount + activity.downvoteCount)) * 100);
+
       if (isNaN(activity.rating)) {
         activity.range = 'nr';
         activity.rating = 'N/R';
@@ -86,6 +87,9 @@ angular.module('app')
       else if (activity.rating <= 45) {
         activity.range = 'falsy';
         activity.rating = activity.rating + '%';
+      } else {
+        activity.range = 'middle';
+        activity.rating = activity.rating + '%';
       }
 
       if (activity.title === null) { activity.title = ''; }
@@ -94,6 +98,7 @@ angular.module('app')
         this.activity.push(activity);
       }
     }.bind(this));
+
   }.bind(this));
 
 })

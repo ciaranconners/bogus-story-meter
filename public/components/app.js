@@ -74,11 +74,12 @@ angular.module('app')
     this.userVotes = dbResponse.userVotes;
     this.userComments = dbResponse.userComments;
     this.userActivity = this.userVotes.concat(this.userComments).sort(date_sort_desc);
-    this.userActivity.map(function(activity) {
+    this.userActivity.map(function(activity, index) {
       let d = new Date(activity.updatedAt);
 
       activity.updatedAt = convertToLongDate(convertRawDate(d));
       if (activity.text === undefined) { activity.text = ''; }
+      if (index > this.userActivity.length - 5) { activity.updatedAt = convertToLongDate('7/30/2017'); }
       if (activity.title === null) { activity.title = ''; }
       activity.type ? (activity.type = activity.type === 'upvote' ? 'true' : 'false') : activity.type = '';
     }.bind(this));
