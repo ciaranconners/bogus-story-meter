@@ -1,6 +1,6 @@
 angular.module('app') /*eslint-disable indent*/
 
-.controller('StatCtrl', function($window, request, sort, $location, $scope) {
+.controller('StatCtrl', function($window, request, sort, $location, $scope, $mdDialog) {
   $window.scrollTo(0, 0);
 
   this.url;
@@ -12,6 +12,22 @@ angular.module('app') /*eslint-disable indent*/
   this.rated;
   this.commentText = '';
   this.replyText = '';
+
+  this.showAlert = (title, text) => {
+    alert = $mdDialog.alert({
+      title: title,
+      textContent: text,
+      ok: 'Got it!',
+      clickOutsideToClose: true,
+      hasBackdrop: false
+    });
+
+    $mdDialog
+      .show( alert )
+      .finally(function() {
+        alert = undefined;
+    });
+  };
 
   // this needs to check database and if id not found then indicate that
 
@@ -55,16 +71,23 @@ angular.module('app') /*eslint-disable indent*/
 
   // posts both comments and replies
   this.postComment = (text, commentId = null) => {
-    this.checkAuth();
-    let data = {urlId: this.urlId, comment: text, commentId: commentId};
-    this.commentText = '';
-    this.replyText = '';
-    request.post('/urlcomment', data, (res) => {
-      getUrlComments();
-    });
+    if (this.authenticated) {
+      this.checkAuth();
+      let data = {urlId: this.urlId, comment: text, commentId: commentId};
+      this.commentText = '';
+      this.replyText = '';
+      request.post('/urlcomment', data, (res) => {
+        getUrlComments();
+      });
+    } else {
+      this.showAlert('Oops!', 'You\'ll have to log in to comment.');
+    }
   };
 
   this.handleVote = (vote) => {
+    if (!this.authenticated) {
+      this.showAlert('Oops!', 'You\'ll have to log in to comment.');
+    } else {
     this.checkAuth();
     if (this.url === null) {
       return;
@@ -104,6 +127,7 @@ angular.module('app') /*eslint-disable indent*/
         });
       });
     }
-  };
+  }
+};
 
 });
