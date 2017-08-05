@@ -15,7 +15,7 @@ Once the project moves into development, the press release can be used as a touc
 ## Summary ##
   > Give a summary of the product and the benefit. Assume the reader will not read anything else so make this paragraph good.
 
-  Bogus Story Meter is a Chrome extension that shows users the truthfulness of the current webpage as determined by their peers, as well as input from IBM Watson.
+  Bogus Story Meter is a Chrome extension that shows users the truthfulness of the current webpage as determined by their peers.
 ## Problem ##
   > Describe the problem your product solves.
 
@@ -23,7 +23,7 @@ Once the project moves into development, the press release can be used as a touc
 ## Solution ##
   > Describe how your product elegantly solves the problem.
 
- Bogus Story Meter compiles data from advanced AI as well as our extensive user base to determine a webpage's truthfulness.
+ Bogus Story Meter compiles data from our extensive user base to determine a webpage's truthfulness.
 ## Quote from You ##
   > A quote from a spokesperson in your company.
 
