@@ -79,7 +79,6 @@ angular.module('app')
 
       activity.updatedAt = convertToLongDate(convertRawDate(d));
       if (activity.text === undefined) { activity.text = ''; }
-      if (index > this.userActivity.length - 5) { activity.updatedAt = convertToLongDate('7/30/2017'); }
       if (activity.title === null) { activity.title = ''; }
       activity.type ? (activity.type = activity.type === 'upvote' ? 'true' : 'false') : activity.type = '';
     }.bind(this));
