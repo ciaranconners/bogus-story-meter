@@ -35,6 +35,7 @@ angular.module('app') /*eslint-disable indent*/
   const getUrlComments = () => {
     let params = {urlId: this.urlId};
     request.get('/urlcomments', null, params, (res) => {
+      console.log(res);
       this.comments = res.comments.filter(comment => comment /* filters out null comments */);
       sort.sortComments(this.comments);
     });

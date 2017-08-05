@@ -31,7 +31,6 @@ const getFromWatson = (url, callback) => {
 };
 
 router.post('/', (req, res, next) => {
-  console.log('session username: ', req.session.username);
   let url = req.body.url;
   let urlId = req.body.urlId;
   let username = req.body.username || req.session.username;
