@@ -12,6 +12,7 @@ angular.module('app') /*eslint-disable indent*/
   this.rated;
   this.commentText = '';
   this.replyText = '';
+  this.authenticated;
 
   this.showAlert = (title, text) => {
     alert = $mdDialog.alert({
@@ -51,7 +52,6 @@ angular.module('app') /*eslint-disable indent*/
   const getUrlComments = () => {
     let params = {urlId: this.urlId};
     request.get('/urlcomments', null, params, (res) => {
-      console.log(res);
       this.comments = res.comments.filter(comment => comment /* filters out null comments */);
       sort.sortComments(this.comments);
     });
@@ -59,7 +59,9 @@ angular.module('app') /*eslint-disable indent*/
 
   this.checkAuth = () => {
     request.get('/auth/getStatus', null, null, (authResponse) => {
-      this.authenticated = authResponse.statusCode === 200 ? true : false;
+      if (authResponse) {
+        this.authenticated = true;
+      }
     });
   };
 
@@ -67,12 +69,13 @@ angular.module('app') /*eslint-disable indent*/
     getUrlId();
     getUrlStats();
     getUrlComments();
+    this.checkAuth();
   });
 
   // posts both comments and replies
   this.postComment = (text, commentId = null) => {
+    this.checkAuth();
     if (this.authenticated) {
-      this.checkAuth();
       let data = {urlId: this.urlId, comment: text, commentId: commentId};
       this.commentText = '';
       this.replyText = '';
@@ -80,15 +83,15 @@ angular.module('app') /*eslint-disable indent*/
         getUrlComments();
       });
     } else {
-      this.showAlert('Oops!', 'You\'ll have to log in to comment.');
+      this.showAlert('Oops!', 'You have to log in to comment.');
     }
   };
 
   this.handleVote = (vote) => {
-    if (!this.authenticated) {
-      this.showAlert('Oops!', 'You\'ll have to log in to comment.');
-    } else {
     this.checkAuth();
+    if (!this.authenticated) {
+      this.showAlert('Oops!', 'You have to log in to vote.');
+    } else {
     if (this.url === null) {
       return;
     }

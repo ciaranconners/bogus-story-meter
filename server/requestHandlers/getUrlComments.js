@@ -62,7 +62,6 @@ router.get('/', (req, res, next) => {
     });
   })
   .mapSeries(comment => {
-    console.log('comment', comment);
     return db.User.findOne({where: {id: comment.userId}})
     .then((commUser) => {
         comment.dataValues.username = commUser.fullname || commUser.username;

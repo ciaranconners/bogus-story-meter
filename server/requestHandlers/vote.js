@@ -78,6 +78,9 @@ router.post('/', (req, res, next) => {
                     .then(() => {
                       res.status(201).json(url.id);
                       getFromWatson(url.url, (err, data) => {
+                        if (err) {
+                          console.error(err);
+                        } else {
                         let title = data.metadata.title;
                         let text = data.analyzed_text;
                         categories = [];
@@ -97,6 +100,7 @@ router.post('/', (req, res, next) => {
                           .catch(err => {
                             console.error(err);
                           });
+                        }
                       });
                     });
                 })
