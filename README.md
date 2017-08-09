@@ -2,6 +2,8 @@
 
 > Digging through the Internet for reliable information is a tedious task. A plethora of misinformation coexists with reliable data. Bogus Story Meter is a web app and Chrome extension that aims to make this process easier by displaying user-generated ratings as well as AI insights to quickly inform users of a URL's trustworthiness and accuracy of the presented information.
 
+http://198.199.71.9:8080/about
+
 ## Team
 
   - __Product Owner__: Ciaran Conners
